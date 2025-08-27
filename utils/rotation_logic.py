@@ -25,28 +25,24 @@ def can_assign_mvp():
         bool: True if MVP can be assigned, False otherwise
     
     Logic:
-        - If no players exist, return False
+        - If no active (non-excluded) players exist, return False
         - MVP assignments are always allowed - rotation cycles automatically
-        - When all players have been MVP, eligible players are those with minimum MVP count
+        - When all active players have been MVP, eligible players are those with minimum MVP count
     """
     try:
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
         
-        # Get all players
-        all_players = Player.query.all()
+        # Get all active (non-excluded) players
+        all_active_players = Player.query.filter(Player.is_excluded == False).all()
         
-        if not all_players:
-            return False  # No players to assign MVP to
+        if not all_active_players:
+            return False  # No active players to assign MVP to
         
         # Check if any MVP assignments have been made
         total_assignments = MVPAssignment.query.count()
         
         if total_assignments == 0:
             return True  # First assignment is always allowed
-        
-        # Check if all players have been MVP at least once
-        players_with_mvp = Player.query.filter(Player.mvp_count > 0).count()
-        total_players = len(all_players)
         
         # Always allow MVP assignment - rotation handles fairness automatically
         return True
@@ -63,27 +59,38 @@ def get_eligible_players():
         list: List of Player objects eligible for MVP assignment
     
     Logic:
-        - If this is the first round (not all players have been MVP), 
-          return players who haven't been MVP yet
-        - If all players have been MVP, return players with the minimum MVP count
+        - Excludes players where is_excluded = True from MVP rotation
+        - If this is the first round (not all active players have been MVP), 
+          return active players who haven't been MVP yet
+        - If all active players have been MVP, return active players with the minimum MVP count
     """
     try:
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
-        all_players = Player.query.all()
+        # Get only active (non-excluded) players
+        all_active_players = Player.query.filter(Player.is_excluded == False).all()
         
-        if not all_players:
+        if not all_active_players:
             return []
         
-        # Check if we're in the first round (not all players have been MVP)
-        players_with_mvp = Player.query.filter(Player.mvp_count > 0).all()
+        # Check if we're in the first round (not all active players have been MVP)
+        active_players_with_mvp = Player.query.filter(
+            Player.mvp_count > 0, 
+            Player.is_excluded == False
+        ).all()
         
-        if len(players_with_mvp) < len(all_players):
-            # First round: return players who haven't been MVP yet
-            return Player.query.filter(Player.mvp_count == 0).all()
+        if len(active_players_with_mvp) < len(all_active_players):
+            # First round: return active players who haven't been MVP yet
+            return Player.query.filter(
+                Player.mvp_count == 0, 
+                Player.is_excluded == False
+            ).all()
         else:
-            # Subsequent rounds: return players with minimum MVP count
-            min_mvp_count = min(player.mvp_count for player in all_players)
-            return Player.query.filter(Player.mvp_count == min_mvp_count).all()
+            # Subsequent rounds: return active players with minimum MVP count
+            min_mvp_count = min(player.mvp_count for player in all_active_players)
+            return Player.query.filter(
+                Player.mvp_count == min_mvp_count,
+                Player.is_excluded == False
+            ).all()
             
     except Exception as e:
         print(f"Error in get_eligible_players: {str(e)}")
