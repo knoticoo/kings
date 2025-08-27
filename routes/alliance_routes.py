@@ -11,7 +11,7 @@ Handles all alliance-related operations:
 
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from models import Alliance, Event, WinnerAssignment
-from app import db
+from database import db
 from utils.rotation_logic import can_assign_winner, get_eligible_alliances
 
 # Create blueprint for alliance routes

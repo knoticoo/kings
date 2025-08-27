@@ -11,7 +11,7 @@ Handles all player-related operations:
 
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from models import Player, Event, MVPAssignment
-from app import db
+from database import db
 from utils.rotation_logic import can_assign_mvp, get_eligible_players
 
 # Create blueprint for player routes

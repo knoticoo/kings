@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Winner - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 text-primary">
+                <i class="bi bi-trophy me-2"></i>Assign Winner
+            </h1>
+            <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back to Alliances
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-arrow-repeat me-2"></i>Winner Rotation Status
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if can_assign_winner %}
+                    <div class="alert alert-success d-flex align-items-center mb-3">
+                        <i class="bi bi-check-circle-fill me-3 fs-4"></i>
+                        <div>
+                            <strong>Winner Assignment Available</strong><br>
+                            <small>You can assign winner to eligible alliances below.</small>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning d-flex align-items-center mb-0">
+                        <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+                        <div>
+                            <strong>Winner Assignment Locked</strong><br>
+                            <small>Not all alliances have won yet. Complete the current rotation first.</small>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if can_assign_winner and eligible_alliances and available_events %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-trophy me-2"></i>Winner Assignment Form
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="alliance_id" class="form-label">
+                                <i class="bi bi-shield me-1"></i>Select Alliance
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="alliance_id" name="alliance_id" required>
+                                <option value="">Choose an alliance...</option>
+                                {% for alliance in eligible_alliances %}
+                                    <option value="{{ alliance.id }}">
+                                        {{ alliance.name }} 
+                                        {% if alliance.win_count > 0 %}
+                                            (Wins: {{ alliance.win_count }}x)
+                                        {% else %}
+                                            (New Winner)
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="event_id" class="form-label">
+                                <i class="bi bi-calendar-event me-1"></i>Select Event
+                                <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="event_id" name="event_id" required>
+                                <option value="">Choose an event...</option>
+                                {% for event in available_events %}
+                                    <option value="{{ event.id }}">
+                                        {{ event.name }}
+                                        <small>({{ event.event_date.strftime('%Y-%m-%d') if event.event_date }})</small>
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="bi bi-trophy-fill me-2"></i>Assign Winner
+                        </button>
+                        <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

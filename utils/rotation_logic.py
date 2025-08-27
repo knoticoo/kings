@@ -11,7 +11,10 @@ This ensures fair distribution and prevents the same player/alliance from winnin
 while others haven't had a chance.
 """
 
-from models import Player, Alliance, MVPAssignment, WinnerAssignment
+# Import models dynamically to avoid circular imports
+def get_models():
+    from models import Player, Alliance, MVPAssignment, WinnerAssignment
+    return Player, Alliance, MVPAssignment, WinnerAssignment
 
 def can_assign_mvp():
     """
@@ -27,6 +30,8 @@ def can_assign_mvp():
         - Otherwise, return False
     """
     try:
+        Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
+        
         # Get all players
         all_players = Player.query.all()
         
@@ -63,6 +68,7 @@ def get_eligible_players():
         - If all players have been MVP, return players with the minimum MVP count
     """
     try:
+        Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
         all_players = Player.query.all()
         
         if not all_players:
@@ -97,6 +103,7 @@ def can_assign_winner():
         - Otherwise, return False
     """
     try:
+        Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
         # Get all alliances
         all_alliances = Alliance.query.all()
         
@@ -133,6 +140,7 @@ def get_eligible_alliances():
         - If all alliances have won, return alliances with the minimum win count
     """
     try:
+        Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
         all_alliances = Alliance.query.all()
         
         if not all_alliances:
@@ -161,6 +169,8 @@ def get_rotation_status():
         dict: Dictionary containing rotation status information
     """
     try:
+        Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
+        
         status = {
             'mvp': {
                 'can_assign': can_assign_mvp(),
@@ -209,7 +219,9 @@ def reset_mvp_rotation():
     WARNING: This is destructive and should be used carefully!
     """
     try:
-        from app import db
+        from database import db
+        from models import Event
+        Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
         
         # Clear current MVP flags
         Player.query.update({'is_current_mvp': False, 'mvp_count': 0})
@@ -218,7 +230,6 @@ def reset_mvp_rotation():
         MVPAssignment.query.delete()
         
         # Update events to reflect no MVP assignments
-        from models import Event
         Event.query.update({'has_mvp': False})
         
         db.session.commit()
@@ -227,7 +238,7 @@ def reset_mvp_rotation():
         
     except Exception as e:
         print(f"Error in reset_mvp_rotation: {str(e)}")
-        from app import db
+        from database import db
         db.session.rollback()
         return False
 
@@ -243,7 +254,9 @@ def reset_winner_rotation():
     WARNING: This is destructive and should be used carefully!
     """
     try:
-        from app import db
+        from database import db
+        from models import Event
+        Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
         
         # Clear current winner flags
         Alliance.query.update({'is_current_winner': False, 'win_count': 0})
@@ -252,7 +265,6 @@ def reset_winner_rotation():
         WinnerAssignment.query.delete()
         
         # Update events to reflect no winner assignments
-        from models import Event
         Event.query.update({'has_winner': False})
         
         db.session.commit()
@@ -261,6 +273,6 @@ def reset_winner_rotation():
         
     except Exception as e:
         print(f"Error in reset_winner_rotation: {str(e)}")
-        from app import db
+        from database import db
         db.session.rollback()
         return False

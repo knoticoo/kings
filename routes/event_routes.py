@@ -11,7 +11,7 @@ Handles all event-related operations:
 
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from models import Event, Player, Alliance, MVPAssignment, WinnerAssignment
-from app import db
+from database import db
 from datetime import datetime
 
 # Create blueprint for event routes

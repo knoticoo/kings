@@ -7,7 +7,7 @@ Shows current MVP player and winning alliance information.
 
 from flask import Blueprint, render_template, jsonify
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment
-from app import db
+from database import db
 
 # Create blueprint for main routes
 bp = Blueprint('main', __name__)

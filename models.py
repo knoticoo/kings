@@ -9,8 +9,8 @@ This module contains all SQLAlchemy models for:
 - WinnerAssignment: Tracks which alliance won which event
 """
 
-from app import db
 from datetime import datetime
+from database import db
 
 class Player(db.Model):
     """

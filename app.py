@@ -7,7 +7,6 @@ with rotation logic to ensure fair distribution of awards.
 """
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 
@@ -21,9 +20,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 
 # Initialize database
-db = SQLAlchemy(app)
+from database import db, init_app, create_all_tables
+init_app(app)
 
-# Import models after db initialization
+# Import models after database initialization
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment
 
 # Import routes
@@ -37,9 +37,7 @@ app.register_blueprint(event_routes.bp)
 
 def create_tables():
     """Create all database tables"""
-    with app.app_context():
-        db.create_all()
-        print("Database tables created successfully!")
+    create_all_tables(app)
 
 if __name__ == '__main__':
     create_tables()
