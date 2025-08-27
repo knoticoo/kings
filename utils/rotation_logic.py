@@ -4,11 +4,12 @@ Rotation Logic Utility Module
 This module implements the core rotation logic for MVP and winner assignments.
 
 Key Rules:
-1. MVP Rotation: Can only assign MVP when all current players have been MVP at least once
-2. Alliance Rotation: Can only assign winner when all current alliances have won at least once
+1. MVP Rotation: Players with the fewest MVP wins are prioritized for selection
+2. Alliance Rotation: Alliances with the fewest wins are prioritized for selection
+3. Auto-cycling: When all players/alliances have won at least once, the cycle resets
+   and those with the minimum count become eligible again
 
-This ensures fair distribution and prevents the same player/alliance from winning repeatedly
-while others haven't had a chance.
+This ensures fair distribution while allowing continuous assignments without locks.
 """
 
 # Import models dynamically to avoid circular imports
@@ -25,9 +26,8 @@ def can_assign_mvp():
     
     Logic:
         - If no players exist, return False
-        - If no MVP assignments have been made yet, return True (first assignment)
-        - If all players have been MVP at least once, return True
-        - Otherwise, return False
+        - MVP assignments are always allowed - rotation cycles automatically
+        - When all players have been MVP, eligible players are those with minimum MVP count
     """
     try:
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
@@ -48,8 +48,8 @@ def can_assign_mvp():
         players_with_mvp = Player.query.filter(Player.mvp_count > 0).count()
         total_players = len(all_players)
         
-        # Can assign MVP if all players have been MVP at least once
-        return players_with_mvp >= total_players
+        # Always allow MVP assignment - rotation handles fairness automatically
+        return True
         
     except Exception as e:
         print(f"Error in can_assign_mvp: {str(e)}")
@@ -98,9 +98,8 @@ def can_assign_winner():
     
     Logic:
         - If no alliances exist, return False
-        - If no winner assignments have been made yet, return True (first assignment)
-        - If all alliances have won at least once, return True
-        - Otherwise, return False
+        - Winner assignments are always allowed - rotation cycles automatically
+        - When all alliances have won, eligible alliances are those with minimum win count
     """
     try:
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
@@ -120,8 +119,8 @@ def can_assign_winner():
         alliances_with_wins = Alliance.query.filter(Alliance.win_count > 0).count()
         total_alliances = len(all_alliances)
         
-        # Can assign winner if all alliances have won at least once
-        return alliances_with_wins >= total_alliances
+        # Always allow winner assignment - rotation handles fairness automatically
+        return True
         
     except Exception as e:
         print(f"Error in can_assign_winner: {str(e)}")

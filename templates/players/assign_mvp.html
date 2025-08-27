@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Assign MVP - King's Choice Management{% endblock %}
+{% block title %}Назначить MVP - Управление King's Choice{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,10 +8,10 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-award me-2"></i>Assign MVP
+                <i class="bi bi-award me-2"></i>Назначить MVP
             </h1>
             <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Back to Players
+                <i class="bi bi-arrow-left me-1"></i>Назад к игрокам
             </a>
         </div>
     </div>
@@ -35,7 +35,7 @@
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-arrow-repeat me-2"></i>MVP Rotation Status
+                    <i class="bi bi-arrow-repeat me-2"></i>Статус ротации MVP
                 </h5>
             </div>
             <div class="card-body">
@@ -43,13 +43,13 @@
                     <div class="alert alert-success d-flex align-items-center mb-3">
                         <i class="bi bi-check-circle-fill me-3 fs-4"></i>
                         <div>
-                            <strong>MVP Assignment Available</strong><br>
-                            <small>You can assign MVP to eligible players below.</small>
+                            <strong>Назначение MVP доступно</strong><br>
+                            <small>Вы можете назначить MVP подходящим игрокам ниже.</small>
                         </div>
                     </div>
                     
                     <h6 class="text-success mb-2">
-                        <i class="bi bi-people-fill me-1"></i>Eligible Players:
+                        <i class="bi bi-people-fill me-1"></i>Подходящие игроки:
                     </h6>
                     <div class="mb-0">
                         {% for player in eligible_players %}
@@ -62,8 +62,8 @@
                     <div class="alert alert-warning d-flex align-items-center mb-0">
                         <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
                         <div>
-                            <strong>MVP Assignment Locked</strong><br>
-                            <small>Not all players have been MVP yet. Complete the current rotation first before assigning new MVPs.</small>
+                            <strong>Назначение MVP недоступно</strong><br>
+                            <small>Нет подходящих игроков или событий для назначения MVP.</small>
                         </div>
                     </div>
                 {% endif %}
@@ -75,7 +75,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-trophy me-2"></i>MVP Assignment Form
+                    <i class="bi bi-trophy me-2"></i>Форма назначения MVP
                 </h5>
             </div>
             <div class="card-body">
@@ -83,7 +83,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="player_id" class="form-label">
-                                <i class="bi bi-person me-1"></i>Select Player
+                                <i class="bi bi-person me-1"></i>Выберите игрока
                                 <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="player_id" name="player_id" required>

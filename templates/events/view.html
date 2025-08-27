@@ -134,13 +134,13 @@
                                     <p class="text-muted mb-1">
                                         Назначен: {{ winner_assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if winner_assignment.assigned_at }}
                                     </p>
-                                    <small class="text-muted">Win Count: {{ winner_assignment.alliance.win_count }}</small>
+                                    <small class="text-muted">Количество побед: {{ winner_assignment.alliance.win_count }}</small>
                                 {% else %}
                                     <i class="bi bi-question-circle text-muted mb-2" style="font-size: 2rem;"></i>
-                                    <h6 class="text-muted">No Winner Назначен</h6>
-                                    <p class="text-muted">This event doesn't have a winning alliance yet.</p>
+                                    <h6 class="text-muted">Победитель не назначен</h6>
+                                    <p class="text-muted">У этого события еще нет победившего альянса.</p>
                                     <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-success btn-sm">
-                                        <i class="bi bi-trophy me-1"></i>Assign Winner
+                                        <i class="bi bi-trophy me-1"></i>Назначить победителя
                                     </a>
                                 {% endif %}
                             </div>
@@ -156,26 +156,26 @@
         <div class="card">
             <div class="card-header">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-bar-chart me-2"></i>Event Summary
+                    <i class="bi bi-bar-chart me-2"></i>Сводка по событию
                 </h6>
             </div>
             <div class="card-body">
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
-                        <span>Completion Status:</span>
+                        <span>Статус завершения:</span>
                         {% if event.has_mvp and event.has_winner %}
-                            <span class="badge bg-success">Complete</span>
+                            <span class="badge bg-success">Завершено</span>
                         {% elif event.has_mvp or event.has_winner %}
-                            <span class="badge bg-warning">Partial</span>
+                            <span class="badge bg-warning">Частично</span>
                         {% else %}
-                            <span class="badge bg-danger">Incomplete</span>
+                            <span class="badge bg-danger">Незавершено</span>
                         {% endif %}
                     </div>
                 </div>
                 
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
-                        <span>Created:</span>
+                        <span>Создано:</span>
                         <small class="text-muted">
                             {{ event.created_at.strftime('%Y-%m-%d') if event.created_at }}
                         </small>
@@ -187,19 +187,19 @@
                 <div class="d-grid gap-2">
                     {% if not event.has_mvp %}
                         <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-award me-1"></i>Assign MVP
+                            <i class="bi bi-award me-1"></i>Назначить MVP
                         </a>
                     {% endif %}
                     
                     {% if not event.has_winner %}
                         <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-trophy me-1"></i>Assign Winner
+                            <i class="bi bi-trophy me-1"></i>Назначить победителя
                         </a>
                     {% endif %}
                     
-                    <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-pencil me-1"></i>Edit Event
-                    </a>
+                                            <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-pencil me-1"></i>Редактировать событие
+                        </a>
                 </div>
             </div>
         </div>
