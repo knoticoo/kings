@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Alliances - King's Choice Management{% endblock %}
+{% block title %}Альянсы - Управление King's Choice{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,14 +8,14 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-shield-fill me-2"></i>Alliances Management
+                <i class="bi bi-shield-fill me-2"></i>Управление альянсами
             </h1>
             <div class="btn-group">
                 <a href="{{ url_for('alliances.add_alliance') }}" class="btn btn-primary">
-                    <i class="bi bi-shield-plus me-1"></i>Add Alliance
+                    <i class="bi bi-shield-plus me-1"></i>Добавить альянс
                 </a>
                 <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-success">
-                    <i class="bi bi-trophy me-1"></i>Assign Winner
+                    <i class="bi bi-trophy me-1"></i>Назначить победителя
                 </a>
             </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-arrow-repeat me-2"></i>Winner Rotation Status
+                    <i class="bi bi-arrow-repeat me-2"></i>Статус ротации победителей
                 </h5>
             </div>
             <div class="card-body">
@@ -48,8 +48,8 @@
                     <div class="alert alert-success d-flex align-items-center mb-0">
                         <i class="bi bi-check-circle-fill me-2"></i>
                         <div>
-                            <strong>Winner Assignment Available</strong><br>
-                            <small>Eligible alliances: 
+                            <strong>Назначение победителя доступно</strong><br>
+                            <small>Подходящие альянсы: 
                                 {% for alliance in eligible_alliances %}
                                     <span class="badge bg-success me-1">{{ alliance.name }}</span>
                                 {% endfor %}
@@ -60,8 +60,8 @@
                     <div class="alert alert-warning d-flex align-items-center mb-0">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         <div>
-                            <strong>Winner Assignment Locked</strong><br>
-                            <small>Not all alliances have won yet. Complete the current rotation first.</small>
+                            <strong>Назначение победителя заблокировано</strong><br>
+                            <small>Не все альянсы еще побеждали. Сначала завершите текущую ротацию.</small>
                         </div>
                     </div>
                 {% endif %}
@@ -76,7 +76,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-list me-2"></i>All Alliances
+                    <i class="bi bi-list me-2"></i>Все альянсы
                 </h5>
             </div>
             <div class="card-body">
@@ -85,11 +85,11 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Alliance</th>
-                                    <th>Status</th>
-                                    <th>Win Count</th>
-                                    <th>Created</th>
-                                    <th>Actions</th>
+                                    <th>Альянс</th>
+                                    <th>Статус</th>
+                                    <th>Количество побед</th>
+                                    <th>Создан</th>
+                                    <th>Действия</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,7 +98,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             {% if alliance.is_current_winner %}
-                                                <i class="bi bi-trophy-fill text-warning me-2" title="Current Winner"></i>
+                                                <i class="bi bi-trophy-fill text-warning me-2" title="Текущий победитель"></i>
                                             {% else %}
                                                 <i class="bi bi-shield text-muted me-2"></i>
                                             {% endif %}
@@ -108,15 +108,15 @@
                                     <td>
                                         {% if alliance.is_current_winner %}
                                             <span class="badge bg-warning text-dark">
-                                                <i class="bi bi-trophy me-1"></i>Current Winner
+                                                <i class="bi bi-trophy me-1"></i>Текущий победитель
                                             </span>
                                         {% elif alliance.win_count > 0 %}
                                             <span class="badge bg-success">
-                                                <i class="bi bi-check-circle me-1"></i>Former Winner
+                                                <i class="bi bi-check-circle me-1"></i>Бывший победитель
                                             </span>
                                         {% else %}
                                             <span class="badge bg-secondary">
-                                                <i class="bi bi-dash-circle me-1"></i>Never Won
+                                                <i class="bi bi-dash-circle me-1"></i>Никогда не побеждал
                                             </span>
                                         {% endif %}
                                     </td>
@@ -131,11 +131,11 @@
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ url_for('alliances.edit_alliance', alliance_id=alliance.id) }}" 
-                                               class="btn btn-outline-primary" title="Edit Alliance">
+                                               class="btn btn-outline-primary" title="Редактировать альянс">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <button type="button" class="btn btn-outline-danger" 
-                                                    title="Delete Alliance"
+                                                    title="Удалить альянс"
                                                     onclick="confirmDelete('{{ alliance.name }}', {{ alliance.id }})">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -153,7 +153,7 @@
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h5 class="text-primary">{{ alliances|length }}</h5>
-                                    <small class="text-muted">Total Alliances</small>
+                                    <small class="text-muted">Всего альянсов</small>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +163,7 @@
                                     <h5 class="text-warning">
                                         {{ alliances|selectattr('is_current_winner', 'equalto', true)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Current Winner</small>
+                                    <small class="text-muted">Текущий победитель</small>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +173,7 @@
                                     <h5 class="text-success">
                                         {{ alliances|selectattr('win_count', 'greaterthan', 0)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Former Winners</small>
+                                    <small class="text-muted">Бывшие победители</small>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                                     <h5 class="text-info">
                                         {{ alliances|sum(attribute='win_count') }}
                                     </h5>
-                                    <small class="text-muted">Total Wins</small>
+                                    <small class="text-muted">Всего побед</small>
                                 </div>
                             </div>
                         </div>
@@ -191,10 +191,10 @@
                 {% else %}
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-shield" style="font-size: 4rem;"></i>
-                        <h4 class="mt-3">No Alliances Yet</h4>
-                        <p>No alliances have been added to the system yet.</p>
+                        <h4 class="mt-3">Пока нет альянсов</h4>
+                        <p>Альянсы еще не добавлены в систему.</p>
                         <a href="{{ url_for('alliances.add_alliance') }}" class="btn btn-primary">
-                            <i class="bi bi-shield-plus me-1"></i>Add First Alliance
+                            <i class="bi bi-shield-plus me-1"></i>Добавить первый альянс
                         </a>
                     </div>
                 {% endif %}
@@ -208,21 +208,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
+                <h5 class="modal-title">Подтвердить удаление</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete alliance <strong id="allianceName"></strong>?</p>
+                <p>Вы уверены, что хотите удалить альянс <strong id="allianceName"></strong>?</p>
                 <div class="alert alert-warning">
                     <i class="bi bi-exclamation-triangle me-2"></i>
-                    This will also delete all winner assignments for this alliance and cannot be undone.
+                    Это также удалит все назначения победителей для этого альянса и не может быть отменено.
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
                 <form id="deleteForm" method="POST" style="display: inline;">
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-1"></i>Delete Alliance
+                        <i class="bi bi-trash me-1"></i>Удалить альянс
                     </button>
                 </form>
             </div>
@@ -244,7 +244,7 @@ function confirmDelete(allianceName, allianceId) {
 // Auto-refresh rotation status every 30 seconds
 setInterval(function() {
     // You can add AJAX call here to refresh rotation status
-    console.log('Checking rotation status...');
+    console.log('Проверка статуса ротации...');
 }, 30000);
 </script>
 {% endblock %}

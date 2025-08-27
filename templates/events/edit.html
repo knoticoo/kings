@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Edit Event - King's Choice Management{% endblock %}
+{% block title %}Редактировать событие - Управление King's Choice{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-pencil-square me-2"></i>Edit Event
+                <i class="bi bi-pencil-square me-2"></i>Редактировать событие
             </h1>
             <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Back to Events
+                <i class="bi bi-arrow-left me-1"></i>Назад к событиям
             </a>
         </div>
     </div>
@@ -21,14 +21,14 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-pencil me-2"></i>Edit Event Information
+                    <i class="bi bi-pencil me-2"></i>Редактировать информацию о событии
                 </h5>
             </div>
             <div class="card-body">
                 <form method="POST" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">
-                            <i class="bi bi-calendar-event me-1"></i>Event Name
+                            <i class="bi bi-calendar-event me-1"></i>Название события
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" 
@@ -42,7 +42,7 @@
                     
                     <div class="mb-3">
                         <label for="description" class="form-label">
-                            <i class="bi bi-text-paragraph me-1"></i>Description (Optional)
+                            <i class="bi bi-text-paragraph me-1"></i>Описание (необязательно)
                         </label>
                         <textarea class="form-control" 
                                   id="description" 
@@ -52,7 +52,7 @@
                     
                     <div class="mb-3">
                         <label for="event_date" class="form-label">
-                            <i class="bi bi-clock me-1"></i>Event Date & Time
+                            <i class="bi bi-clock me-1"></i>Дата и время события
                         </label>
                         <input type="datetime-local" 
                                class="form-control" 
@@ -63,10 +63,10 @@
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-check-circle me-2"></i>Update Event
+                            <i class="bi bi-check-circle me-2"></i>Обновить событие
                         </button>
                         <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-1"></i>Cancel
+                            <i class="bi bi-x-circle me-1"></i>Отменить
                         </a>
                     </div>
                 </form>

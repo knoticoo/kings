@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Add Alliance - King's Choice Management{% endblock %}
+{% block title %}Добавить альянс - Управление King's Choice{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,10 +8,10 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-shield-plus me-2"></i>Add New Alliance
+                <i class="bi bi-shield-plus me-2"></i>Добавить новый альянс
             </h1>
             <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Back to Alliances
+                <i class="bi bi-arrow-left me-1"></i>Назад к альянсам
             </a>
         </div>
     </div>
@@ -22,42 +22,42 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-shield-check me-2"></i>Alliance Information
+                    <i class="bi bi-shield-check me-2"></i>Информация о альянсе
                 </h5>
             </div>
             <div class="card-body">
                 <form method="POST" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">
-                            <i class="bi bi-shield me-1"></i>Alliance Name
+                            <i class="bi bi-shield me-1"></i>Название альянса
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" 
                                class="form-control" 
                                id="name" 
                                name="name" 
-                               placeholder="Enter alliance name"
+                               placeholder="Введите название альянса"
                                required
                                autocomplete="off"
                                maxlength="100">
                         <div class="form-text">
                             <i class="bi bi-info-circle me-1"></i>
-                            Alliance names must be unique and cannot exceed 100 characters.
+                            Названия альянсов должны быть уникальными и не могут превышать 100 символов.
                         </div>
                     </div>
                     
                     <div class="alert alert-info">
                         <i class="bi bi-lightbulb me-2"></i>
-                        <strong>Winner Rotation:</strong> New alliances will be eligible for winner assignment 
-                        after all current alliances have won at least once.
+                        <strong>Ротация победителей:</strong> Новые альянсы смогут претендовать на назначение победителя 
+                        после того, как все текущие альянсы победят хотя бы один раз.
                     </div>
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-plus-circle me-2"></i>Add Alliance
+                            <i class="bi bi-plus-circle me-2"></i>Добавить альянс
                         </button>
                         <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-1"></i>Cancel
+                            <i class="bi bi-x-circle me-1"></i>Отменить
                         </a>
                     </div>
                 </form>
@@ -68,26 +68,26 @@
         <div class="card mt-4">
             <div class="card-header bg-light">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-question-circle me-2"></i>Need Help?
+                    <i class="bi bi-question-circle me-2"></i>Нужна помощь?
                 </h6>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        Use meaningful alliance names that represent groups or guilds
+                        Используйте осмысленные названия альянсов, которые отражают группы или гильдии
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        Alliance names must be unique across the system
+                        Названия альянсов должны быть уникальными в системе
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        Once added, alliances can be assigned as winners when their turn comes
+                        После добавления альянсы могут быть назначены победителями, когда придет их очередь
                     </li>
                     <li class="mb-0">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        You can edit or delete alliances later if needed
+                        При необходимости вы можете редактировать или удалять альянсы позже
                     </li>
                 </ul>
             </div>
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 feedback.className = 'invalid-feedback';
                 nameInput.parentNode.appendChild(feedback);
             }
-            feedback.textContent = 'Alliance name is required.';
+            feedback.textContent = 'Название альянса обязательно.';
         }
     });
     
