@@ -161,6 +161,40 @@ def delete_player(player_id):
     
     return redirect(url_for('players.list_players'))
 
+@bp.route('/toggle-exclusion/<int:player_id>', methods=['POST'])
+def toggle_exclusion(player_id):
+    """
+    Toggle exclusion status for a player
+    
+    Args:
+        player_id: ID of player to toggle exclusion for
+    
+    Excludes/includes player from MVP rotation while keeping them visible in the list
+    """
+    try:
+        player = Player.query.get_or_404(player_id)
+        
+        # Toggle exclusion status
+        player.is_excluded = not player.is_excluded
+        
+        # If excluding the current MVP, remove their MVP status
+        if player.is_excluded and player.is_current_mvp:
+            player.is_current_mvp = False
+            flash(f'Игрок "{player.name}" исключен из ротации MVP и снят с поста текущего MVP', 'warning')
+        elif player.is_excluded:
+            flash(f'Игрок "{player.name}" исключен из ротации MVP', 'info')
+        else:
+            flash(f'Игрок "{player.name}" включен в ротацию MVP', 'success')
+        
+        db.session.commit()
+        
+    except Exception as e:
+        print(f"Error toggling exclusion: {str(e)}")
+        db.session.rollback()
+        flash('Не удалось изменить статус исключения', 'error')
+    
+    return redirect(url_for('players.list_players'))
+
 @bp.route('/assign-mvp', methods=['GET', 'POST'])
 def assign_mvp():
     """

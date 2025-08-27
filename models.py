@@ -20,6 +20,7 @@ class Player(db.Model):
         id: Primary key
         name: Player name (unique)
         is_current_mvp: Boolean flag for current MVP status
+        is_excluded: Boolean flag for exclusion from MVP rotation
         mvp_count: Total number of times this player was MVP
         created_at: When player was added
         updated_at: Last modification time
@@ -29,6 +30,7 @@ class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
     is_current_mvp = db.Column(db.Boolean, default=False, nullable=False)
+    is_excluded = db.Column(db.Boolean, default=False, nullable=False)
     mvp_count = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -45,6 +47,7 @@ class Player(db.Model):
             'id': self.id,
             'name': self.name,
             'is_current_mvp': self.is_current_mvp,
+            'is_excluded': self.is_excluded,
             'mvp_count': self.mvp_count,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None
