@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Add Event - King's Choice Management{% endblock %}
+{% block title %}Добавить событие - Управление King's Choice{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-calendar-plus me-2"></i>Add New Event
+                <i class="bi bi-calendar-plus me-2"></i>Добавить новое событие
             </h1>
             <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Back to Events
+                <i class="bi bi-arrow-left me-1"></i>Назад к событиям
             </a>
         </div>
     </div>
@@ -21,39 +21,39 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-calendar-event me-2"></i>Event Information
+                    <i class="bi bi-calendar-event me-2"></i>Информация о событии
                 </h5>
             </div>
             <div class="card-body">
                 <form method="POST" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">
-                            <i class="bi bi-calendar-event me-1"></i>Event Name
+                            <i class="bi bi-calendar-event me-1"></i>Название события
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" 
                                class="form-control" 
                                id="name" 
                                name="name" 
-                               placeholder="Enter event name"
+                               placeholder="Введите название события"
                                required
                                maxlength="200">
                     </div>
                     
                     <div class="mb-3">
                         <label for="description" class="form-label">
-                            <i class="bi bi-text-paragraph me-1"></i>Description (Optional)
+                            <i class="bi bi-text-paragraph me-1"></i>Описание (необязательно)
                         </label>
                         <textarea class="form-control" 
                                   id="description" 
                                   name="description" 
                                   rows="3"
-                                  placeholder="Enter event description..."></textarea>
+                                  placeholder="Введите описание события..."></textarea>
                     </div>
                     
                     <div class="mb-3">
                         <label for="event_date" class="form-label">
-                            <i class="bi bi-clock me-1"></i>Event Date & Time
+                            <i class="bi bi-clock me-1"></i>Дата и время события
                         </label>
                         <input type="datetime-local" 
                                class="form-control" 
@@ -61,21 +61,21 @@
                                name="event_date">
                         <div class="form-text">
                             <i class="bi bi-info-circle me-1"></i>
-                            Leave blank to use current date and time.
+                            Оставьте пустым, чтобы использовать текущую дату и время.
                         </div>
                     </div>
                     
                     <div class="alert alert-info">
                         <i class="bi bi-lightbulb me-2"></i>
-                        <strong>Next Steps:</strong> After creating the event, you can assign MVP and winner from their respective management pages.
+                        <strong>Следующие шаги:</strong> После создания события вы можете назначить MVP и победителя на соответствующих страницах управления.
                     </div>
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-plus-circle me-2"></i>Create Event
+                            <i class="bi bi-plus-circle me-2"></i>Создать событие
                         </button>
                         <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-1"></i>Cancel
+                            <i class="bi bi-x-circle me-1"></i>Отменить
                         </a>
                     </div>
                 </form>
