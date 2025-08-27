@@ -5,7 +5,7 @@ Flask==3.0.0
 Flask-SQLAlchemy==3.1.1
 
 # Database
-SQLAlchemy==2.0.23
+SQLAlchemy==2.0.35
 
 # Development dependencies (optional for production)
 python-dotenv==1.0.0

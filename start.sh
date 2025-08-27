@@ -289,15 +289,14 @@ start_app() {
             --workers 4 \
             --worker-class sync \
             --timeout 60 \
-            --keepalive 2 \
             --max-requests 1000 \
             --max-requests-jitter 100 \
-            --log-file "$LOG_FILE" \
+            --access-logfile "$LOG_FILE" \
             --error-logfile "$ERROR_LOG" \
             --log-level info \
             --daemon \
             --pid "$PID_FILE" \
-            app:app
+            app:app > /dev/null 2>&1 &
     else
         print_warning "Gunicorn not found, using Flask development server..."
         nohup python3 app.py > "$LOG_FILE" 2> "$ERROR_LOG" &
