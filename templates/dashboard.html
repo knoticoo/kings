@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 text-primary">
+                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+            </h1>
+            <div class="text-muted">
+                <i class="bi bi-clock me-1"></i>
+                <span id="current-time"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Display -->
+{% if error %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ error }}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Players</h5>
+                        <h2 class="mb-0">{{ total_players }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-people-fill fs-1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('players.list_players') }}" class="text-white text-decoration-none">
+                    <small>View all players <i class="bi bi-arrow-right"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Alliances</h5>
+                        <h2 class="mb-0">{{ total_alliances }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-shield-fill fs-1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('alliances.list_alliances') }}" class="text-white text-decoration-none">
+                    <small>View all alliances <i class="bi bi-arrow-right"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Events</h5>
+                        <h2 class="mb-0">{{ total_events }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-calendar-event-fill fs-1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('events.list_events') }}" class="text-white text-decoration-none">
+                    <small>View all events <i class="bi bi-arrow-right"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-dark h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">Quick Actions</h5>
+                        <p class="mb-0">Add & Assign</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-lightning-fill fs-1"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ url_for('players.add_player') }}">
+                            <i class="bi bi-person-plus me-2"></i>Add Player
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('alliances.add_alliance') }}">
+                            <i class="bi bi-shield-plus me-2"></i>Add Alliance
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('events.add_event') }}">
+                            <i class="bi bi-calendar-plus me-2"></i>Add Event
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ url_for('players.assign_mvp') }}">
+                            <i class="bi bi-award me-2"></i>Assign MVP
+                        </a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('alliances.assign_winner') }}">
+                            <i class="bi bi-trophy me-2"></i>Assign Winner
+                        </a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Current Status -->
+<div class="row mb-4">
+    <!-- Current MVP -->
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-award-fill me-2"></i>Current MVP
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if current_mvp %}
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-trophy-fill text-warning" style="font-size: 3rem;"></i>
+                        </div>
+                        <h4 class="text-primary">{{ current_mvp.name }}</h4>
+                        <p class="text-muted mb-1">MVP Count: {{ current_mvp.mvp_count }}</p>
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i>
+                            Last updated: {{ current_mvp.updated_at.strftime('%Y-%m-%d %H:%M') if current_mvp.updated_at }}
+                        </small>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted">
+                        <i class="bi bi-question-circle" style="font-size: 3rem;"></i>
+                        <h5 class="mt-2">No MVP Assigned</h5>
+                        <p>No player currently holds the MVP title.</p>
+                        <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-award me-1"></i>Assign MVP
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Current Winner -->
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-trophy-fill me-2"></i>Current Winner
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if current_winner %}
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="bi bi-shield-fill-check text-success" style="font-size: 3rem;"></i>
+                        </div>
+                        <h4 class="text-success">{{ current_winner.name }}</h4>
+                        <p class="text-muted mb-1">Win Count: {{ current_winner.win_count }}</p>
+                        <small class="text-muted">
+                            <i class="bi bi-clock me-1"></i>
+                            Last updated: {{ current_winner.updated_at.strftime('%Y-%m-%d %H:%M') if current_winner.updated_at }}
+                        </small>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted">
+                        <i class="bi bi-question-circle" style="font-size: 3rem;"></i>
+                        <h5 class="mt-2">No Winner Assigned</h5>
+                        <p>No alliance currently holds the winner title.</p>
+                        <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-success btn-sm">
+                            <i class="bi bi-trophy me-1"></i>Assign Winner
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Events -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history me-2"></i>Recent Events
+                    </h5>
+                    <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-primary btn-sm">
+                        View All Events
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if recent_events %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Date</th>
+                                    <th>MVP</th>
+                                    <th>Winner</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for event in recent_events[:5] %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ event.name }}</strong>
+                                        {% if event.description %}
+                                            <br><small class="text-muted">{{ event.description[:50] }}{% if event.description|length > 50 %}...{% endif %}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>{{ event.event_date.strftime('%Y-%m-%d %H:%M') if event.event_date }}</small>
+                                    </td>
+                                    <td>
+                                        {% if event.has_mvp %}
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-award-fill me-1"></i>Assigned
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-dash-circle me-1"></i>Pending
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if event.has_winner %}
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-trophy-fill me-1"></i>Assigned
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-dash-circle me-1"></i>Pending
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if event.has_mvp and event.has_winner %}
+                                            <span class="badge bg-success">Complete</span>
+                                        {% elif event.has_mvp or event.has_winner %}
+                                            <span class="badge bg-warning">Partial</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Incomplete</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-calendar-x" style="font-size: 3rem;"></i>
+                        <h5 class="mt-2">No Events Yet</h5>
+                        <p>No events have been created yet.</p>
+                        <a href="{{ url_for('events.add_event') }}" class="btn btn-primary">
+                            <i class="bi bi-calendar-plus me-1"></i>Create First Event
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Update current time
+function updateTime() {
+    const now = new Date();
+    const timeString = now.toLocaleString();
+    document.getElementById('current-time').textContent = timeString;
+}
+
+// Update time immediately and then every second
+updateTime();
+setInterval(updateTime, 1000);
+
+// Auto-refresh dashboard data every 30 seconds
+setInterval(function() {
+    // You can add AJAX calls here to refresh data without page reload
+    // For now, we'll just update the timestamp
+    updateTime();
+}, 30000);
+</script>
+{% endblock %}

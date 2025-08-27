@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Alliance - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 text-primary">
+                <i class="bi bi-pencil-square me-2"></i>Edit Alliance
+            </h1>
+            <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back to Alliances
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h6 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>Current Alliance Information
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Current Name:</strong><br>
+                        <span class="text-primary">{{ alliance.name }}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>Winner Status:</strong><br>
+                        {% if alliance.is_current_winner %}
+                            <span class="badge bg-warning text-dark">
+                                <i class="bi bi-trophy-fill me-1"></i>Current Winner
+                            </span>
+                        {% elif alliance.win_count > 0 %}
+                            <span class="badge bg-success">
+                                <i class="bi bi-award me-1"></i>Former Winner ({{ alliance.win_count }}x)
+                            </span>
+                        {% else %}
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-dash-circle me-1"></i>Never Won
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pencil me-2"></i>Edit Alliance Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="bi bi-shield me-1"></i>Alliance Name
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="name" 
+                               name="name" 
+                               value="{{ alliance.name }}"
+                               required
+                               maxlength="100">
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-check-circle me-2"></i>Update Alliance
+                        </button>
+                        <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
