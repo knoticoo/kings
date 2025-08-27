@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Players - King's Choice Management{% endblock %}
+{% block title %}Игроки - Управление King's Choice{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,14 +8,14 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-people-fill me-2"></i>Players Management
+                <i class="bi bi-people-fill me-2"></i>Управление игроками
             </h1>
             <div class="btn-group">
                 <a href="{{ url_for('players.add_player') }}" class="btn btn-primary">
-                    <i class="bi bi-person-plus me-1"></i>Add Player
+                    <i class="bi bi-person-plus me-1"></i>Добавить игрока
                 </a>
                 <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-success">
-                    <i class="bi bi-award me-1"></i>Assign MVP
+                    <i class="bi bi-award me-1"></i>Назначить MVP
                 </a>
             </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-arrow-repeat me-2"></i>MVP Rotation Status
+                    <i class="bi bi-arrow-repeat me-2"></i>Статус ротации MVP
                 </h5>
             </div>
             <div class="card-body">
@@ -48,8 +48,8 @@
                     <div class="alert alert-success d-flex align-items-center mb-0">
                         <i class="bi bi-check-circle-fill me-2"></i>
                         <div>
-                            <strong>MVP Assignment Available</strong><br>
-                            <small>Eligible players: 
+                            <strong>Назначение MVP доступно</strong><br>
+                            <small>Подходящие игроки: 
                                 {% for player in eligible_players %}
                                     <span class="badge bg-primary me-1">{{ player.name }}</span>
                                 {% endfor %}
@@ -76,7 +76,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-list me-2"></i>All Players
+                    <i class="bi bi-list me-2"></i>Все игроки
                 </h5>
             </div>
             <div class="card-body">
@@ -85,11 +85,11 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Player</th>
-                                    <th>Status</th>
-                                    <th>MVP Count</th>
-                                    <th>Created</th>
-                                    <th>Actions</th>
+                                    <th>Игрок</th>
+                                    <th>Статус</th>
+                                    <th>Количество MVP</th>
+                                    <th>Создан</th>
+                                    <th>Действия</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,7 +98,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             {% if player.is_current_mvp %}
-                                                <i class="bi bi-trophy-fill text-warning me-2" title="Current MVP"></i>
+                                                <i class="bi bi-trophy-fill text-warning me-2" title="Текущий MVP"></i>
                                             {% else %}
                                                 <i class="bi bi-person-circle text-muted me-2"></i>
                                             {% endif %}
@@ -108,15 +108,15 @@
                                     <td>
                                         {% if player.is_current_mvp %}
                                             <span class="badge bg-warning text-dark">
-                                                <i class="bi bi-award me-1"></i>Current MVP
+                                                <i class="bi bi-award me-1"></i>Текущий MVP
                                             </span>
                                         {% elif player.mvp_count > 0 %}
                                             <span class="badge bg-success">
-                                                <i class="bi bi-check-circle me-1"></i>Former MVP
+                                                <i class="bi bi-check-circle me-1"></i>Предыдущий MVP
                                             </span>
                                         {% else %}
                                             <span class="badge bg-secondary">
-                                                <i class="bi bi-dash-circle me-1"></i>Never MVP
+                                                <i class="bi bi-dash-circle me-1"></i>Никогда не был MVP
                                             </span>
                                         {% endif %}
                                     </td>
@@ -131,11 +131,11 @@
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ url_for('players.edit_player', player_id=player.id) }}" 
-                                               class="btn btn-outline-primary" title="Edit Player">
+                                               class="btn btn-outline-primary" title="Редактировать игрока">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             <button type="button" class="btn btn-outline-danger" 
-                                                    title="Delete Player"
+                                                    title="Удалить игрока"
                                                     onclick="confirmDelete('{{ player.name }}', {{ player.id }})">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -153,7 +153,7 @@
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h5 class="text-primary">{{ players|length }}</h5>
-                                    <small class="text-muted">Total Players</small>
+                                    <small class="text-muted">Всего игроков</small>
                                 </div>
                             </div>
                         </div>
@@ -163,7 +163,7 @@
                                     <h5 class="text-warning">
                                         {{ players|selectattr('is_current_mvp', 'equalto', true)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Current MVP</small>
+                                    <small class="text-muted">Текущий MVP</small>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +173,7 @@
                                     <h5 class="text-success">
                                         {{ players|selectattr('mvp_count', 'greaterthan', 0)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Former MVPs</small>
+                                    <small class="text-muted">Предыдущие MVP</small>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                                     <h5 class="text-info">
                                         {{ players|sum(attribute='mvp_count') }}
                                     </h5>
-                                    <small class="text-muted">Total MVP Awards</small>
+                                    <small class="text-muted">Всего наград MVP</small>
                                 </div>
                             </div>
                         </div>
@@ -191,10 +191,10 @@
                 {% else %}
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-people" style="font-size: 4rem;"></i>
-                        <h4 class="mt-3">No Players Yet</h4>
-                        <p>No players have been added to the system yet.</p>
+                        <h4 class="mt-3">Пока нет игроков</h4>
+                        <p>Игроки ещё не добавлены в систему.</p>
                         <a href="{{ url_for('players.add_player') }}" class="btn btn-primary">
-                            <i class="bi bi-person-plus me-1"></i>Add First Player
+                            <i class="bi bi-person-plus me-1"></i>Добавить первого игрока
                         </a>
                     </div>
                 {% endif %}
@@ -208,21 +208,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
+                <h5 class="modal-title">Подтвердить удаление</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete player <strong id="playerName"></strong>?</p>
+                <p>Вы уверены, что хотите удалить игрока <strong id="playerName"></strong>?</p>
                 <div class="alert alert-warning">
                     <i class="bi bi-exclamation-triangle me-2"></i>
-                    This will also delete all MVP assignments for this player and cannot be undone.
+                    Это также удалит все назначения MVP для этого игрока и не может быть отменено.
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
                 <form id="deleteForm" method="POST" style="display: inline;">
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-1"></i>Delete Player
+                        <i class="bi bi-trash me-1"></i>Удалить игрока
                     </button>
                 </form>
             </div>
