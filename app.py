@@ -9,6 +9,10 @@ with rotation logic to ensure fair distribution of awards.
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from datetime import datetime
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
