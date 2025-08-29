@@ -8,7 +8,7 @@ import asyncio
 import logging
 from telegram import Bot
 from telegram.error import TelegramError
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 from russian_templates import format_mvp_announcement, format_winner_announcement
 
 # Configure logging
@@ -23,7 +23,7 @@ class KingsChoiceTelegramBot:
         self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
         self.channel_id = os.getenv('TELEGRAM_CHANNEL_ID')  # Should start with @channelname or -100...
         self.bot = None
-        self.translator = Translator()
+        self.translator = GoogleTranslator(source='auto', target='ru')
         
         if not self.bot_token:
             logger.warning("TELEGRAM_BOT_TOKEN not found in environment variables")
@@ -77,8 +77,7 @@ class KingsChoiceTelegramBot:
         """Translate text to Russian and send to channel"""
         try:
             # Translate to Russian
-            translated = self.translator.translate(text, dest='ru')
-            russian_text = translated.text
+            russian_text = self.translator.translate(text)
             
             logger.info(f"Translated text: {text[:30]}... -> {russian_text[:30]}...")
             
