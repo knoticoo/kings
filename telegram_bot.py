@@ -6,10 +6,14 @@ Handles automatic announcements for MVP and winner assignments
 import os
 import asyncio
 import logging
+from dotenv import load_dotenv
 from telegram import Bot
 from telegram.error import TelegramError
 from deep_translator import GoogleTranslator
 from russian_templates import format_mvp_announcement, format_winner_announcement
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
