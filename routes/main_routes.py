@@ -5,9 +5,10 @@ Handles the main dashboard and navigation routes.
 Shows current MVP player and winning alliance information.
 """
 
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment
 from database import db
+from telegram_bot import send_manual_message
 
 # Create blueprint for main routes
 bp = Blueprint('main', __name__)
@@ -106,3 +107,37 @@ def dashboard_data():
             'success': False,
             'error': str(e)
         }), 500
+
+@bp.route('/telegram-message', methods=['GET', 'POST'])
+def telegram_message():
+    """
+    Manual Telegram message posting interface
+    
+    GET: Show form to enter text
+    POST: Translate text to Russian and send to Telegram channel
+    """
+    if request.method == 'POST':
+        try:
+            message_text = request.form.get('message', '').strip()
+            
+            if not message_text:
+                flash('Message text is required', 'error')
+                return render_template('telegram_message.html')
+            
+            # Send message via Telegram (will be auto-translated to Russian)
+            success = send_manual_message(message_text)
+            
+            if success:
+                flash('Message sent successfully to Telegram channel!', 'success')
+                print(f"Manual Telegram message sent: {message_text[:50]}...")
+            else:
+                flash('Failed to send message to Telegram channel', 'error')
+                
+            return render_template('telegram_message.html')
+            
+        except Exception as e:
+            print(f"Error sending manual Telegram message: {str(e)}")
+            flash('An error occurred while sending the message', 'error')
+            return render_template('telegram_message.html')
+    
+    return render_template('telegram_message.html')

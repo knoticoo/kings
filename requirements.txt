@@ -23,3 +23,10 @@ click==8.1.7
 
 # For better JSON handling
 flask-cors==4.0.0
+
+# Telegram Bot
+python-telegram-bot==20.7
+requests==2.31.0
+
+# Translation
+googletrans==4.0.0
