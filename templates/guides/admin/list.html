@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _("Guide Management") }} - {{ _("King's Choice Management") }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('guides.list_guides') }}">{{ _("Guides") }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ _("Guide Management") }}</li>
+                    </ol>
+                </nav>
+                <h1 class="h2 text-primary">
+                    <i class="bi bi-gear me-2"></i>{{ _("Guide Management") }}
+                </h1>
+            </div>
+            <div>
+                <a href="{{ url_for('guides.add_guide') }}" class="btn btn-primary me-2">
+                    <i class="bi bi-plus me-1"></i>{{ _("Add Guide") }}
+                </a>
+                <a href="{{ url_for('guides.admin_categories') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-tags me-1"></i>{{ _("Manage Categories") }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ _("Total Guides") }}</h5>
+                        <h2 class="mb-0">{{ guides|length }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-book fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ _("Published") }}</h5>
+                        <h2 class="mb-0">{{ guides|selectattr('is_published')|list|length }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-check-circle fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ _("Featured") }}</h5>
+                        <h2 class="mb-0">{{ guides|selectattr('is_featured')|list|length }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-star fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ _("Categories") }}</h5>
+                        <h2 class="mb-0">{{ categories|length }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-tags fs-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Guides Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-list me-2"></i>{{ _("All Guides") }}
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if guides %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>{{ _("Title") }}</th>
+                                <th>{{ _("Category") }}</th>
+                                <th>{{ _("Status") }}</th>
+                                <th>{{ _("Views") }}</th>
+                                <th>{{ _("Created") }}</th>
+                                <th>{{ _("Actions") }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for guide in guides %}
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>{{ guide.title }}</strong>
+                                        {% if guide.is_featured %}
+                                        <span class="badge bg-warning ms-2">
+                                            <i class="bi bi-star-fill me-1"></i>{{ _("Featured") }}
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    {% if guide.excerpt %}
+                                    <small class="text-muted">{{ guide.excerpt[:100] }}{% if guide.excerpt|length > 100 %}...{% endif %}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">
+                                        <i class="bi bi-{{ guide.category.icon }} me-1"></i>{{ guide.category.name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if guide.is_published %}
+                                    <span class="badge bg-success">{{ _("Published") }}</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ _("Draft") }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <i class="bi bi-eye me-1"></i>{{ guide.view_count }}
+                                </td>
+                                <td>
+                                    <small>{{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{{ url_for('guides.view_guide', slug=guide.slug) }}" class="btn btn-outline-primary" title="{{ _('View') }}">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{{ url_for('guides.edit_guide', guide_id=guide.id) }}" class="btn btn-outline-warning" title="{{ _('Edit') }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" title="{{ _('Delete') }}" 
+                                                onclick="confirmDelete({{ guide.id }}, '{{ guide.title }}')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-book" style="font-size: 3rem;"></i>
+                    <h5 class="mt-2">{{ _("No guides found") }}</h5>
+                    <p>{{ _("Create your first guide to get started.") }}</p>
+                    <a href="{{ url_for('guides.add_guide') }}" class="btn btn-primary">
+                        <i class="bi bi-plus me-1"></i>{{ _("Add Guide") }}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ _("Confirm Delete") }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ _("Are you sure you want to delete the guide") }} "<span id="guideTitle"></span>"?</p>
+                <p class="text-danger"><strong>{{ _("This action cannot be undone.") }}</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">{{ _("Delete") }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(guideId, guideTitle) {
+    document.getElementById('guideTitle').textContent = guideTitle;
+    document.getElementById('deleteForm').action = "{{ url_for('guides.delete_guide', guide_id=0) }}".replace('0', guideId);
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}

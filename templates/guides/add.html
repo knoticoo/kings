@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _("Add Guide") }} - {{ _("Guides") }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('guides.list_guides') }}">{{ _("Guides") }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ _("Add Guide") }}</li>
+            </ol>
+        </nav>
+        <h1 class="h2 text-primary">
+            <i class="bi bi-plus-circle me-2"></i>{{ _("Add Guide") }}
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <form method="POST">
+            <div class="card">
+                <div class="card-body">
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">{{ _("Title") }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" required 
+                               placeholder="{{ _('Enter guide title') }}" value="{{ request.form.get('title', '') }}">
+                    </div>
+
+                    <!-- Category -->
+                    <div class="mb-3">
+                        <label for="category_id" class="form-label">{{ _("Category") }} <span class="text-danger">*</span></label>
+                        <select class="form-select" id="category_id" name="category_id" required>
+                            <option value="">{{ _("Select a category") }}</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}" {% if request.form.get('category_id') == category.id|string %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Excerpt -->
+                    <div class="mb-3">
+                        <label for="excerpt" class="form-label">{{ _("Excerpt") }}</label>
+                        <textarea class="form-control" id="excerpt" name="excerpt" rows="3" 
+                                  placeholder="{{ _('Brief description of the guide') }}">{{ request.form.get('excerpt', '') }}</textarea>
+                    </div>
+
+                    <!-- Featured Image -->
+                    <div class="mb-3">
+                        <label for="featured_image" class="form-label">{{ _("Featured Image URL") }}</label>
+                        <input type="url" class="form-control" id="featured_image" name="featured_image" 
+                               placeholder="{{ _('https://example.com/image.jpg') }}" value="{{ request.form.get('featured_image', '') }}">
+                    </div>
+
+                    <!-- Content -->
+                    <div class="mb-3">
+                        <label for="content" class="form-label">{{ _("Content") }} <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="content" name="content" rows="15" required 
+                                  placeholder="{{ _('Write your guide content here. You can use HTML tags for formatting.') }}">{{ request.form.get('content', '') }}</textarea>
+                        <div class="form-text">
+                            {{ _("You can use HTML tags for formatting:") }}<br>
+                            <code>&lt;h1&gt;</code>, <code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code> {{ _("for headings") }}<br>
+                            <code>&lt;strong&gt;</code>, <code>&lt;b&gt;</code> {{ _("for bold text") }}<br>
+                            <code>&lt;em&gt;</code>, <code>&lt;i&gt;</code> {{ _("for italic text") }}<br>
+                            <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, <code>&lt;li&gt;</code> {{ _("for lists") }}<br>
+                            <code>&lt;img src=\"url\"&gt;</code> {{ _("for images") }}<br>
+                            <code>&lt;table&gt;</code>, <code>&lt;tr&gt;</code>, <code>&lt;td&gt;</code> {{ _("for tables") }}
+                        </div>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_published" name="is_published" 
+                                   {% if request.form.get('is_published') %}checked{% endif %}>
+                            <label class="form-check-label" for="is_published">
+                                {{ _("Published") }}
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_featured" name="is_featured" 
+                                   {% if request.form.get('is_featured') %}checked{% endif %}>
+                            <label class="form-check-label" for="is_featured">
+                                {{ _("Featured") }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('guides.list_guides') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>{{ _("Cancel") }}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i>{{ _("Create Guide") }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>{{ _("Guide Tips") }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6>{{ _("Writing Tips") }}:</h6>
+                <ul class="small">
+                    <li>{{ _("Use clear, descriptive titles") }}</li>
+                    <li>{{ _("Write a helpful excerpt") }}</li>
+                    <li>{{ _("Use headings to organize content") }}</li>
+                    <li>{{ _("Include images when helpful") }}</li>
+                    <li>{{ _("Test your HTML formatting") }}</li>
+                </ul>
+                
+                <h6 class="mt-3">{{ _("HTML Examples") }}:</h6>
+                <div class="small">
+                    <strong>{{ _("Tier List") }}:</strong><br>
+                    <code>&lt;h2&gt;EX+&lt;/h2&gt;<br>&lt;ul&gt;<br>&lt;li&gt;Joan of Arc&lt;/li&gt;<br>&lt;/ul&gt;</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

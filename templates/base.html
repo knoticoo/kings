@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="{{ get_locale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Управление King's Choice{% endblock %}</title>
+    <title>{% block title %}{{ _("King's Choice Management") }}{% endblock %}</title>
     
     <!-- PWA Meta Tags -->
-    <meta name="description" content="Управление MVP и победителями для игры King's Choice">
+    <meta name="description" content="{{ _("King's Choice Management") }}">
     <meta name="theme-color" content="#0d6efd">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -39,7 +39,7 @@
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">
                 <i class="bi bi-crown-fill text-warning me-2"></i>
-                Управление King's Choice
+                {{ _("King's Choice Management") }}
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -51,32 +51,56 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" 
                            href="{{ url_for('main.dashboard') }}">
-                            <i class="bi bi-house-fill me-1"></i>Панель управления
+                            <i class="bi bi-house-fill me-1"></i>{{ _("Dashboard") }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint and 'players' in request.endpoint %}active{% endif %}" 
                            href="{{ url_for('players.list_players') }}">
-                            <i class="bi bi-people-fill me-1"></i>Игроки
+                            <i class="bi bi-people-fill me-1"></i>{{ _("Players") }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint and 'alliances' in request.endpoint %}active{% endif %}" 
                            href="{{ url_for('alliances.list_alliances') }}">
-                            <i class="bi bi-shield-fill me-1"></i>Альянсы
+                            <i class="bi bi-shield-fill me-1"></i>{{ _("Alliances") }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}" 
                            href="{{ url_for('events.list_events') }}">
-                            <i class="bi bi-calendar-event-fill me-1"></i>События
+                            <i class="bi bi-calendar-event-fill me-1"></i>{{ _("Events") }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint and 'guides' in request.endpoint %}active{% endif %}" 
+                           href="{{ url_for('guides.list_guides') }}">
+                            <i class="bi bi-book me-1"></i>{{ _("Guides") }}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'main.telegram_message' %}active{% endif %}" 
                            href="{{ url_for('main.telegram_message') }}">
-                            <i class="bi bi-telegram me-1"></i>Telegram
+                            <i class="bi bi-telegram me-1"></i>{{ _("Telegram") }}
                         </a>
+                    </li>
+                </ul>
+                
+                <!-- Language Switcher -->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-translate me-1"></i>
+                            {% if get_locale() == 'en' %}English{% else %}Русский{% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item {% if get_locale() == 'ru' %}active{% endif %}" href="{{ url_for('set_language', language='ru') }}">
+                                <i class="bi bi-flag me-2"></i>Русский
+                            </a></li>
+                            <li><a class="dropdown-item {% if get_locale() == 'en' %}active{% endif %}" href="{{ url_for('set_language', language='en') }}">
+                                <i class="bi bi-flag me-2"></i>English
+                            </a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -114,8 +138,8 @@
     <!-- Footer -->
     <footer class="bg-dark text-light mt-5 py-3">
         <div class="container text-center">
-            <small>&copy; 2024 Система управления King's Choice | 
-                <i class="bi bi-code-slash text-warning"></i> Создано с Flask & Bootstrap
+            <small>&copy; 2024 {{ _("King's Choice Management System") }} | 
+                <i class="bi bi-code-slash text-warning"></i> {{ _("Created with Flask & Bootstrap") }}
             </small>
         </div>
     </footer>
