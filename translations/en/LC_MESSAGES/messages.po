@@ -467,3 +467,19 @@ msgstr "Copied!"
 
 msgid "Close"
 msgstr "Close"
+
+# JavaScript export strings
+msgid "Blacklist ["
+msgstr "Blacklist ["
+
+msgid "]"
+msgstr "]"
+
+msgid "Alliances:"
+msgstr "Alliances:"
+
+msgid "Players:"
+msgstr "Players:"
+
+msgid "Blacklist Export -"
+msgstr "Blacklist Export -"

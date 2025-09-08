@@ -467,3 +467,19 @@ msgstr "Скопировано!"
 
 msgid "Close"
 msgstr "Закрыть"
+
+# JavaScript export strings
+msgid "Blacklist ["
+msgstr "Черный список ["
+
+msgid "]"
+msgstr "]"
+
+msgid "Alliances:"
+msgstr "Альянсы:"
+
+msgid "Players:"
+msgstr "Игроки:"
+
+msgid "Blacklist Export -"
+msgstr "Экспорт черного списка -"
