@@ -100,23 +100,42 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">{{ _("Quick Actions") }}</h5>
-                        <p class="mb-0">{{ _("Management Tools") }}</p>
+                        <h5 class="card-title">{{ _("Blacklist") }}</h5>
+                        <h2 class="mb-0">{{ total_blacklist_entries }}</h2>
                     </div>
                     <div class="align-self-center">
-                        <i class="bi bi-tools fs-1"></i>
+                        <i class="bi bi-shield-exclamation fs-1"></i>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <div class="d-grid gap-2">
-                    <a href="{{ url_for('blacklist.list_blacklist') }}" class="btn btn-outline-dark btn-sm">
-                        <i class="bi bi-shield-exclamation me-2"></i>{{ _("Blacklist") }}
-                    </a>
-                    <a href="{{ url_for('guides.list_guides') }}" class="btn btn-outline-dark btn-sm">
-                        <i class="bi bi-book me-2"></i>{{ _("Guides") }}
-                    </a>
+                <a href="{{ url_for('blacklist.list_blacklist') }}" class="text-dark text-decoration-none">
+                    <small>{{ _("View blacklist") }} <i class="bi bi-arrow-right"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Second Row of Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-secondary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ _("Guides") }}</h5>
+                        <h2 class="mb-0">{{ total_guides }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-book-fill fs-1"></i>
+                    </div>
                 </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('guides.list_guides') }}" class="text-white text-decoration-none">
+                    <small>{{ _("View all guides") }} <i class="bi bi-arrow-right"></i></small>
+                </a>
             </div>
         </div>
     </div>

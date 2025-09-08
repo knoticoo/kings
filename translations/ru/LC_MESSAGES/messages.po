@@ -126,6 +126,12 @@ msgstr "Посмотреть все альянсы"
 msgid "View all events"
 msgstr "Посмотреть все события"
 
+msgid "View blacklist"
+msgstr "Посмотреть черный список"
+
+msgid "View all guides"
+msgstr "Посмотреть все руководства"
+
 msgid "Create first event"
 msgstr "Создать первое событие"
 

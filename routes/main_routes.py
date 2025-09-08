@@ -6,7 +6,7 @@ Shows current MVP player and winning alliance information.
 """
 
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash
-from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment
+from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Guide
 from database import db
 from telegram_bot import send_manual_message
 
@@ -50,6 +50,8 @@ def dashboard():
         total_players = Player.query.count()
         total_alliances = Alliance.query.count()
         total_events = Event.query.count()
+        total_blacklist_entries = Blacklist.query.count()
+        total_guides = Guide.query.count()
         
         return render_template('dashboard.html', 
                              current_mvp=current_mvp,
@@ -57,11 +59,21 @@ def dashboard():
                              recent_events=recent_events,
                              total_players=total_players,
                              total_alliances=total_alliances,
-                             total_events=total_events)
+                             total_events=total_events,
+                             total_blacklist_entries=total_blacklist_entries,
+                             total_guides=total_guides)
     except Exception as e:
         print(f"Error in dashboard route: {str(e)}")
         return render_template('dashboard.html', 
-                             error="Failed to load dashboard data")
+                             error="Failed to load dashboard data",
+                             current_mvp=None,
+                             current_winner=None,
+                             recent_events=[],
+                             total_players=0,
+                             total_alliances=0,
+                             total_events=0,
+                             total_blacklist_entries=0,
+                             total_guides=0)
 
 @bp.route('/api/dashboard-data')
 def dashboard_data():

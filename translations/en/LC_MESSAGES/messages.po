@@ -126,6 +126,12 @@ msgstr "View all alliances"
 msgid "View all events"
 msgstr "View all events"
 
+msgid "View blacklist"
+msgstr "View blacklist"
+
+msgid "View all guides"
+msgstr "View all guides"
+
 msgid "Create first event"
 msgstr "Create first event"
 
