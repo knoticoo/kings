@@ -10,7 +10,7 @@ Handles all event-related operations:
 """
 
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
-from models import Event, Player, Alliance, MVPAssignment, WinnerAssignment
+from models import Event, Player, Alliance, MVPAssignment, WinnerAssignment, EventTemplate
 from database import db
 from datetime import datetime
 
@@ -258,9 +258,9 @@ def api_list_events():
 
 @bp.route('/api/available-for-mvp')
 def api_available_for_mvp():
-    """API endpoint to get events available for MVP assignment"""
+    """API endpoint to get all events for MVP assignment (including those with existing assignments)"""
     try:
-        events = Event.query.filter_by(has_mvp=False).order_by(Event.event_date.desc()).all()
+        events = Event.query.order_by(Event.event_date.desc()).all()
         return jsonify({
             'success': True,
             'events': [event.to_dict() for event in events]
@@ -273,9 +273,9 @@ def api_available_for_mvp():
 
 @bp.route('/api/available-for-winner')
 def api_available_for_winner():
-    """API endpoint to get events available for winner assignment"""
+    """API endpoint to get all events for winner assignment (including those with existing assignments)"""
     try:
-        events = Event.query.filter_by(has_winner=False).order_by(Event.event_date.desc()).all()
+        events = Event.query.order_by(Event.event_date.desc()).all()
         return jsonify({
             'success': True,
             'events': [event.to_dict() for event in events]

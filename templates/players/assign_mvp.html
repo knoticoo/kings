@@ -116,12 +116,15 @@
                                     <option value="{{ event.id }}">
                                         {{ event.name }}
                                         <small>({{ event.event_date.strftime('%Y-%m-%d') if event.event_date }})</small>
+                                        {% if event.has_mvp %}
+                                            - Уже есть MVP
+                                        {% endif %}
                                     </option>
                                 {% endfor %}
                             </select>
                             <div class="form-text">
                                 <i class="bi bi-info-circle me-1"></i>
-                                Показаны только события без MVP.
+                                Показаны все события. События с уже назначенным MVP можно переназначить.
                             </div>
                         </div>
                     </div>

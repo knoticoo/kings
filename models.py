@@ -194,3 +194,37 @@ class WinnerAssignment(db.Model):
             'alliance_name': self.alliance.name if self.alliance else None,
             'event_name': self.event.name if self.event else None
         }
+
+class EventTemplate(db.Model):
+    """
+    Event Template model - stores reusable event templates/presets
+    
+    This allows users to quickly create common events without typing them every time.
+    Templates can be used to create new events with predefined names and descriptions.
+    """
+    __tablename__ = 'event_templates'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text)
+    category = db.Column(db.String(50), default='General')  # Daily, Weekly, Special, Tournament, etc.
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    usage_count = db.Column(db.Integer, default=0, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<EventTemplate {self.name}>'
+    
+    def to_dict(self):
+        """Convert template to dictionary for API responses"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'category': self.category,
+            'is_active': self.is_active,
+            'usage_count': self.usage_count,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }

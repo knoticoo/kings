@@ -228,11 +228,15 @@ def assign_mvp():
             player = Player.query.get_or_404(player_id)
             event = Event.query.get_or_404(event_id)
             
-            # Check if event already has MVP
+            # Check if event already has MVP and handle reassignment
             existing_assignment = MVPAssignment.query.filter_by(event_id=event_id).first()
             if existing_assignment:
-                flash(f'Event "{event.name}" already has an MVP assigned', 'error')
-                return redirect(url_for('players.assign_mvp'))
+                # Allow reassignment - remove old assignment first
+                old_player = existing_assignment.player
+                old_player.is_current_mvp = False
+                old_player.mvp_count = max(0, old_player.mvp_count - 1)
+                db.session.delete(existing_assignment)
+                flash(f'Reassigning MVP for "{event.name}" from {old_player.name}', 'info')
             
             # Remove current MVP status from all players
             Player.query.update({'is_current_mvp': False})
@@ -273,8 +277,9 @@ def assign_mvp():
         can_assign = can_assign_mvp()
         eligible_players = get_eligible_players() if can_assign else []
         
-        # Get events that don't have MVP assigned yet
-        available_events = Event.query.filter_by(has_mvp=False).order_by(Event.event_date.desc()).all()
+        # Get all events (both with and without MVP assigned)
+        # This allows users to see all events and reassign if needed
+        available_events = Event.query.order_by(Event.event_date.desc()).all()
         
         return render_template('players/assign_mvp.html',
                              can_assign_mvp=can_assign,
