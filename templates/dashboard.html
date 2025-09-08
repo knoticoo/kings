@@ -334,13 +334,6 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="mvpExportType" class="form-label">{{ _("Export Type") }}</label>
-                    <select class="form-select" id="mvpExportType">
-                        <option value="mvp_only">{{ _("MVP Players Only") }}</option>
-                        <option value="all_players">{{ _("All Active Players") }}</option>
-                    </select>
-                </div>
-                <div class="mb-3">
                     <label for="mvpExportFormat" class="form-label">{{ _("Export Format") }}</label>
                     <select class="form-select" id="mvpExportFormat">
                         <option value="formatted">{{ _("Formatted Text") }}</option>
@@ -391,17 +384,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const mvpExportModal = document.getElementById('mvpExportModal');
     const mvpExportText = document.getElementById('mvpExportText');
     const mvpExportFormat = document.getElementById('mvpExportFormat');
-    const mvpExportType = document.getElementById('mvpExportType');
     
     mvpExportModal.addEventListener('show.bs.modal', function() {
         generateMvpExportText();
     });
     
     mvpExportFormat.addEventListener('change', function() {
-        generateMvpExportText();
-    });
-    
-    mvpExportType.addEventListener('change', function() {
         generateMvpExportText();
     });
     

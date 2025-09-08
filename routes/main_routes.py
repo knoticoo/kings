@@ -51,17 +51,13 @@ def dashboard():
         total_alliances = Alliance.query.count()
         total_events = Event.query.count()
         
-        # Get all active players for export functionality
-        all_active_players = Player.query.filter(Player.is_excluded == False).order_by(Player.name).all()
-        
         return render_template('dashboard.html', 
                              current_mvp=current_mvp,
                              current_winner=current_winner,
                              recent_events=recent_events,
                              total_players=total_players,
                              total_alliances=total_alliances,
-                             total_events=total_events,
-                             all_active_players=all_active_players)
+                             total_events=total_events)
     except Exception as e:
         print(f"Error in dashboard route: {str(e)}")
         return render_template('dashboard.html', 
