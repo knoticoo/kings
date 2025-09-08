@@ -34,9 +34,13 @@ def list_events():
         # Get assignment data for each event
         events_data = []
         for event in events:
+            # Get all MVP assignments for this event (since events can be reused)
+            mvp_assignments = MVPAssignment.query.filter_by(event_id=event.id).order_by(MVPAssignment.assigned_at.desc()).all()
+            
             event_info = {
                 'event': event,
-                'mvp_assignment': MVPAssignment.query.filter_by(event_id=event.id).first(),
+                'mvp_assignments': mvp_assignments,
+                'mvp_assignment': mvp_assignments[0] if mvp_assignments else None,  # Keep first for backward compatibility
                 'winner_assignment': WinnerAssignment.query.filter_by(event_id=event.id).first()
             }
             events_data.append(event_info)
@@ -202,18 +206,22 @@ def view_event(event_id):
     
     Shows:
     - Event details
-    - MVP assignment (if any)
+    - All MVP assignments (since events can be reused)
     - Winner assignment (if any)
     - Event history/timeline
     """
     try:
         event = Event.query.get_or_404(event_id)
-        mvp_assignment = MVPAssignment.query.filter_by(event_id=event_id).first()
+        
+        # Get ALL MVP assignments for this event (since events can be reused)
+        mvp_assignments = MVPAssignment.query.filter_by(event_id=event_id).order_by(MVPAssignment.assigned_at.desc()).all()
+        
+        # Get winner assignment (still only one per event)
         winner_assignment = WinnerAssignment.query.filter_by(event_id=event_id).first()
         
         return render_template('events/view.html',
                              event=event,
-                             mvp_assignment=mvp_assignment,
+                             mvp_assignments=mvp_assignments,
                              winner_assignment=winner_assignment)
         
     except Exception as e:
