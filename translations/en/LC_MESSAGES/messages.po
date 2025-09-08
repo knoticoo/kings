@@ -51,6 +51,9 @@ msgstr "Recent Events"
 msgid "Quick Actions"
 msgstr "Quick Actions"
 
+msgid "Management Tools"
+msgstr "Management Tools"
+
 msgid "Add Player"
 msgstr "Add Player"
 

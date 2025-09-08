@@ -51,6 +51,9 @@ msgstr "Последние события"
 msgid "Quick Actions"
 msgstr "Быстрые действия"
 
+msgid "Management Tools"
+msgstr "Инструменты управления"
+
 msgid "Add Player"
 msgstr "Добавить игрока"
 
