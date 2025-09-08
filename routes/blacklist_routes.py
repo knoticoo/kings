@@ -6,8 +6,7 @@ Allows adding, viewing, and removing blacklisted entries.
 """
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from models import Blacklist
-from database import db
+from blacklist_database import Blacklist, blacklist_db
 
 # Create blueprint for blacklist routes
 bp = Blueprint('blacklist', __name__, url_prefix='/blacklist')
@@ -73,15 +72,15 @@ def add_entry():
                 player_name=player_name if player_name else None
             )
             
-            db.session.add(new_entry)
-            db.session.commit()
+            blacklist_db.session.add(new_entry)
+            blacklist_db.session.commit()
             
             flash('Blacklist entry added successfully!', 'success')
             return redirect(url_for('blacklist.list_blacklist'))
             
         except Exception as e:
             print(f"Error adding blacklist entry: {str(e)}")
-            db.session.rollback()
+            blacklist_db.session.rollback()
             flash('Failed to add blacklist entry', 'error')
             return render_template('blacklist/add.html')
     
@@ -122,14 +121,14 @@ def edit_entry(entry_id):
             entry.alliance_name = alliance_name if alliance_name else None
             entry.player_name = player_name if player_name else None
             
-            db.session.commit()
+            blacklist_db.session.commit()
             
             flash('Blacklist entry updated successfully!', 'success')
             return redirect(url_for('blacklist.list_blacklist'))
             
         except Exception as e:
             print(f"Error updating blacklist entry: {str(e)}")
-            db.session.rollback()
+            blacklist_db.session.rollback()
             flash('Failed to update blacklist entry', 'error')
             return render_template('blacklist/edit.html', entry=entry)
     
@@ -145,14 +144,14 @@ def delete_entry(entry_id):
     try:
         entry = Blacklist.query.get_or_404(entry_id)
         
-        db.session.delete(entry)
-        db.session.commit()
+        blacklist_db.session.delete(entry)
+        blacklist_db.session.commit()
         
         flash('Blacklist entry deleted successfully!', 'success')
         
     except Exception as e:
         print(f"Error deleting blacklist entry: {str(e)}")
-        db.session.rollback()
+        blacklist_db.session.rollback()
         flash('Failed to delete blacklist entry', 'error')
     
     return redirect(url_for('blacklist.list_blacklist'))

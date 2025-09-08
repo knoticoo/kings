@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _("Edit Blacklist Entry") }} - {{ _("King's Choice Management") }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pencil me-2"></i>
+                    {{ _("Edit Blacklist Entry") }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="alliance_name" class="form-label">
+                            <i class="bi bi-shield me-1"></i>
+                            {{ _("Alliance Name") }}
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="alliance_name" 
+                               name="alliance_name" 
+                               placeholder="{{ _('Enter alliance name (optional)') }}"
+                               value="{{ request.form.get('alliance_name', entry.alliance_name or '') }}">
+                        <div class="form-text">
+                            {{ _("Leave empty if editing only a player without alliance") }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="player_name" class="form-label">
+                            <i class="bi bi-person me-1"></i>
+                            {{ _("Player Name") }}
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="player_name" 
+                               name="player_name" 
+                               placeholder="{{ _('Enter player name (optional)') }}"
+                               value="{{ request.form.get('player_name', entry.player_name or '') }}">
+                        <div class="form-text">
+                            {{ _("Leave empty if editing only an alliance") }}
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>{{ _("Note:") }}</strong> {{ _("You must provide either an alliance name or a player name (or both).") }}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('blacklist.list_blacklist') }}" class="btn btn-secondary me-md-2">
+                            <i class="bi bi-arrow-left me-1"></i>
+                            {{ _("Cancel") }}
+                        </a>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ _("Update Entry") }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Current Entry Info -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    {{ _("Current Entry") }}
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>{{ _("Alliance:") }}</strong>
+                        <p class="text-muted">{{ entry.alliance_name or _("Not specified") }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>{{ _("Player:") }}</strong>
+                        <p class="text-muted">{{ entry.player_name or _("Not specified") }}</p>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>{{ _("Created:") }}</strong>
+                        <p class="text-muted">{{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <strong>{{ _("Last Updated:") }}</strong>
+                        <p class="text-muted">{{ entry.updated_at.strftime('%Y-%m-%d %H:%M') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
