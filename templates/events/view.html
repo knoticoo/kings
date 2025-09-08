@@ -91,29 +91,61 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <!-- MVP Assignment -->
+                    <!-- MVP Assignments -->
                     <div class="col-md-6 mb-3">
                         <div class="card h-100">
                             <div class="card-header bg-primary text-white">
                                 <h6 class="card-title mb-0">
-                                    <i class="bi bi-trophy me-1"></i>Игрок MVP
+                                    <i class="bi bi-trophy me-1"></i>Игроки MVP
+                                    {% if mvp_assignments %}
+                                        <span class="badge bg-light text-primary ms-2">{{ mvp_assignments|length }}</span>
+                                    {% endif %}
                                 </h6>
                             </div>
-                            <div class="card-body text-center">
-                                {% if mvp_assignment %}
-                                    <i class="bi bi-person-fill-check text-primary mb-2" style="font-size: 2rem;"></i>
-                                    <h5 class="text-primary">{{ mvp_assignment.player.name }}</h5>
-                                    <p class="text-muted mb-1">
-                                        Назначен: {{ mvp_assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if mvp_assignment.assigned_at }}
-                                    </p>
-                                    <small class="text-muted">Количество MVP: {{ mvp_assignment.player.mvp_count }}</small>
+                            <div class="card-body">
+                                {% if mvp_assignments %}
+                                    <div class="text-center mb-3">
+                                        <i class="bi bi-person-fill-check text-primary mb-2" style="font-size: 2rem;"></i>
+                                        <h6 class="text-primary">История назначений MVP</h6>
+                                    </div>
+                                    
+                                    <div class="list-group list-group-flush">
+                                        {% for assignment in mvp_assignments %}
+                                        <div class="list-group-item px-0 py-2">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h6 class="mb-1 text-primary">
+                                                        <i class="bi bi-trophy-fill text-warning me-2"></i>
+                                                        {{ assignment.player.name }}
+                                                    </h6>
+                                                    <small class="text-muted">
+                                                        Назначен: {{ assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if assignment.assigned_at }}
+                                                    </small>
+                                                </div>
+                                                <div class="text-end">
+                                                    <small class="text-muted">
+                                                        MVP: {{ assignment.player.mvp_count }}x
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <div class="text-center mt-3">
+                                        <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-award me-1"></i>Назначить еще MVP
+                                        </a>
+                                    </div>
                                 {% else %}
-                                    <i class="bi bi-question-circle text-muted mb-2" style="font-size: 2rem;"></i>
-                                    <h6 class="text-muted">MVP не назначен</h6>
-                                    <p class="text-muted">У этого события еще нет MVP.</p>
-                                    <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-award me-1"></i>Назначить MVP
-                                    </a>
+                                    <div class="text-center">
+                                        <i class="bi bi-question-circle text-muted mb-2" style="font-size: 2rem;"></i>
+                                        <h6 class="text-muted">MVP не назначен</h6>
+                                        <p class="text-muted">У этого события еще нет MVP.</p>
+                                        <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-award me-1"></i>Назначить MVP
+                                        </a>
+                                    </div>
                                 {% endif %}
                             </div>
                         </div>
