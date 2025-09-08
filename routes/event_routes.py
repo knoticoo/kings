@@ -164,11 +164,11 @@ def delete_event(event_id):
         event_name = event.name
         
         # Get assignments before deletion to update counts
-        mvp_assignment = MVPAssignment.query.filter_by(event_id=event_id).first()
+        mvp_assignments = MVPAssignment.query.filter_by(event_id=event_id).all()
         winner_assignment = WinnerAssignment.query.filter_by(event_id=event_id).first()
         
-        # Update player MVP count if this event had an MVP
-        if mvp_assignment:
+        # Update player MVP counts if this event had MVPs
+        for mvp_assignment in mvp_assignments:
             player = mvp_assignment.player
             player.mvp_count = max(0, player.mvp_count - 1)
             # Remove current MVP status if this was the current MVP
@@ -241,10 +241,11 @@ def api_list_events():
         for event in events:
             event_dict = event.to_dict()
             
-            # Add MVP assignment info
-            mvp_assignment = MVPAssignment.query.filter_by(event_id=event.id).first()
-            if mvp_assignment:
-                event_dict['mvp_assignment'] = mvp_assignment.to_dict()
+            # Add ALL MVP assignment info (since events can be reused)
+            mvp_assignments = MVPAssignment.query.filter_by(event_id=event.id).order_by(MVPAssignment.assigned_at.desc()).all()
+            if mvp_assignments:
+                event_dict['mvp_assignments'] = [assignment.to_dict() for assignment in mvp_assignments]
+                event_dict['mvp_assignment'] = mvp_assignments[0].to_dict()  # Keep first for backward compatibility
             
             # Add winner assignment info
             winner_assignment = WinnerAssignment.query.filter_by(event_id=event.id).first()
