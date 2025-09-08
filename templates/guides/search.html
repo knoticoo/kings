@@ -57,9 +57,9 @@
                     <div class="col-12">
                     {% endif %}
                         <h5 class="card-title">
-                            <button class="btn btn-link text-decoration-none p-0 text-start read-more-btn" data-guide-slug="{{ guide.slug }}" style="font-size: inherit; font-weight: inherit;">
+                            <a href="{{ url_for('guides.view_guide', slug=guide.slug) }}" class="text-decoration-none" style="font-size: inherit; font-weight: inherit;">
                                 {{ guide.title }}
-                            </button>
+                            </a>
                         </h5>
                         <p class="card-text text-muted">{{ guide.excerpt[:200] }}{% if guide.excerpt|length > 200 %}...{% endif %}</p>
                         <div class="d-flex justify-content-between align-items-center">
@@ -80,9 +80,9 @@
                                         <i class="bi bi-calendar ms-2 me-1"></i>{{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}
                                     </small>
                                 </div>
-                                <button class="btn btn-primary btn-sm read-more-btn" data-guide-slug="{{ guide.slug }}">
+                                <a href="{{ url_for('guides.view_guide', slug=guide.slug) }}" class="btn btn-primary btn-sm">
                                     <i class="bi bi-book me-1"></i>{{ _("Read More") }}
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
