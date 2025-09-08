@@ -31,9 +31,9 @@ def dashboard():
         # Get current winning alliance
         current_winner = Alliance.query.filter_by(is_current_winner=True).first()
         
-        # Get recent events (last 10) with MVP assignments
+        # Get all events with MVP assignments (not limited to recent 10)
         recent_events = []
-        events = Event.query.order_by(Event.event_date.desc()).limit(10).all()
+        events = Event.query.filter(Event.has_mvp == True).order_by(Event.event_date.desc()).all()
         
         for event in events:
             # Get all MVP assignments for this event (since events can be reused)
@@ -78,9 +78,9 @@ def dashboard_data():
         # Get current winning alliance
         current_winner = Alliance.query.filter_by(is_current_winner=True).first()
         
-        # Get recent events with their assignments
+        # Get all events with MVP assignments
         recent_events = []
-        events = Event.query.order_by(Event.event_date.desc()).limit(10).all()
+        events = Event.query.filter(Event.has_mvp == True).order_by(Event.event_date.desc()).all()
         
         for event in events:
             event_data = event.to_dict()

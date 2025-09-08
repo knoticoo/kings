@@ -149,7 +149,7 @@
                     </h5>
                     <button type="button" class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#mvpExportModal">
                         <i class="bi bi-download me-1"></i>
-                        {{ _("Export Players") }}
+                        {{ _("Export") }}
                     </button>
                 </div>
             </div>
@@ -328,7 +328,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="mvpExportModalLabel">
                     <i class="bi bi-download me-2"></i>
-                    {{ _("Export Players") }}
+                    {{ _("Export MVP List") }}
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -395,46 +395,29 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function generateMvpExportText() {
         const format = mvpExportFormat.value;
-        const exportType = mvpExportType.value;
         const now = new Date();
         const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
         
         let text = '';
         
-        if (exportType === 'all_players') {
-            // Export all active players
-            if (format === 'formatted') {
-                text = `All Active Players [ ${dateStr} ]\n\n`;
-                {% for player in all_active_players %}
-                text += `- {{ player.name }} (MVP Count: {{ player.mvp_count }}){% if player.is_current_mvp %} [CURRENT MVP]{% endif %}\n`;
-                {% endfor %}
-            } else {
-                text = `All Active Players Export - ${dateStr}\n\n`;
-                {% for player in all_active_players %}
-                text += `{{ player.name }} (MVP Count: {{ player.mvp_count }}){% if player.is_current_mvp %} [CURRENT MVP]{% endif %}\n`;
-                {% endfor %}
-            }
+        if (format === 'formatted') {
+            text = `MVP [ ${dateStr} ]\n\n`;
+            {% for event in recent_events %}
+            {% if event.has_mvp and event.mvp_players %}
+            {% for mvp_name in event.mvp_players %}
+            text += `- {{ mvp_name }} [ {{ event.name }} ]\n`;
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
         } else {
-            // Export only MVP players (original functionality)
-            if (format === 'formatted') {
-                text = `MVP Players [ ${dateStr} ]\n\n`;
-                {% for event in recent_events %}
-                {% if event.has_mvp and event.mvp_players %}
-                {% for mvp_name in event.mvp_players %}
-                text += `- {{ mvp_name }} [ {{ event.name }} ]\n`;
-                {% endfor %}
-                {% endif %}
-                {% endfor %}
-            } else {
-                text = `MVP Players Export - ${dateStr}\n\n`;
-                {% for event in recent_events %}
-                {% if event.has_mvp and event.mvp_players %}
-                {% for mvp_name in event.mvp_players %}
-                text += `{{ mvp_name }} [ {{ event.name }} ]\n`;
-                {% endfor %}
-                {% endif %}
-                {% endfor %}
-            }
+            text = `MVP Export - ${dateStr}\n\n`;
+            {% for event in recent_events %}
+            {% if event.has_mvp and event.mvp_players %}
+            {% for mvp_name in event.mvp_players %}
+            text += `{{ mvp_name }} [ {{ event.name }} ]\n`;
+            {% endfor %}
+            {% endif %}
+            {% endfor %}
         }
         
         mvpExportText.value = text;
