@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _("Category Management") }} - {{ _("King's Choice Management") }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ url_for('guides.list_guides') }}">{{ _("Guides") }}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ url_for('guides.admin_guides') }}">{{ _("Guide Management") }}</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ _("Category Management") }}</li>
+                    </ol>
+                </nav>
+                <h1 class="h2 text-primary">
+                    <i class="bi bi-tags me-2"></i>{{ _("Category Management") }}
+                </h1>
+            </div>
+            <div>
+                <a href="{{ url_for('guides.add_category') }}" class="btn btn-primary">
+                    <i class="bi bi-plus me-1"></i>{{ _("Add Category") }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Categories Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-list me-2"></i>{{ _("All Categories") }}
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if categories %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>{{ _("Name") }}</th>
+                                <th>{{ _("Description") }}</th>
+                                <th>{{ _("Icon") }}</th>
+                                <th>{{ _("Sort Order") }}</th>
+                                <th>{{ _("Status") }}</th>
+                                <th>{{ _("Guides Count") }}</th>
+                                <th>{{ _("Actions") }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            <tr>
+                                <td>
+                                    <div>
+                                        <strong>{{ category.name }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ category.slug }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if category.description %}
+                                    {{ category.description[:100] }}{% if category.description|length > 100 %}...{% endif %}
+                                    {% else %}
+                                    <span class="text-muted">{{ _("No description") }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <i class="bi bi-{{ category.icon }}"></i>
+                                    <small class="text-muted ms-1">{{ category.icon }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ category.sort_order }}</span>
+                                </td>
+                                <td>
+                                    {% if category.is_active %}
+                                    <span class="badge bg-success">{{ _("Active") }}</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ _("Inactive") }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary">{{ category.guides|length }}</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{{ url_for('guides.edit_category', category_id=category.id) }}" class="btn btn-outline-warning" title="{{ _('Edit') }}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger" title="{{ _('Delete') }}" 
+                                                onclick="confirmDelete({{ category.id }}, '{{ category.name }}', {{ category.guides|length }})">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-tags" style="font-size: 3rem;"></i>
+                    <h5 class="mt-2">{{ _("No categories found") }}</h5>
+                    <p>{{ _("Create your first category to get started.") }}</p>
+                    <a href="{{ url_for('guides.add_category') }}" class="btn btn-primary">
+                        <i class="bi bi-plus me-1"></i>{{ _("Add Category") }}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ _("Confirm Delete") }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ _("Are you sure you want to delete the category") }} "<span id="categoryTitle"></span>"?</p>
+                <p id="guidesWarning" class="text-warning" style="display: none;">
+                    <strong>{{ _("Warning: This category has guides. Please move or delete them first.") }}</strong>
+                </p>
+                <p class="text-danger"><strong>{{ _("This action cannot be undone.") }}</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">{{ _("Delete") }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(categoryId, categoryName, guidesCount) {
+    document.getElementById('categoryTitle').textContent = categoryName;
+    document.getElementById('deleteForm').action = "{{ url_for('guides.delete_category', category_id=0) }}".replace('0', categoryId);
+    
+    if (guidesCount > 0) {
+        document.getElementById('guidesWarning').style.display = 'block';
+        document.querySelector('#deleteForm button').disabled = true;
+    } else {
+        document.getElementById('guidesWarning').style.display = 'none';
+        document.querySelector('#deleteForm button').disabled = false;
+    }
+    
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
+{% endblock %}
