@@ -60,11 +60,15 @@ def inject_get_locale():
 from database import db, init_app, create_all_tables
 init_app(app)
 
+# Initialize blacklist database
+from blacklist_database import init_blacklist_app, create_blacklist_tables
+init_blacklist_app(app)
+
 # Import models after database initialization
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Guide, GuideCategory
 
 # Import routes
-from routes import main_routes, player_routes, alliance_routes, event_routes, guide_routes
+from routes import main_routes, player_routes, alliance_routes, event_routes, guide_routes, blacklist_routes
 
 # Register blueprints
 app.register_blueprint(main_routes.bp)
@@ -72,6 +76,7 @@ app.register_blueprint(player_routes.bp)
 app.register_blueprint(alliance_routes.bp)
 app.register_blueprint(event_routes.bp)
 app.register_blueprint(guide_routes.bp)
+app.register_blueprint(blacklist_routes.bp)
 
 @app.route('/set_language/<language>')
 def set_language(language=None):
@@ -85,6 +90,7 @@ def set_language(language=None):
 def create_tables():
     """Create all database tables"""
     create_all_tables(app)
+    create_blacklist_tables(app)
 
 if __name__ == '__main__':
     create_tables()

@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _("Blacklist Management") }} - {{ _("King's Choice Management") }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                <i class="bi bi-shield-exclamation text-danger me-2"></i>
+                {{ _("Blacklist Management") }}
+            </h1>
+            <a href="{{ url_for('blacklist.add_entry') }}" class="btn btn-danger">
+                <i class="bi bi-plus-circle me-1"></i>
+                {{ _("Add Entry") }}
+            </a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card bg-danger text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">{{ total_entries }}</h4>
+                                <p class="card-text">{{ _("Total Entries") }}</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-shield-exclamation fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">{{ alliance_entries|length }}</h4>
+                                <p class="card-text">{{ _("Alliance Entries") }}</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-shield fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h4 class="card-title">{{ player_entries|length }}</h4>
+                                <p class="card-text">{{ _("Player Entries") }}</p>
+                            </div>
+                            <div class="align-self-center">
+                                <i class="bi bi-person-x fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alliance Blacklist Section -->
+        {% if alliance_entries %}
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-shield me-2"></i>
+                    {{ _("Blacklisted Alliances") }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for entry in alliance_entries %}
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card border-warning">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title text-warning">
+                                            <i class="bi bi-shield me-1"></i>
+                                            {{ entry.alliance_name }}
+                                        </h6>
+                                        <small class="text-muted">
+                                            {{ _("Added") }}: {{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                        </small>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('blacklist.edit_entry', entry_id=entry.id) }}" 
+                                           class="btn btn-outline-warning btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form method="POST" action="{{ url_for('blacklist.delete_entry', entry_id=entry.id) }}" 
+                                              class="d-inline" onsubmit="return confirm('{{ _("Are you sure you want to delete this entry?") }}')">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Player Blacklist Section -->
+        {% if player_entries %}
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-person-x me-2"></i>
+                    {{ _("Blacklisted Players") }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for entry in player_entries %}
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card border-info">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title text-info">
+                                            <i class="bi bi-person-x me-1"></i>
+                                            {{ entry.get_display_name() }}
+                                        </h6>
+                                        <small class="text-muted">
+                                            {{ _("Added") }}: {{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                        </small>
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('blacklist.edit_entry', entry_id=entry.id) }}" 
+                                           class="btn btn-outline-info btn-sm">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form method="POST" action="{{ url_for('blacklist.delete_entry', entry_id=entry.id) }}" 
+                                              class="d-inline" onsubmit="return confirm('{{ _("Are you sure you want to delete this entry?") }}')">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Empty State -->
+        {% if not alliance_entries and not player_entries %}
+        <div class="text-center py-5">
+            <i class="bi bi-shield-check text-success" style="font-size: 4rem;"></i>
+            <h3 class="mt-3">{{ _("No Blacklist Entries") }}</h3>
+            <p class="text-muted">{{ _("The blacklist is currently empty. Add entries to start managing blacklisted alliances and players.") }}</p>
+            <a href="{{ url_for('blacklist.add_entry') }}" class="btn btn-danger">
+                <i class="bi bi-plus-circle me-1"></i>
+                {{ _("Add First Entry") }}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

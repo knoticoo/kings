@@ -150,6 +150,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint and 'blacklist' in request.endpoint %}active{% endif %}" 
+                           href="{{ url_for('blacklist.list_blacklist') }}">
+                            <i class="bi bi-shield-exclamation me-1"></i>{{ _("Blacklist") }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'main.telegram_message' %}active{% endif %}" 
                            href="{{ url_for('main.telegram_message') }}">
                             <i class="bi bi-telegram me-1"></i>{{ _("Telegram") }}
