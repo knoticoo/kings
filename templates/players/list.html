@@ -105,7 +105,14 @@
                                             {% else %}
                                                 <i class="bi bi-person-circle text-muted me-2"></i>
                                             {% endif %}
-                                            <strong>{{ player.name }}</strong>
+                                            <strong>
+                                                <a href="#" class="text-decoration-none player-name-link" 
+                                                   data-player-id="{{ player.id }}" 
+                                                   data-player-name="{{ player.name }}"
+                                                   title="Показать историю MVP">
+                                                    {{ player.name }}
+                                                </a>
+                                            </strong>
                                         </div>
                                     </td>
                                     <td>
@@ -318,6 +325,91 @@
         </div>
     </div>
 </div>
+
+<!-- MVP History Modal -->
+<div class="modal fade" id="mvpHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="bi bi-trophy me-2"></i>История MVP: <span id="historyPlayerName"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="historyLoading" class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Загрузка...</span>
+                    </div>
+                    <p class="mt-2">Загрузка истории MVP...</p>
+                </div>
+                
+                <div id="historyContent" style="display: none;">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h4 class="text-primary mb-0" id="totalMvpCount">0</h4>
+                                    <small class="text-muted">Всего наград MVP</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <h4 class="text-success mb-0" id="totalEvents">0</h4>
+                                    <small class="text-muted">Участий в событиях</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="mb-3">
+                        <i class="bi bi-list-ul me-2"></i>Детальная история
+                    </h6>
+                    
+                    <div id="historyList">
+                        <!-- History items will be populated here -->
+                    </div>
+                    
+                    <div id="noHistory" class="text-center text-muted py-4" style="display: none;">
+                        <i class="bi bi-trophy" style="font-size: 3rem;"></i>
+                        <h5 class="mt-3">Пока нет истории MVP</h5>
+                        <p>Этот игрок еще не получал награду MVP.</p>
+                    </div>
+                </div>
+                
+                <div id="historyError" class="alert alert-danger" style="display: none;">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span id="historyErrorMessage"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.player-name-link {
+    color: inherit !important;
+    transition: color 0.2s ease;
+}
+
+.player-name-link:hover {
+    color: #0d6efd !important;
+    text-decoration: underline !important;
+}
+
+.player-name-link:focus {
+    color: #0d6efd !important;
+    text-decoration: underline !important;
+    outline: none;
+}
+</style>
 {% endblock %}
 
 {% block extra_js %}
@@ -366,5 +458,107 @@ setInterval(function() {
     // You can add AJAX call here to refresh rotation status
     console.log('Checking rotation status...');
 }, 30000);
+
+// MVP History Modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event listeners to player name links
+    document.querySelectorAll('.player-name-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const playerId = this.getAttribute('data-player-id');
+            const playerName = this.getAttribute('data-player-name');
+            showMvpHistory(playerId, playerName);
+        });
+    });
+});
+
+function showMvpHistory(playerId, playerName) {
+    // Set player name in modal title
+    document.getElementById('historyPlayerName').textContent = playerName;
+    
+    // Show loading state
+    document.getElementById('historyLoading').style.display = 'block';
+    document.getElementById('historyContent').style.display = 'none';
+    document.getElementById('historyError').style.display = 'none';
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('mvpHistoryModal'));
+    modal.show();
+    
+    // Fetch MVP history
+    fetch(`/players/api/mvp-history/${playerId}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('historyLoading').style.display = 'none';
+            
+            if (data.success) {
+                displayMvpHistory(data);
+            } else {
+                showHistoryError(data.error || 'Не удалось загрузить историю MVP');
+            }
+        })
+        .catch(error => {
+            document.getElementById('historyLoading').style.display = 'none';
+            showHistoryError('Ошибка при загрузке истории MVP: ' + error.message);
+        });
+}
+
+function displayMvpHistory(data) {
+    const historyContent = document.getElementById('historyContent');
+    const historyList = document.getElementById('historyList');
+    const noHistory = document.getElementById('noHistory');
+    
+    // Update summary stats
+    document.getElementById('totalMvpCount').textContent = data.mvp_count;
+    document.getElementById('totalEvents').textContent = data.history.length;
+    
+    if (data.history.length === 0) {
+        historyContent.style.display = 'block';
+        noHistory.style.display = 'block';
+        historyList.innerHTML = '';
+    } else {
+        historyContent.style.display = 'block';
+        noHistory.style.display = 'none';
+        
+        // Generate history list
+        let historyHtml = '';
+        data.history.forEach(function(item, index) {
+            const eventDate = item.event_date ? new Date(item.event_date).toLocaleDateString('ru-RU') : 'Дата не указана';
+            const assignedDate = item.assigned_at ? new Date(item.assigned_at).toLocaleDateString('ru-RU') : 'Дата не указана';
+            
+            historyHtml += `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-1 text-center">
+                                <span class="badge bg-primary rounded-pill">${index + 1}</span>
+                            </div>
+                            <div class="col-md-7">
+                                <h6 class="mb-1">
+                                    <i class="bi bi-trophy-fill text-warning me-2"></i>
+                                    ${item.event_name}
+                                </h6>
+                                ${item.event_description ? `<p class="text-muted mb-0 small">${item.event_description}</p>` : ''}
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="text-muted small">
+                                    <div><strong>Событие:</strong> ${eventDate}</div>
+                                    <div><strong>Назначен:</strong> ${assignedDate}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        historyList.innerHTML = historyHtml;
+    }
+}
+
+function showHistoryError(message) {
+    document.getElementById('historyErrorMessage').textContent = message;
+    document.getElementById('historyError').style.display = 'block';
+}
 </script>
 {% endblock %}

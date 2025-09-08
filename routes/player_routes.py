@@ -316,3 +316,37 @@ def api_rotation_status():
             'success': False,
             'error': str(e)
         }), 500
+
+@bp.route('/api/mvp-history/<int:player_id>')
+def api_mvp_history(player_id):
+    """API endpoint to get player's MVP history"""
+    try:
+        player = Player.query.get_or_404(player_id)
+        
+        # Get all MVP assignments for this player with event details
+        mvp_assignments = db.session.query(MVPAssignment, Event).join(
+            Event, MVPAssignment.event_id == Event.id
+        ).filter(
+            MVPAssignment.player_id == player_id
+        ).order_by(MVPAssignment.assigned_at.desc()).all()
+        
+        history = []
+        for assignment, event in mvp_assignments:
+            history.append({
+                'event_name': event.name,
+                'event_date': event.event_date.isoformat() if event.event_date else None,
+                'assigned_at': assignment.assigned_at.isoformat() if assignment.assigned_at else None,
+                'event_description': event.description
+            })
+        
+        return jsonify({
+            'success': True,
+            'player_name': player.name,
+            'mvp_count': player.mvp_count,
+            'history': history
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
