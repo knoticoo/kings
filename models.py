@@ -147,8 +147,7 @@ class MVPAssignment(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     assigned_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Ensure one MVP per event
-    __table_args__ = (db.UniqueConstraint('event_id', name='one_mvp_per_event'),)
+    # Allow multiple MVP assignments per event for recurring events
     
     def __repr__(self):
         return f'<MVPAssignment Player:{self.player_id} Event:{self.event_id}>'
