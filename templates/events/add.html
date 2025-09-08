@@ -31,13 +31,26 @@
                             <i class="bi bi-calendar-event me-1"></i>Название события
                             <span class="text-danger">*</span>
                         </label>
-                        <input type="text" 
-                               class="form-control" 
-                               id="name" 
-                               name="name" 
-                               placeholder="Введите название события"
-                               required
-                               maxlength="200">
+                        <div class="input-group">
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="name" 
+                                   name="name" 
+                                   placeholder="Введите название события"
+                                   required
+                                   maxlength="200"
+                                   list="event-suggestions">
+                            <button class="btn btn-outline-secondary" type="button" id="clear-suggestions" title="Очистить историю событий">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        <datalist id="event-suggestions">
+                            <!-- Event suggestions will be populated by JavaScript -->
+                        </datalist>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Начните вводить название или выберите из ранее добавленных событий.
+                        </div>
                     </div>
                     
                     <div class="mb-3">
@@ -90,11 +103,92 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const nameInput = document.getElementById('name');
+    const eventSuggestions = document.getElementById('event-suggestions');
+    const clearButton = document.getElementById('clear-suggestions');
     
     // Set default date to now
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     document.getElementById('event_date').value = now.toISOString().slice(0, 16);
+    
+    // Event persistence functionality
+    const STORAGE_KEY = 'kings_choice_events';
+    
+    // Load saved events from localStorage
+    function loadSavedEvents() {
+        try {
+            const savedEvents = localStorage.getItem(STORAGE_KEY);
+            return savedEvents ? JSON.parse(savedEvents) : [];
+        } catch (error) {
+            console.error('Error loading saved events:', error);
+            return [];
+        }
+    }
+    
+    // Save events to localStorage
+    function saveEvents(events) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+        } catch (error) {
+            console.error('Error saving events:', error);
+        }
+    }
+    
+    // Add event to saved list
+    function addEventToHistory(eventName) {
+        if (!eventName || eventName.trim() === '') return;
+        
+        const events = loadSavedEvents();
+        const trimmedName = eventName.trim();
+        
+        // Remove if already exists to avoid duplicates
+        const filteredEvents = events.filter(event => event !== trimmedName);
+        
+        // Add to beginning of array
+        filteredEvents.unshift(trimmedName);
+        
+        // Keep only last 20 events
+        const limitedEvents = filteredEvents.slice(0, 20);
+        
+        saveEvents(limitedEvents);
+        updateSuggestions();
+    }
+    
+    // Update suggestions dropdown
+    function updateSuggestions() {
+        const events = loadSavedEvents();
+        eventSuggestions.innerHTML = '';
+        
+        events.forEach(event => {
+            const option = document.createElement('option');
+            option.value = event;
+            eventSuggestions.appendChild(option);
+        });
+    }
+    
+    // Clear all saved events
+    function clearEventHistory() {
+        if (confirm('Вы уверены, что хотите очистить историю событий?')) {
+            localStorage.removeItem(STORAGE_KEY);
+            updateSuggestions();
+            nameInput.value = '';
+            nameInput.focus();
+        }
+    }
+    
+    // Handle form submission
+    form.addEventListener('submit', function(e) {
+        const eventName = nameInput.value.trim();
+        if (eventName) {
+            addEventToHistory(eventName);
+        }
+    });
+    
+    // Handle clear button click
+    clearButton.addEventListener('click', clearEventHistory);
+    
+    // Initialize suggestions
+    updateSuggestions();
     
     // Auto-focus on name input
     nameInput.focus();
