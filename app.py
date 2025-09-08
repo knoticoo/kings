@@ -32,8 +32,29 @@ app.config['LANGUAGES'] = {
 app.config['BABEL_DEFAULT_LOCALE'] = 'ru'
 app.config['BABEL_DEFAULT_TIMEZONE'] = 'UTC'
 
+def get_locale():
+    """Determine the best language for the user"""
+    # Check if language is set in cookies
+    if 'language' in request.cookies:
+        return request.cookies.get('language')
+    
+    # Check if language is in URL parameters
+    if request.args.get('lang'):
+        return request.args.get('lang')
+    
+    # Check Accept-Language header
+    return request.accept_languages.best_match(app.config['LANGUAGES'].keys()) or app.config['BABEL_DEFAULT_LOCALE']
+
 # Initialize Babel
 babel = Babel(app)
+
+# Configure Babel with locale selector
+babel.init_app(app, locale_selector=get_locale)
+
+# Make get_locale available in templates
+@app.context_processor
+def inject_get_locale():
+    return dict(get_locale=get_locale)
 
 # Initialize database
 from database import db, init_app, create_all_tables
