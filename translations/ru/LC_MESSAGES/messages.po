@@ -492,3 +492,13 @@ msgstr "Игроки:"
 
 msgid "Blacklist Export -"
 msgstr "Экспорт черного списка -"
+
+# Example strings for blacklist help
+msgid "ROR"
+msgstr "ROR"
+
+msgid "Mayima"
+msgstr "Mayima"
+
+msgid "(ATG) besia"
+msgstr "(ATG) besia"
