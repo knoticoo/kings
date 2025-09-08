@@ -336,7 +336,16 @@ class HTMLCategorizer {
      * Process pasted content and show categorization
      */
     processPastedContent(textarea, pastedContent) {
-        const categorizedData = this.categorizeContent(pastedContent);
+        // First, try to detect and format Discord-style text
+        const formattedContent = this.formatDiscordText(pastedContent);
+        
+        // If content was formatted, update the textarea
+        if (formattedContent !== pastedContent) {
+            textarea.value = formattedContent;
+            this.showMessage('Discord text has been automatically formatted!', 'success');
+        }
+        
+        const categorizedData = this.categorizeContent(formattedContent);
         const visualRepresentation = this.createVisualRepresentation(categorizedData);
         
         // Find or create the categorization display area
@@ -361,6 +370,12 @@ class HTMLCategorizer {
         organizeBtn.innerHTML = '<i class="bi bi-sort-alpha-down me-1"></i>Organize Content';
         organizeBtn.onclick = () => this.organizeContent(textarea, categorizedData);
         
+        const formatBtn = document.createElement('button');
+        formatBtn.type = 'button';
+        formatBtn.className = 'btn btn-sm btn-outline-success me-2';
+        formatBtn.innerHTML = '<i class="bi bi-magic me-1"></i>Auto Format';
+        formatBtn.onclick = () => this.autoFormatContent(textarea);
+        
         const clearBtn = document.createElement('button');
         clearBtn.type = 'button';
         clearBtn.className = 'btn btn-sm btn-outline-secondary';
@@ -368,6 +383,7 @@ class HTMLCategorizer {
         clearBtn.onclick = () => this.clearAnalysis(displayArea);
         
         actionsDiv.appendChild(organizeBtn);
+        actionsDiv.appendChild(formatBtn);
         actionsDiv.appendChild(clearBtn);
         displayArea.appendChild(actionsDiv);
         
@@ -423,6 +439,118 @@ class HTMLCategorizer {
         displayArea.innerHTML = '';
     }
 
+    /**
+     * Format Discord-style text to proper HTML
+     */
+    formatDiscordText(text) {
+        let formatted = text;
+        
+        // Convert Discord markdown to HTML
+        // Bold text: **text** or __text__
+        formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        formatted = formatted.replace(/__(.*?)__/g, '<strong>$1</strong>');
+        
+        // Italic text: *text* or _text_
+        formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+        formatted = formatted.replace(/_(.*?)_/g, '<em>$1</em>');
+        
+        // Code blocks: `text`
+        formatted = formatted.replace(/`(.*?)`/g, '<code>$1</code>');
+        
+        // Headers: # Header, ## Header, etc.
+        formatted = formatted.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+        formatted = formatted.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+        formatted = formatted.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+        
+        // Convert tier list format
+        formatted = this.formatTierList(formatted);
+        
+        // Convert line breaks to proper HTML
+        formatted = formatted.replace(/\n\n/g, '</p><p>');
+        formatted = formatted.replace(/\n/g, '<br>');
+        
+        // Wrap in paragraph tags if not already wrapped
+        if (!formatted.includes('<p>') && !formatted.includes('<h1>') && !formatted.includes('<h2>') && !formatted.includes('<h3>')) {
+            formatted = '<p>' + formatted + '</p>';
+        }
+        
+        return formatted;
+    }
+    
+    /**
+     * Format tier list structure
+     */
+    formatTierList(text) {
+        let formatted = text;
+        
+        // Convert tier headers like `EX+`, `EX`, `SSS`, etc.
+        const tierPatterns = [
+            { pattern: /^`EX\+`$/gm, replacement: '<h2><strong>EX+</strong></h2>' },
+            { pattern: /^`EX`$/gm, replacement: '<h2><strong>EX</strong></h2>' },
+            { pattern: /^`SSS`$/gm, replacement: '<h2><strong>SSS</strong></h2>' },
+            { pattern: /^`S`$/gm, replacement: '<h2><strong>S</strong></h2>' },
+            { pattern: /^`A`$/gm, replacement: '<h2><strong>A</strong></h2>' },
+            { pattern: /^`B`$/gm, replacement: '<h2><strong>B</strong></h2>' },
+            { pattern: /^`C`$/gm, replacement: '<h2><strong>C</strong></h2>' },
+            { pattern: /^`F`$/gm, replacement: '<h2><strong>F</strong></h2>' }
+        ];
+        
+        tierPatterns.forEach(({ pattern, replacement }) => {
+            formatted = formatted.replace(pattern, replacement);
+        });
+        
+        // Convert list items that start with - to proper HTML lists
+        const lines = formatted.split('\n');
+        let inList = false;
+        let result = [];
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            
+            // Check if this is a list item
+            if (line.startsWith('- ')) {
+                if (!inList) {
+                    result.push('<ul>');
+                    inList = true;
+                }
+                result.push(`<li>${line.substring(2)}</li>`);
+            } else {
+                if (inList) {
+                    result.push('</ul>');
+                    inList = false;
+                }
+                result.push(line);
+            }
+        }
+        
+        // Close any open list
+        if (inList) {
+            result.push('</ul>');
+        }
+        
+        return result.join('\n');
+    }
+    
+    /**
+     * Auto format content in textarea
+     */
+    autoFormatContent(textarea) {
+        const currentContent = textarea.value;
+        const formattedContent = this.formatDiscordText(currentContent);
+        
+        if (formattedContent !== currentContent) {
+            textarea.value = formattedContent;
+            this.showMessage('Content has been automatically formatted!', 'success');
+            
+            // Re-analyze the formatted content
+            setTimeout(() => {
+                this.processPastedContent(textarea, formattedContent);
+            }, 100);
+        } else {
+            this.showMessage('No formatting changes needed.', 'info');
+        }
+    }
+    
     /**
      * Show a temporary message
      */
