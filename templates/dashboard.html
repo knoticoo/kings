@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Панель управления - Управление King's Choice{% endblock %}
+{% block title %}{{ _("Control Panel") }} - {{ _("King's Choice Management") }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,7 +8,7 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-speedometer2 me-2"></i>Панель управления
+                <i class="bi bi-speedometer2 me-2"></i>{{ _("Control Panel") }}
             </h1>
             <div class="text-muted">
                 <i class="bi bi-clock me-1"></i>
@@ -37,7 +37,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">Игроки</h5>
+                        <h5 class="card-title">{{ _("Total Players") }}</h5>
                         <h2 class="mb-0">{{ total_players }}</h2>
                     </div>
                     <div class="align-self-center">
@@ -47,7 +47,7 @@
             </div>
             <div class="card-footer">
                 <a href="{{ url_for('players.list_players') }}" class="text-white text-decoration-none">
-                    <small>Посмотреть всех игроков <i class="bi bi-arrow-right"></i></small>
+                    <small>{{ _("View all players") }} <i class="bi bi-arrow-right"></i></small>
                 </a>
             </div>
         </div>
@@ -58,7 +58,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">Альянсы</h5>
+                        <h5 class="card-title">{{ _("Total Alliances") }}</h5>
                         <h2 class="mb-0">{{ total_alliances }}</h2>
                     </div>
                     <div class="align-self-center">
@@ -68,7 +68,7 @@
             </div>
             <div class="card-footer">
                 <a href="{{ url_for('alliances.list_alliances') }}" class="text-white text-decoration-none">
-                    <small>Посмотреть все альянсы <i class="bi bi-arrow-right"></i></small>
+                    <small>{{ _("View all alliances") }} <i class="bi bi-arrow-right"></i></small>
                 </a>
             </div>
         </div>
@@ -79,7 +79,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">События</h5>
+                        <h5 class="card-title">{{ _("Total Events") }}</h5>
                         <h2 class="mb-0">{{ total_events }}</h2>
                     </div>
                     <div class="align-self-center">
@@ -89,7 +89,7 @@
             </div>
             <div class="card-footer">
                 <a href="{{ url_for('events.list_events') }}" class="text-white text-decoration-none">
-                    <small>Посмотреть все события <i class="bi bi-arrow-right"></i></small>
+                    <small>{{ _("View all events") }} <i class="bi bi-arrow-right"></i></small>
                 </a>
             </div>
         </div>
@@ -100,8 +100,8 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">Быстрые действия</h5>
-                        <p class="mb-0">Добавить и назначить</p>
+                        <h5 class="card-title">{{ _("Quick Actions") }}</h5>
+                        <p class="mb-0">{{ _("Add and assign") }}</p>
                     </div>
                     <div class="align-self-center">
                         <i class="bi bi-lightning-fill fs-1"></i>
@@ -111,24 +111,24 @@
             <div class="card-footer">
                 <div class="dropdown">
                     <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        Действия
+                        {{ _("Actions") }}
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ url_for('players.add_player') }}">
-                            <i class="bi bi-person-plus me-2"></i>Добавить игрока
+                            <i class="bi bi-person-plus me-2"></i>{{ _("Add Player") }}
                         </a></li>
                         <li><a class="dropdown-item" href="{{ url_for('alliances.add_alliance') }}">
-                            <i class="bi bi-shield-plus me-2"></i>Добавить альянс
+                            <i class="bi bi-shield-plus me-2"></i>{{ _("Add Alliance") }}
                         </a></li>
                         <li><a class="dropdown-item" href="{{ url_for('events.add_event') }}">
-                            <i class="bi bi-calendar-plus me-2"></i>Добавить событие
+                            <i class="bi bi-calendar-plus me-2"></i>{{ _("Add Event") }}
                         </a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="{{ url_for('players.assign_mvp') }}">
-                            <i class="bi bi-award me-2"></i>Назначить MVP
+                            <i class="bi bi-award me-2"></i>{{ _("Assign MVP") }}
                         </a></li>
                         <li><a class="dropdown-item" href="{{ url_for('alliances.assign_winner') }}">
-                            <i class="bi bi-trophy me-2"></i>Назначить победителя
+                            <i class="bi bi-trophy me-2"></i>{{ _("Assign Winner") }}
                         </a></li>
                     </ul>
                 </div>
@@ -144,7 +144,7 @@
         <div class="card h-100">
             <div class="card-header bg-primary text-white">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-award-fill me-2"></i>Текущий MVP
+                    <i class="bi bi-award-fill me-2"></i>{{ _("Current MVP") }}
                 </h5>
             </div>
             <div class="card-body">
@@ -154,19 +154,19 @@
                             <i class="bi bi-trophy-fill text-warning" style="font-size: 3rem;"></i>
                         </div>
                         <h4 class="text-primary">{{ current_mvp.name }}</h4>
-                        <p class="text-muted mb-1">Количество MVP: {{ current_mvp.mvp_count }}</p>
+                        <p class="text-muted mb-1">{{ _("MVP Count") }}: {{ current_mvp.mvp_count }}</p>
                         <small class="text-muted">
                             <i class="bi bi-clock me-1"></i>
-                            Последнее обновление: {{ current_mvp.updated_at.strftime('%Y-%m-%d %H:%M') if current_mvp.updated_at }}
+                            {{ _("Last Update") }}: {{ current_mvp.updated_at.strftime('%Y-%m-%d %H:%M') if current_mvp.updated_at }}
                         </small>
                     </div>
                 {% else %}
                     <div class="text-center text-muted">
                         <i class="bi bi-question-circle" style="font-size: 3rem;"></i>
-                        <h5 class="mt-2">MVP не назначен</h5>
-                        <p>Ни один игрок в настоящее время не имеет звания MVP.</p>
+                        <h5 class="mt-2">{{ _("MVP not assigned") }}</h5>
+                        <p>{{ _("No player currently has MVP status.") }}</p>
                         <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-award me-1"></i>Назначить MVP
+                            <i class="bi bi-award me-1"></i>{{ _("Assign MVP") }}
                         </a>
                     </div>
                 {% endif %}
@@ -179,7 +179,7 @@
         <div class="card h-100">
             <div class="card-header bg-success text-white">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-trophy-fill me-2"></i>Текущий победитель
+                    <i class="bi bi-trophy-fill me-2"></i>{{ _("Current Winner") }}
                 </h5>
             </div>
             <div class="card-body">
@@ -189,19 +189,19 @@
                             <i class="bi bi-shield-fill-check text-success" style="font-size: 3rem;"></i>
                         </div>
                         <h4 class="text-success">{{ current_winner.name }}</h4>
-                        <p class="text-muted mb-1">Количество побед: {{ current_winner.win_count }}</p>
+                        <p class="text-muted mb-1">{{ _("Win Count") }}: {{ current_winner.win_count }}</p>
                         <small class="text-muted">
                             <i class="bi bi-clock me-1"></i>
-                            Последнее обновление: {{ current_winner.updated_at.strftime('%Y-%m-%d %H:%M') if current_winner.updated_at }}
+                            {{ _("Last Update") }}: {{ current_winner.updated_at.strftime('%Y-%m-%d %H:%M') if current_winner.updated_at }}
                         </small>
                     </div>
                 {% else %}
                     <div class="text-center text-muted">
                         <i class="bi bi-question-circle" style="font-size: 3rem;"></i>
-                        <h5 class="mt-2">Победитель не назначен</h5>
-                        <p>Ни одному альянсу в настоящее время не присвоено звание победителя.</p>
+                        <h5 class="mt-2">{{ _("Winner not assigned") }}</h5>
+                        <p>{{ _("No alliance currently has winner status.") }}</p>
                         <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-success btn-sm">
-                            <i class="bi bi-trophy me-1"></i>Назначить победителя
+                            <i class="bi bi-trophy me-1"></i>{{ _("Assign Winner") }}
                         </a>
                     </div>
                 {% endif %}
@@ -217,10 +217,10 @@
             <div class="card-header">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">
-                        <i class="bi bi-clock-history me-2"></i>Последние события
+                        <i class="bi bi-clock-history me-2"></i>{{ _("Recent Events") }}
                     </h5>
                     <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-primary btn-sm">
-                        Посмотреть все события
+                        {{ _("View all events") }}
                     </a>
                 </div>
             </div>
@@ -230,11 +230,11 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Событие</th>
-                                    <th>Дата</th>
+                                    <th>{{ _("Event") }}</th>
+                                    <th>{{ _("Date") }}</th>
                                     <th>MVP</th>
-                                    <th>Победитель</th>
-                                    <th>Статус</th>
+                                    <th>{{ _("Winner") }}</th>
+                                    <th>{{ _("Status") }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -266,33 +266,33 @@
                                                 </div>
                                             {% else %}
                                                 <span class="badge bg-primary">
-                                                    <i class="bi bi-award-fill me-1"></i>Назначен
+                                                    <i class="bi bi-award-fill me-1"></i>{{ _("Assigned") }}
                                                 </span>
                                             {% endif %}
                                         {% else %}
                                             <span class="badge bg-secondary">
-                                                <i class="bi bi-dash-circle me-1"></i>Ожидает
+                                                <i class="bi bi-dash-circle me-1"></i>{{ _("Waiting") }}
                                             </span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if event.has_winner %}
                                             <span class="badge bg-success">
-                                                <i class="bi bi-trophy-fill me-1"></i>Назначен
+                                                <i class="bi bi-trophy-fill me-1"></i>{{ _("Assigned") }}
                                             </span>
                                         {% else %}
                                             <span class="badge bg-secondary">
-                                                <i class="bi bi-dash-circle me-1"></i>Ожидает
+                                                <i class="bi bi-dash-circle me-1"></i>{{ _("Waiting") }}
                                             </span>
                                         {% endif %}
                                     </td>
                                     <td>
                                         {% if event.has_mvp and event.has_winner %}
-                                            <span class="badge bg-success">Завершено</span>
+                                            <span class="badge bg-success">{{ _("Completed") }}</span>
                                         {% elif event.has_mvp or event.has_winner %}
-                                            <span class="badge bg-warning">Частично</span>
+                                            <span class="badge bg-warning">{{ _("Partial") }}</span>
                                         {% else %}
-                                            <span class="badge bg-danger">Незавершено</span>
+                                            <span class="badge bg-danger">{{ _("Incomplete") }}</span>
                                         {% endif %}
                                     </td>
                                 </tr>
@@ -303,10 +303,10 @@
                 {% else %}
                     <div class="text-center text-muted py-4">
                         <i class="bi bi-calendar-x" style="font-size: 3rem;"></i>
-                        <h5 class="mt-2">Пока нет событий</h5>
-                        <p>События еще не созданы.</p>
+                        <h5 class="mt-2">{{ _("No events yet") }}</h5>
+                        <p>{{ _("Events have not been created yet.") }}</p>
                         <a href="{{ url_for('events.add_event') }}" class="btn btn-primary">
-                            <i class="bi bi-calendar-plus me-1"></i>Создать первое событие
+                            <i class="bi bi-calendar-plus me-1"></i>{{ _("Create first event") }}
                         </a>
                     </div>
                 {% endif %}

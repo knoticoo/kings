@@ -7,6 +7,7 @@ with rotation logic to ensure fair distribution of awards.
 """
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask_babel import Babel, gettext, ngettext, get_locale
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -23,6 +24,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "king
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 
+# Babel configuration
+app.config['LANGUAGES'] = {
+    'en': 'English',
+    'ru': 'Русский'
+}
+app.config['BABEL_DEFAULT_LOCALE'] = 'ru'
+app.config['BABEL_DEFAULT_TIMEZONE'] = 'UTC'
+
+# Initialize Babel
+babel = Babel(app)
+
 # Initialize database
 from database import db, init_app, create_all_tables
 init_app(app)
@@ -38,6 +50,15 @@ app.register_blueprint(main_routes.bp)
 app.register_blueprint(player_routes.bp)
 app.register_blueprint(alliance_routes.bp)
 app.register_blueprint(event_routes.bp)
+
+@app.route('/set_language/<language>')
+def set_language(language=None):
+    """Set the language for the user"""
+    if language and language in app.config['LANGUAGES']:
+        response = redirect(request.referrer or url_for('main.dashboard'))
+        response.set_cookie('language', language, max_age=60*60*24*365)  # 1 year
+        return response
+    return redirect(url_for('main.dashboard'))
 
 def create_tables():
     """Create all database tables"""

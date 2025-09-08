@@ -1,0 +1,198 @@
+# King's Choice Management App - Russian Translation
+# Copyright (C) 2024
+# This file is distributed under the same license as the King's Choice Management App package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: King's Choice Management App 1.0\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-01-01 12:00+0000\n"
+"PO-Revision-Date: 2024-01-01 12:00+0000\n"
+"Last-Translator: AI Assistant\n"
+"Language-Team: Russian\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.12.1\n"
+
+# Navigation
+msgid "King's Choice Management"
+msgstr "Управление King's Choice"
+
+msgid "Dashboard"
+msgstr "Панель управления"
+
+msgid "Players"
+msgstr "Игроки"
+
+msgid "Alliances"
+msgstr "Альянсы"
+
+msgid "Events"
+msgstr "События"
+
+msgid "Telegram"
+msgstr "Telegram"
+
+# Dashboard
+msgid "Control Panel"
+msgstr "Панель управления"
+
+msgid "Current MVP"
+msgstr "Текущий MVP"
+
+msgid "Current Winner"
+msgstr "Текущий победитель"
+
+msgid "Recent Events"
+msgstr "Последние события"
+
+msgid "Quick Actions"
+msgstr "Быстрые действия"
+
+msgid "Add Player"
+msgstr "Добавить игрока"
+
+msgid "Add Alliance"
+msgstr "Добавить альянс"
+
+msgid "Add Event"
+msgstr "Добавить событие"
+
+msgid "Assign MVP"
+msgstr "Назначить MVP"
+
+msgid "Assign Winner"
+msgstr "Назначить победителя"
+
+# Status messages
+msgid "MVP not assigned"
+msgstr "MVP не назначен"
+
+msgid "No player currently has MVP status."
+msgstr "Ни один игрок в настоящее время не имеет звания MVP."
+
+msgid "Winner not assigned"
+msgstr "Победитель не назначен"
+
+msgid "No alliance currently has winner status."
+msgstr "Ни одному альянсу в настоящее время не присвоено звание победителя."
+
+msgid "Completed"
+msgstr "Завершено"
+
+msgid "Partial"
+msgstr "Частично"
+
+msgid "Incomplete"
+msgstr "Незавершено"
+
+msgid "Waiting"
+msgstr "Ожидает"
+
+msgid "Assigned"
+msgstr "Назначен"
+
+# Stats
+msgid "Total Players"
+msgstr "Игроки"
+
+msgid "Total Alliances"
+msgstr "Альянсы"
+
+msgid "Total Events"
+msgstr "События"
+
+msgid "MVP Count"
+msgstr "Количество MVP"
+
+msgid "Win Count"
+msgstr "Количество побед"
+
+msgid "Last Update"
+msgstr "Последнее обновление"
+
+# Actions
+msgid "View all players"
+msgstr "Посмотреть всех игроков"
+
+msgid "View all alliances"
+msgstr "Посмотреть все альянсы"
+
+msgid "View all events"
+msgstr "Посмотреть все события"
+
+msgid "Create first event"
+msgstr "Создать первое событие"
+
+# Common
+msgid "Actions"
+msgstr "Действия"
+
+msgid "Event"
+msgstr "Событие"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Delete"
+msgstr "Удалить"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "List"
+msgstr "Список"
+
+msgid "View"
+msgstr "Просмотр"
+
+# Footer
+msgid "King's Choice Management System"
+msgstr "Система управления King's Choice"
+
+msgid "Created with Flask & Bootstrap"
+msgstr "Создано с Flask & Bootstrap"
+
+# Error messages
+msgid "Error loading dashboard data"
+msgstr "Ошибка загрузки данных панели управления"
+
+msgid "Failed to load dashboard data"
+msgstr "Не удалось загрузить данные панели управления"
+
+# Time format
+msgid "Current time"
+msgstr "Текущее время"
+
+# Additional strings
+msgid "Add and assign"
+msgstr "Добавить и назначить"
+
+msgid "No events yet"
+msgstr "Пока нет событий"
+
+msgid "Events have not been created yet."
+msgstr "События еще не созданы."
+
+msgid "Winner"
+msgstr "Победитель"
