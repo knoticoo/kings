@@ -6,6 +6,7 @@ Allows adding, viewing, and removing blacklisted entries.
 """
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
+from flask_babel import gettext as _
 from models import Blacklist
 from database import db
 
@@ -33,7 +34,7 @@ def list_blacklist():
                              total_entries=len(blacklist_entries))
     except Exception as e:
         print(f"Error in blacklist list route: {str(e)}")
-        flash('Failed to load blacklist data', 'error')
+        flash(_('Failed to load blacklist data'), 'error')
         return render_template('blacklist/list.html', 
                              alliance_entries=[], 
                              player_entries=[],
@@ -54,7 +55,7 @@ def add_entry():
             
             # Validate input
             if not alliance_name and not player_name:
-                flash('Either alliance name or player name is required', 'error')
+                flash(_('Either alliance name or player name is required'), 'error')
                 return render_template('blacklist/add.html')
             
             # Check for duplicates
@@ -64,7 +65,7 @@ def add_entry():
             ).first()
             
             if existing_entry:
-                flash('This entry already exists in the blacklist', 'error')
+                flash(_('This entry already exists in the blacklist'), 'error')
                 return render_template('blacklist/add.html')
             
             # Create new blacklist entry
@@ -76,13 +77,13 @@ def add_entry():
             db.session.add(new_entry)
             db.session.commit()
             
-            flash('Blacklist entry added successfully!', 'success')
+            flash(_('Blacklist entry added successfully!'), 'success')
             return redirect(url_for('blacklist.list_blacklist'))
             
         except Exception as e:
             print(f"Error adding blacklist entry: {str(e)}")
             db.session.rollback()
-            flash('Failed to add blacklist entry', 'error')
+            flash(_('Failed to add blacklist entry'), 'error')
             return render_template('blacklist/add.html')
     
     return render_template('blacklist/add.html')
@@ -104,7 +105,7 @@ def edit_entry(entry_id):
             
             # Validate input
             if not alliance_name and not player_name:
-                flash('Either alliance name or player name is required', 'error')
+                flash(_('Either alliance name or player name is required'), 'error')
                 return render_template('blacklist/edit.html', entry=entry)
             
             # Check for duplicates (excluding current entry)
@@ -115,7 +116,7 @@ def edit_entry(entry_id):
             ).first()
             
             if existing_entry:
-                flash('This entry already exists in the blacklist', 'error')
+                flash(_('This entry already exists in the blacklist'), 'error')
                 return render_template('blacklist/edit.html', entry=entry)
             
             # Update entry
@@ -124,13 +125,13 @@ def edit_entry(entry_id):
             
             db.session.commit()
             
-            flash('Blacklist entry updated successfully!', 'success')
+            flash(_('Blacklist entry updated successfully!'), 'success')
             return redirect(url_for('blacklist.list_blacklist'))
             
         except Exception as e:
             print(f"Error updating blacklist entry: {str(e)}")
             db.session.rollback()
-            flash('Failed to update blacklist entry', 'error')
+            flash(_('Failed to update blacklist entry'), 'error')
             return render_template('blacklist/edit.html', entry=entry)
     
     return render_template('blacklist/edit.html', entry=entry)
@@ -148,12 +149,12 @@ def delete_entry(entry_id):
         db.session.delete(entry)
         db.session.commit()
         
-        flash('Blacklist entry deleted successfully!', 'success')
+        flash(_('Blacklist entry deleted successfully!'), 'success')
         
     except Exception as e:
         print(f"Error deleting blacklist entry: {str(e)}")
         db.session.rollback()
-        flash('Failed to delete blacklist entry', 'error')
+        flash(_('Failed to delete blacklist entry'), 'error')
     
     return redirect(url_for('blacklist.list_blacklist'))
 

@@ -10,10 +10,16 @@
                 <i class="bi bi-shield-exclamation text-danger me-2"></i>
                 {{ _("Blacklist Management") }}
             </h1>
-            <a href="{{ url_for('blacklist.add_entry') }}" class="btn btn-danger">
-                <i class="bi bi-plus-circle me-1"></i>
-                {{ _("Add Entry") }}
-            </a>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exportModal">
+                    <i class="bi bi-download me-1"></i>
+                    {{ _("Export") }}
+                </button>
+                <a href="{{ url_for('blacklist.add_entry') }}" class="btn btn-danger">
+                    <i class="bi bi-plus-circle me-1"></i>
+                    {{ _("Add Entry") }}
+                </a>
+            </div>
         </div>
 
         <!-- Stats Cards -->
@@ -173,4 +179,109 @@
         {% endif %}
     </div>
 </div>
+
+<!-- Export Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exportModalLabel">
+                    <i class="bi bi-download me-2"></i>
+                    {{ _("Export Blacklist") }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="exportFormat" class="form-label">{{ _("Export Format") }}</label>
+                    <select class="form-select" id="exportFormat">
+                        <option value="formatted">{{ _("Formatted Text") }}</option>
+                        <option value="simple">{{ _("Simple List") }}</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="exportText" class="form-label">{{ _("Export Text") }}</label>
+                    <textarea class="form-control" id="exportText" rows="15" readonly></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary" onclick="copyToClipboard()">
+                        <i class="bi bi-clipboard me-1"></i>
+                        {{ _("Copy to Clipboard") }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        {{ _("Close") }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const exportModal = document.getElementById('exportModal');
+    const exportText = document.getElementById('exportText');
+    const exportFormat = document.getElementById('exportFormat');
+    
+    exportModal.addEventListener('show.bs.modal', function() {
+        generateExportText();
+    });
+    
+    exportFormat.addEventListener('change', function() {
+        generateExportText();
+    });
+    
+    function generateExportText() {
+        const format = exportFormat.value;
+        const now = new Date();
+        const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+        
+        let text = '';
+        
+        if (format === 'formatted') {
+            text = `Blacklist [ ${dateStr} ]\n\n`;
+            text += `Alliances:\n`;
+            {% for entry in alliance_entries %}
+            text += `- {{ entry.alliance_name }}\n`;
+            {% endfor %}
+            text += `\nPlayers:\n`;
+            {% for entry in player_entries %}
+            text += `- {{ entry.get_display_name() }}\n`;
+            {% endfor %}
+        } else {
+            text = `Blacklist Export - ${dateStr}\n\n`;
+            text += `Alliances:\n`;
+            {% for entry in alliance_entries %}
+            text += `{{ entry.alliance_name }}\n`;
+            {% endfor %}
+            text += `\nPlayers:\n`;
+            {% for entry in player_entries %}
+            text += `{{ entry.get_display_name() }}\n`;
+            {% endfor %}
+        }
+        
+        exportText.value = text;
+    }
+});
+
+function copyToClipboard() {
+    const exportText = document.getElementById('exportText');
+    exportText.select();
+    exportText.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    
+    // Show success message
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-check me-1"></i>{{ _("Copied!") }}';
+    button.classList.remove('btn-outline-secondary');
+    button.classList.add('btn-success');
+    
+    setTimeout(function() {
+        button.innerHTML = originalText;
+        button.classList.remove('btn-success');
+        button.classList.add('btn-outline-secondary');
+    }, 2000);
+}
+</script>
 {% endblock %}

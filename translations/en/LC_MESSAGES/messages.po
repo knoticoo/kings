@@ -408,3 +408,62 @@ msgstr "Created:"
 
 msgid "Last Updated:"
 msgstr "Last Updated:"
+
+# Blacklist flash messages
+msgid "Failed to load blacklist data"
+msgstr "Failed to load blacklist data"
+
+msgid "Either alliance name or player name is required"
+msgstr "Either alliance name or player name is required"
+
+msgid "This entry already exists in the blacklist"
+msgstr "This entry already exists in the blacklist"
+
+msgid "Blacklist entry added successfully!"
+msgstr "Blacklist entry added successfully!"
+
+msgid "Failed to add blacklist entry"
+msgstr "Failed to add blacklist entry"
+
+msgid "Blacklist entry updated successfully!"
+msgstr "Blacklist entry updated successfully!"
+
+msgid "Failed to update blacklist entry"
+msgstr "Failed to update blacklist entry"
+
+msgid "Blacklist entry deleted successfully!"
+msgstr "Blacklist entry deleted successfully!"
+
+msgid "Failed to delete blacklist entry"
+msgstr "Failed to delete blacklist entry"
+
+# Export functionality
+msgid "Export"
+msgstr "Export"
+
+msgid "Export Blacklist"
+msgstr "Export Blacklist"
+
+msgid "Export MVP List"
+msgstr "Export MVP List"
+
+msgid "Export Format"
+msgstr "Export Format"
+
+msgid "Formatted Text"
+msgstr "Formatted Text"
+
+msgid "Simple List"
+msgstr "Simple List"
+
+msgid "Export Text"
+msgstr "Export Text"
+
+msgid "Copy to Clipboard"
+msgstr "Copy to Clipboard"
+
+msgid "Copied!"
+msgstr "Copied!"
+
+msgid "Close"
+msgstr "Close"
