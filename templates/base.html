@@ -66,11 +66,23 @@
                             <i class="bi bi-shield-fill me-1"></i>Альянсы
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}" 
-                           href="{{ url_for('events.list_events') }}">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}" 
+                           href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-calendar-event-fill me-1"></i>События
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('events.list_events') }}">
+                                <i class="bi bi-list me-2"></i>Все события
+                            </a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('events.add_event') }}">
+                                <i class="bi bi-plus-circle me-2"></i>Добавить событие
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('events.list_templates') }}">
+                                <i class="bi bi-collection me-2"></i>Шаблоны событий
+                            </a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'main.telegram_message' %}active{% endif %}" 

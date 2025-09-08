@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Добавить шаблон события - Управление King's Choice{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 text-primary">
+                <i class="bi bi-plus-circle me-2"></i>Добавить шаблон события
+            </h1>
+            <a href="{{ url_for('events.list_templates') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Назад к шаблонам
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-collection me-2"></i>Информация о шаблоне
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">
+                            <i class="bi bi-calendar-event me-1"></i>Название шаблона
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="name" 
+                               name="name" 
+                               placeholder="Введите название шаблона события"
+                               required
+                               maxlength="200">
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Это название будет использоваться при создании событий из шаблона.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="bi bi-text-paragraph me-1"></i>Описание (необязательно)
+                        </label>
+                        <textarea class="form-control" 
+                                  id="description" 
+                                  name="description" 
+                                  rows="3"
+                                  placeholder="Введите описание шаблона..."></textarea>
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Описание поможет другим пользователям понять, для чего используется этот шаблон.
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        <strong>Совет:</strong> Создавайте шаблоны для событий, которые часто повторяются, например "Ежедневное событие", "Турнир выходного дня", "Специальное событие" и т.д.
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle me-2"></i>Создать шаблон
+                        </button>
+                        <a href="{{ url_for('events.list_templates') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i>Отменить
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-focus on name input
+    document.getElementById('name').focus();
+    
+    // Form validation
+    const form = document.querySelector('form');
+    const nameInput = document.getElementById('name');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const name = nameInput.value.trim();
+            
+            if (!name) {
+                e.preventDefault();
+                nameInput.focus();
+                nameInput.classList.add('is-invalid');
+                
+                // Show validation message
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-danger mt-3';
+                alert.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Пожалуйста, введите название шаблона.';
+                
+                // Remove existing alerts
+                const existingAlert = form.querySelector('.alert-danger');
+                if (existingAlert) {
+                    existingAlert.remove();
+                }
+                
+                form.appendChild(alert);
+                
+                // Auto-remove alert after 5 seconds
+                setTimeout(() => alert.remove(), 5000);
+            }
+        });
+        
+        // Clear validation on input
+        nameInput.addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+        });
+    }
+});
+</script>
+{% endblock %}

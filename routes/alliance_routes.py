@@ -194,11 +194,15 @@ def assign_winner():
             alliance = Alliance.query.get_or_404(alliance_id)
             event = Event.query.get_or_404(event_id)
             
-            # Check if event already has winner
+            # Check if event already has winner and handle reassignment
             existing_assignment = WinnerAssignment.query.filter_by(event_id=event_id).first()
             if existing_assignment:
-                flash(f'Event "{event.name}" already has a winning alliance assigned', 'error')
-                return redirect(url_for('alliances.assign_winner'))
+                # Allow reassignment - remove old assignment first
+                old_alliance = existing_assignment.alliance
+                old_alliance.is_current_winner = False
+                old_alliance.win_count = max(0, old_alliance.win_count - 1)
+                db.session.delete(existing_assignment)
+                flash(f'Reassigning winner for "{event.name}" from {old_alliance.name}', 'info')
             
             # Remove current winner status from all alliances
             Alliance.query.update({'is_current_winner': False})
@@ -239,8 +243,9 @@ def assign_winner():
         can_assign = can_assign_winner()
         eligible_alliances = get_eligible_alliances() if can_assign else []
         
-        # Get events that don't have winner assigned yet
-        available_events = Event.query.filter_by(has_winner=False).order_by(Event.event_date.desc()).all()
+        # Get all events (both with and without winner assigned)
+        # This allows users to see all events and reassign if needed
+        available_events = Event.query.order_by(Event.event_date.desc()).all()
         
         return render_template('alliances/assign_winner.html',
                              can_assign_winner=can_assign,
