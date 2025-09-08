@@ -436,3 +436,34 @@ msgstr "Запись в черном списке успешно удалена!
 
 msgid "Failed to delete blacklist entry"
 msgstr "Не удалось удалить запись из черного списка"
+
+# Export functionality
+msgid "Export"
+msgstr "Экспорт"
+
+msgid "Export Blacklist"
+msgstr "Экспорт черного списка"
+
+msgid "Export MVP List"
+msgstr "Экспорт списка MVP"
+
+msgid "Export Format"
+msgstr "Формат экспорта"
+
+msgid "Formatted Text"
+msgstr "Форматированный текст"
+
+msgid "Simple List"
+msgstr "Простой список"
+
+msgid "Export Text"
+msgstr "Текст для экспорта"
+
+msgid "Copy to Clipboard"
+msgstr "Копировать в буфер обмена"
+
+msgid "Copied!"
+msgstr "Скопировано!"
+
+msgid "Close"
+msgstr "Закрыть"

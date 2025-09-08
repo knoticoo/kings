@@ -436,3 +436,34 @@ msgstr "Blacklist entry deleted successfully!"
 
 msgid "Failed to delete blacklist entry"
 msgstr "Failed to delete blacklist entry"
+
+# Export functionality
+msgid "Export"
+msgstr "Export"
+
+msgid "Export Blacklist"
+msgstr "Export Blacklist"
+
+msgid "Export MVP List"
+msgstr "Export MVP List"
+
+msgid "Export Format"
+msgstr "Export Format"
+
+msgid "Formatted Text"
+msgstr "Formatted Text"
+
+msgid "Simple List"
+msgstr "Simple List"
+
+msgid "Export Text"
+msgstr "Export Text"
+
+msgid "Copy to Clipboard"
+msgstr "Copy to Clipboard"
+
+msgid "Copied!"
+msgstr "Copied!"
+
+msgid "Close"
+msgstr "Close"
