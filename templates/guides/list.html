@@ -77,9 +77,9 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-outline-primary btn-sm read-more-btn" data-guide-slug="{{ guide.slug }}">
+                        <a href="{{ url_for('guides.view_guide', slug=guide.slug) }}" class="btn btn-outline-primary btn-sm">
                             <i class="bi bi-book me-1"></i>{{ _("Read More") }}
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
