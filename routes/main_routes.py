@@ -31,8 +31,20 @@ def dashboard():
         # Get current winning alliance
         current_winner = Alliance.query.filter_by(is_current_winner=True).first()
         
-        # Get recent events (last 10)
-        recent_events = Event.query.order_by(Event.event_date.desc()).limit(10).all()
+        # Get recent events (last 10) with MVP assignments
+        recent_events = []
+        events = Event.query.order_by(Event.event_date.desc()).limit(10).all()
+        
+        for event in events:
+            # Get all MVP assignments for this event (since events can be reused)
+            mvp_assignments = MVPAssignment.query.filter_by(event_id=event.id).order_by(MVPAssignment.assigned_at.desc()).all()
+            
+            # Add MVP data to event object for template access
+            event.mvp_assignments = mvp_assignments
+            event.mvp_players = [assignment.player.name for assignment in mvp_assignments]
+            event.mvp_count = len(mvp_assignments)
+            
+            recent_events.append(event)
         
         # Get total counts for stats
         total_players = Player.query.count()
@@ -73,10 +85,16 @@ def dashboard_data():
         for event in events:
             event_data = event.to_dict()
             
-            # Add MVP info if exists
-            mvp_assignment = MVPAssignment.query.filter_by(event_id=event.id).first()
-            if mvp_assignment:
-                event_data['mvp_player'] = mvp_assignment.player.name
+            # Add ALL MVP assignments for this event (since events can be reused)
+            mvp_assignments = MVPAssignment.query.filter_by(event_id=event.id).order_by(MVPAssignment.assigned_at.desc()).all()
+            if mvp_assignments:
+                event_data['mvp_assignments'] = [assignment.to_dict() for assignment in mvp_assignments]
+                event_data['mvp_players'] = [assignment.player.name for assignment in mvp_assignments]
+                event_data['mvp_count'] = len(mvp_assignments)
+            else:
+                event_data['mvp_assignments'] = []
+                event_data['mvp_players'] = []
+                event_data['mvp_count'] = 0
             
             # Add winner info if exists
             winner_assignment = WinnerAssignment.query.filter_by(event_id=event.id).first()

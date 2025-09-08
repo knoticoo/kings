@@ -54,10 +54,19 @@
                                         <small>{{ event.event_date.strftime('%Y-%m-%d %H:%M') if event.event_date }}</small>
                                     </td>
                                     <td>
-                                        {% if mvp %}
-                                            <span class="badge bg-primary">
-                                                <i class="bi bi-award-fill me-1"></i>{{ mvp.player.name }}
-                                            </span>
+                                        {% if event_info.mvp_assignments %}
+                                            <div class="d-flex flex-wrap gap-1">
+                                                {% for assignment in event_info.mvp_assignments %}
+                                                    <span class="badge bg-primary">
+                                                        <i class="bi bi-award-fill me-1"></i>{{ assignment.player.name }}
+                                                    </span>
+                                                {% endfor %}
+                                                {% if event_info.mvp_assignments|length > 1 %}
+                                                    <span class="badge bg-info">
+                                                        <i class="bi bi-plus me-1"></i>{{ event_info.mvp_assignments|length }}x
+                                                    </span>
+                                                {% endif %}
+                                            </div>
                                         {% else %}
                                             <span class="badge bg-secondary">
                                                 <i class="bi bi-dash-circle me-1"></i>Ожидает

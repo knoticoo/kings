@@ -251,9 +251,24 @@
                                     </td>
                                     <td>
                                         {% if event.has_mvp %}
-                                            <span class="badge bg-primary">
-                                                <i class="bi bi-award-fill me-1"></i>Назначен
-                                            </span>
+                                            {% if event.mvp_players %}
+                                                <div class="d-flex flex-wrap gap-1">
+                                                    {% for mvp_name in event.mvp_players %}
+                                                        <span class="badge bg-primary">
+                                                            <i class="bi bi-award-fill me-1"></i>{{ mvp_name }}
+                                                        </span>
+                                                    {% endfor %}
+                                                    {% if event.mvp_count > 1 %}
+                                                        <span class="badge bg-info">
+                                                            <i class="bi bi-plus me-1"></i>{{ event.mvp_count }}x
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
+                                            {% else %}
+                                                <span class="badge bg-primary">
+                                                    <i class="bi bi-award-fill me-1"></i>Назначен
+                                                </span>
+                                            {% endif %}
                                         {% else %}
                                             <span class="badge bg-secondary">
                                                 <i class="bi bi-dash-circle me-1"></i>Ожидает
