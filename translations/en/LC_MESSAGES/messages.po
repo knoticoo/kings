@@ -196,3 +196,97 @@ msgstr "Events have not been created yet."
 
 msgid "Winner"
 msgstr "Winner"
+
+# Guides
+msgid "Guides"
+msgstr "Guides"
+
+msgid "Guide Categories"
+msgstr "Guide Categories"
+
+msgid "Featured Guides"
+msgstr "Featured Guides"
+
+msgid "Recent Guides"
+msgstr "Recent Guides"
+
+msgid "All Guides"
+msgstr "All Guides"
+
+msgid "Search Guides"
+msgstr "Search Guides"
+
+msgid "No guides found"
+msgstr "No guides found"
+
+msgid "View Guide"
+msgstr "View Guide"
+
+msgid "Read More"
+msgstr "Read More"
+
+msgid "Related Guides"
+msgstr "Related Guides"
+
+msgid "Guide Management"
+msgstr "Guide Management"
+
+msgid "Add Guide"
+msgstr "Add Guide"
+
+msgid "Edit Guide"
+msgstr "Edit Guide"
+
+msgid "Delete Guide"
+msgstr "Delete Guide"
+
+msgid "Category Management"
+msgstr "Category Management"
+
+msgid "Add Category"
+msgstr "Add Category"
+
+msgid "Edit Category"
+msgstr "Edit Category"
+
+msgid "Delete Category"
+msgstr "Delete Category"
+
+msgid "Title"
+msgstr "Title"
+
+msgid "Content"
+msgstr "Content"
+
+msgid "Excerpt"
+msgstr "Excerpt"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Featured Image"
+msgstr "Featured Image"
+
+msgid "Published"
+msgstr "Published"
+
+msgid "Featured"
+msgstr "Featured"
+
+msgid "View Count"
+msgstr "View Count"
+
+msgid "Sort Order"
+msgstr "Sort Order"
+
+msgid "Icon"
+msgstr "Icon"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Search results for"
+msgstr "Search results for"

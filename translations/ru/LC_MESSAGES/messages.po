@@ -196,3 +196,97 @@ msgstr "События еще не созданы."
 
 msgid "Winner"
 msgstr "Победитель"
+
+# Guides
+msgid "Guides"
+msgstr "Руководства"
+
+msgid "Guide Categories"
+msgstr "Категории руководств"
+
+msgid "Featured Guides"
+msgstr "Рекомендуемые руководства"
+
+msgid "Recent Guides"
+msgstr "Недавние руководства"
+
+msgid "All Guides"
+msgstr "Все руководства"
+
+msgid "Search Guides"
+msgstr "Поиск руководств"
+
+msgid "No guides found"
+msgstr "Руководства не найдены"
+
+msgid "View Guide"
+msgstr "Просмотр руководства"
+
+msgid "Read More"
+msgstr "Читать далее"
+
+msgid "Related Guides"
+msgstr "Похожие руководства"
+
+msgid "Guide Management"
+msgstr "Управление руководствами"
+
+msgid "Add Guide"
+msgstr "Добавить руководство"
+
+msgid "Edit Guide"
+msgstr "Редактировать руководство"
+
+msgid "Delete Guide"
+msgstr "Удалить руководство"
+
+msgid "Category Management"
+msgstr "Управление категориями"
+
+msgid "Add Category"
+msgstr "Добавить категорию"
+
+msgid "Edit Category"
+msgstr "Редактировать категорию"
+
+msgid "Delete Category"
+msgstr "Удалить категорию"
+
+msgid "Title"
+msgstr "Заголовок"
+
+msgid "Content"
+msgstr "Содержание"
+
+msgid "Excerpt"
+msgstr "Краткое описание"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Featured Image"
+msgstr "Главное изображение"
+
+msgid "Published"
+msgstr "Опубликовано"
+
+msgid "Featured"
+msgstr "Рекомендуемое"
+
+msgid "View Count"
+msgstr "Количество просмотров"
+
+msgid "Sort Order"
+msgstr "Порядок сортировки"
+
+msgid "Icon"
+msgstr "Иконка"
+
+msgid "Active"
+msgstr "Активно"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Search results for"
+msgstr "Результаты поиска для"

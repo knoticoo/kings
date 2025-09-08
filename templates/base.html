@@ -73,6 +73,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint and 'guides' in request.endpoint %}active{% endif %}" 
+                           href="{{ url_for('guides.list_guides') }}">
+                            <i class="bi bi-book me-1"></i>{{ _("Guides") }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {% if request.endpoint == 'main.telegram_message' %}active{% endif %}" 
                            href="{{ url_for('main.telegram_message') }}">
                             <i class="bi bi-telegram me-1"></i>{{ _("Telegram") }}

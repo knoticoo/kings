@@ -61,16 +61,17 @@ from database import db, init_app, create_all_tables
 init_app(app)
 
 # Import models after database initialization
-from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment
+from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Guide, GuideCategory
 
 # Import routes
-from routes import main_routes, player_routes, alliance_routes, event_routes
+from routes import main_routes, player_routes, alliance_routes, event_routes, guide_routes
 
 # Register blueprints
 app.register_blueprint(main_routes.bp)
 app.register_blueprint(player_routes.bp)
 app.register_blueprint(alliance_routes.bp)
 app.register_blueprint(event_routes.bp)
+app.register_blueprint(guide_routes.bp)
 
 @app.route('/set_language/<language>')
 def set_language(language=None):
