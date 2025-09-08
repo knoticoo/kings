@@ -1,32 +1,22 @@
 """
 Blacklist Database Module
 
-Separate database configuration for blacklist management.
-Uses a dedicated SQLite database file for blacklist data.
+Database models for blacklist management.
+Uses the main database instead of a separate one for simplicity.
 """
 
 from datetime import datetime
-import os
-
-# Import the main database instance instead of creating a new one
 from database import db
 
 def init_blacklist_app(app):
     """Initialize the blacklist database with the Flask app"""
-    # Configure separate database URI for blacklist
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['BLACKLIST_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "blacklist.db")}'
-    
-    # Configure SQLAlchemy for blacklist database using binds
-    if 'SQLALCHEMY_BINDS' not in app.config:
-        app.config['SQLALCHEMY_BINDS'] = {}
-    
-    app.config['SQLALCHEMY_BINDS']['blacklist'] = app.config['BLACKLIST_DATABASE_URI']
+    # No special configuration needed - using main database
+    pass
 
 def create_blacklist_tables(app):
     """Create blacklist database tables"""
     with app.app_context():
-        db.create_all(bind_key='blacklist')
+        db.create_all()
         print("Blacklist database tables created successfully!")
 
 class Blacklist(db.Model):
@@ -36,12 +26,11 @@ class Blacklist(db.Model):
     Attributes:
         id: Primary key
         alliance_name: Alliance name (optional, can be null for individual players)
-        player_name: Player name (required)
+        player_name: Player name (optional, can be null for alliance-only entries)
         created_at: When entry was added
         updated_at: Last modification time
     """
     __tablename__ = 'blacklist'
-    __bind_key__ = 'blacklist'  # Use the blacklist database
     
     id = db.Column(db.Integer, primary_key=True)
     alliance_name = db.Column(db.String(100), nullable=True)  # Optional alliance tag
