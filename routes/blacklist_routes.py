@@ -6,7 +6,7 @@ Allows adding, viewing, and removing blacklisted entries.
 """
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from blacklist_database import Blacklist
+from models import Blacklist
 from database import db
 
 # Create blueprint for blacklist routes

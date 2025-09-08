@@ -290,3 +290,121 @@ msgstr "Search"
 
 msgid "Search results for"
 msgstr "Search results for"
+
+# Blacklist
+msgid "Blacklist Management"
+msgstr "Blacklist Management"
+
+msgid "Blacklist"
+msgstr "Blacklist"
+
+msgid "Add Entry"
+msgstr "Add Entry"
+
+msgid "Total Entries"
+msgstr "Total Entries"
+
+msgid "Alliance Entries"
+msgstr "Alliance Entries"
+
+msgid "Player Entries"
+msgstr "Player Entries"
+
+msgid "Blacklisted Alliances"
+msgstr "Blacklisted Alliances"
+
+msgid "Blacklisted Players"
+msgstr "Blacklisted Players"
+
+msgid "Alliance Name"
+msgstr "Alliance Name"
+
+msgid "Player Name"
+msgstr "Player Name"
+
+msgid "Enter alliance name (optional)"
+msgstr "Enter alliance name (optional)"
+
+msgid "Enter player name (optional)"
+msgstr "Enter player name (optional)"
+
+msgid "Leave empty if adding only a player without alliance"
+msgstr "Leave empty if adding only a player without alliance"
+
+msgid "Leave empty if adding only an alliance"
+msgstr "Leave empty if adding only an alliance"
+
+msgid "Leave empty if editing only a player without alliance"
+msgstr "Leave empty if editing only a player without alliance"
+
+msgid "Leave empty if editing only an alliance"
+msgstr "Leave empty if editing only an alliance"
+
+msgid "Note:"
+msgstr "Note:"
+
+msgid "You must provide either an alliance name or a player name (or both)."
+msgstr "You must provide either an alliance name or a player name (or both)."
+
+msgid "Add Blacklist Entry"
+msgstr "Add Blacklist Entry"
+
+msgid "Edit Blacklist Entry"
+msgstr "Edit Blacklist Entry"
+
+msgid "Update Entry"
+msgstr "Update Entry"
+
+msgid "Added"
+msgstr "Added"
+
+msgid "Are you sure you want to delete this entry?"
+msgstr "Are you sure you want to delete this entry?"
+
+msgid "No Blacklist Entries"
+msgstr "No Blacklist Entries"
+
+msgid "The blacklist is currently empty. Add entries to start managing blacklisted alliances and players."
+msgstr "The blacklist is currently empty. Add entries to start managing blacklisted alliances and players."
+
+msgid "Add First Entry"
+msgstr "Add First Entry"
+
+msgid "How to Use"
+msgstr "How to Use"
+
+msgid "Alliance Only"
+msgstr "Alliance Only"
+
+msgid "Enter only the alliance name to blacklist an entire alliance."
+msgstr "Enter only the alliance name to blacklist an entire alliance."
+
+msgid "Player Only"
+msgstr "Player Only"
+
+msgid "Enter only the player name to blacklist a specific player."
+msgstr "Enter only the player name to blacklist a specific player."
+
+msgid "Player with Alliance"
+msgstr "Player with Alliance"
+
+msgid "Enter both alliance and player name to blacklist a specific player from a specific alliance."
+msgstr "Enter both alliance and player name to blacklist a specific player from a specific alliance."
+
+msgid "Current Entry"
+msgstr "Current Entry"
+
+msgid "Alliance:"
+msgstr "Alliance:"
+
+msgid "Player:"
+msgstr "Player:"
+
+msgid "Not specified"
+msgstr "Not specified"
+
+msgid "Created:"
+msgstr "Created:"
+
+msgid "Last Updated:"
+msgstr "Last Updated:"

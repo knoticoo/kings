@@ -290,3 +290,121 @@ msgstr "Поиск"
 
 msgid "Search results for"
 msgstr "Результаты поиска для"
+
+# Blacklist
+msgid "Blacklist Management"
+msgstr "Управление черным списком"
+
+msgid "Blacklist"
+msgstr "Черный список"
+
+msgid "Add Entry"
+msgstr "Добавить запись"
+
+msgid "Total Entries"
+msgstr "Всего записей"
+
+msgid "Alliance Entries"
+msgstr "Записи альянсов"
+
+msgid "Player Entries"
+msgstr "Записи игроков"
+
+msgid "Blacklisted Alliances"
+msgstr "Альянсы в черном списке"
+
+msgid "Blacklisted Players"
+msgstr "Игроки в черном списке"
+
+msgid "Alliance Name"
+msgstr "Название альянса"
+
+msgid "Player Name"
+msgstr "Имя игрока"
+
+msgid "Enter alliance name (optional)"
+msgstr "Введите название альянса (необязательно)"
+
+msgid "Enter player name (optional)"
+msgstr "Введите имя игрока (необязательно)"
+
+msgid "Leave empty if adding only a player without alliance"
+msgstr "Оставьте пустым, если добавляете только игрока без альянса"
+
+msgid "Leave empty if adding only an alliance"
+msgstr "Оставьте пустым, если добавляете только альянс"
+
+msgid "Leave empty if editing only a player without alliance"
+msgstr "Оставьте пустым, если редактируете только игрока без альянса"
+
+msgid "Leave empty if editing only an alliance"
+msgstr "Оставьте пустым, если редактируете только альянс"
+
+msgid "Note:"
+msgstr "Примечание:"
+
+msgid "You must provide either an alliance name or a player name (or both)."
+msgstr "Необходимо указать либо название альянса, либо имя игрока (или и то, и другое)."
+
+msgid "Add Blacklist Entry"
+msgstr "Добавить запись в черный список"
+
+msgid "Edit Blacklist Entry"
+msgstr "Редактировать запись черного списка"
+
+msgid "Update Entry"
+msgstr "Обновить запись"
+
+msgid "Added"
+msgstr "Добавлено"
+
+msgid "Are you sure you want to delete this entry?"
+msgstr "Вы уверены, что хотите удалить эту запись?"
+
+msgid "No Blacklist Entries"
+msgstr "Нет записей в черном списке"
+
+msgid "The blacklist is currently empty. Add entries to start managing blacklisted alliances and players."
+msgstr "Черный список в настоящее время пуст. Добавьте записи, чтобы начать управление заблокированными альянсами и игроками."
+
+msgid "Add First Entry"
+msgstr "Добавить первую запись"
+
+msgid "How to Use"
+msgstr "Как использовать"
+
+msgid "Alliance Only"
+msgstr "Только альянс"
+
+msgid "Enter only the alliance name to blacklist an entire alliance."
+msgstr "Введите только название альянса, чтобы заблокировать весь альянс."
+
+msgid "Player Only"
+msgstr "Только игрок"
+
+msgid "Enter only the player name to blacklist a specific player."
+msgstr "Введите только имя игрока, чтобы заблокировать конкретного игрока."
+
+msgid "Player with Alliance"
+msgstr "Игрок с альянсом"
+
+msgid "Enter both alliance and player name to blacklist a specific player from a specific alliance."
+msgstr "Введите название альянса и имя игрока, чтобы заблокировать конкретного игрока из определенного альянса."
+
+msgid "Current Entry"
+msgstr "Текущая запись"
+
+msgid "Alliance:"
+msgstr "Альянс:"
+
+msgid "Player:"
+msgstr "Игрок:"
+
+msgid "Not specified"
+msgstr "Не указано"
+
+msgid "Created:"
+msgstr "Создано:"
+
+msgid "Last Updated:"
+msgstr "Последнее обновление:"
