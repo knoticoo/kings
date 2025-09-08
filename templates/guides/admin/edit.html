@@ -124,23 +124,38 @@
             </div>
             <div class="card-body">
                 <div class="row g-2">
+                    {% if guide.view_count > 0 %}
                     <div class="col-6">
                         <strong>{{ _("Views") }}:</strong>
                     </div>
                     <div class="col-6">
-                        {{ guide.view_count }}
+                        <span class="badge bg-primary">{{ guide.view_count }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="col-6">
+                        <strong>{{ _("Status") }}:</strong>
+                    </div>
+                    <div class="col-6">
+                        {% if guide.is_published %}
+                            <span class="badge bg-success">{{ _("Published") }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ _("Draft") }}</span>
+                        {% endif %}
+                        {% if guide.is_featured %}
+                            <span class="badge bg-warning ms-1">{{ _("Featured") }}</span>
+                        {% endif %}
                     </div>
                     <div class="col-6">
                         <strong>{{ _("Created") }}:</strong>
                     </div>
                     <div class="col-6">
-                        {{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}
+                        <small class="text-muted">{{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}</small>
                     </div>
                     <div class="col-6">
                         <strong>{{ _("Updated") }}:</strong>
                     </div>
                     <div class="col-6">
-                        {{ guide.updated_at.strftime('%Y-%m-%d') if guide.updated_at }}
+                        <small class="text-muted">{{ guide.updated_at.strftime('%Y-%m-%d') if guide.updated_at }}</small>
                     </div>
                 </div>
             </div>
@@ -190,7 +205,12 @@
 </div>
 {% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/html-categorizer.css') }}">
+{% endblock %}
+
 {% block extra_js %}
+<script src="{{ url_for('static', filename='js/html-categorizer.js') }}"></script>
 <script>
 function confirmDelete() {
     new bootstrap.Modal(document.getElementById('deleteModal')).show();

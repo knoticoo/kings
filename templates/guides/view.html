@@ -30,8 +30,10 @@
                         <div class="d-flex align-items-center text-muted">
                             <i class="bi bi-{{ guide.category.icon }} me-2"></i>
                             <span class="me-3">{{ guide.category.name }}</span>
+                            {% if guide.view_count > 0 %}
                             <i class="bi bi-eye me-1"></i>
                             <span class="me-3">{{ guide.view_count }} {{ _("views") }}</span>
+                            {% endif %}
                             <i class="bi bi-calendar me-1"></i>
                             <span>{{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}</span>
                         </div>
@@ -79,7 +81,11 @@
                             </a>
                         </h6>
                         <small class="text-muted">
+                            {% if related_guide.view_count > 0 %}
                             <i class="bi bi-eye me-1"></i>{{ related_guide.view_count }}
+                            {% else %}
+                            <i class="bi bi-calendar me-1"></i>{{ related_guide.created_at.strftime('%Y-%m-%d') if related_guide.created_at }}
+                            {% endif %}
                         </small>
                     </div>
                 </div>
@@ -103,23 +109,25 @@
                     <div class="col-6">
                         <i class="bi bi-{{ guide.category.icon }} me-1"></i>{{ guide.category.name }}
                     </div>
+                    {% if guide.view_count > 0 %}
                     <div class="col-6">
                         <strong>{{ _("Views") }}:</strong>
                     </div>
                     <div class="col-6">
-                        {{ guide.view_count }}
+                        <span class="badge bg-primary">{{ guide.view_count }}</span>
                     </div>
+                    {% endif %}
                     <div class="col-6">
                         <strong>{{ _("Created") }}:</strong>
                     </div>
                     <div class="col-6">
-                        {{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}
+                        <small class="text-muted">{{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}</small>
                     </div>
                     <div class="col-6">
                         <strong>{{ _("Updated") }}:</strong>
                     </div>
                     <div class="col-6">
-                        {{ guide.updated_at.strftime('%Y-%m-%d') if guide.updated_at }}
+                        <small class="text-muted">{{ guide.updated_at.strftime('%Y-%m-%d') if guide.updated_at }}</small>
                     </div>
                     {% if guide.is_featured %}
                     <div class="col-12">
