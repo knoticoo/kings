@@ -65,9 +65,9 @@
                 {% endif %}
             </div>
             <div class="card-footer">
-                <a href="{{ url_for('guides.view_guide', slug=guide.slug) }}" class="btn btn-primary btn-sm">
+                <button class="btn btn-primary btn-sm read-more-btn" data-guide-slug="{{ guide.slug }}">
                     <i class="bi bi-book me-1"></i>{{ _("Read More") }}
-                </a>
+                </button>
             </div>
         </div>
     </div>

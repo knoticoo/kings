@@ -33,15 +33,11 @@ def list_guides():
         # Get all active categories with their guides
         categories = GuideCategory.query.filter_by(is_active=True).order_by(GuideCategory.sort_order).all()
         
-        # Get featured guides
-        featured_guides = Guide.query.filter_by(is_published=True, is_featured=True).order_by(Guide.sort_order).limit(6).all()
-        
         # Get recent guides
         recent_guides = Guide.query.filter_by(is_published=True).order_by(Guide.created_at.desc()).limit(6).all()
         
         return render_template('guides/list.html', 
                              categories=categories,
-                             featured_guides=featured_guides,
                              recent_guides=recent_guides)
     except Exception as e:
         print(f"Error in list_guides route: {str(e)}")
@@ -94,6 +90,36 @@ def view_guide(slug):
     except Exception as e:
         print(f"Error in view_guide route: {str(e)}")
         abort(404)
+
+@bp.route('/api/<slug>')
+def get_guide_data(slug):
+    """
+    Get guide data for modal popup
+    """
+    try:
+        guide = Guide.query.filter_by(slug=slug, is_published=True).first()
+        if not guide:
+            return jsonify({'error': 'Guide not found'}), 404
+        
+        # Increment view count
+        guide.increment_view_count()
+        
+        return jsonify({
+            'id': guide.id,
+            'title': guide.title,
+            'content': guide.content,
+            'excerpt': guide.excerpt,
+            'featured_image': guide.featured_image,
+            'view_count': guide.view_count,
+            'created_at': guide.created_at.strftime('%Y-%m-%d') if guide.created_at else None,
+            'category': {
+                'name': guide.category.name,
+                'icon': guide.category.icon
+            }
+        })
+    except Exception as e:
+        print(f"Error in get_guide_data route: {str(e)}")
+        return jsonify({'error': 'Failed to load guide data'}), 500
 
 @bp.route('/search')
 def search_guides():
