@@ -5,12 +5,11 @@ Separate database configuration for blacklist management.
 Uses a dedicated SQLite database file for blacklist data.
 """
 
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 
-# Create separate database instance for blacklist
-blacklist_db = SQLAlchemy()
+# Import the main database instance instead of creating a new one
+from database import db
 
 def init_blacklist_app(app):
     """Initialize the blacklist database with the Flask app"""
@@ -18,20 +17,19 @@ def init_blacklist_app(app):
     basedir = os.path.abspath(os.path.dirname(__file__))
     app.config['BLACKLIST_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "blacklist.db")}'
     
-    # Configure SQLAlchemy for blacklist database
-    app.config['SQLALCHEMY_BINDS'] = {
-        'blacklist': app.config['BLACKLIST_DATABASE_URI']
-    }
+    # Configure SQLAlchemy for blacklist database using binds
+    if 'SQLALCHEMY_BINDS' not in app.config:
+        app.config['SQLALCHEMY_BINDS'] = {}
     
-    blacklist_db.init_app(app)
+    app.config['SQLALCHEMY_BINDS']['blacklist'] = app.config['BLACKLIST_DATABASE_URI']
 
 def create_blacklist_tables(app):
     """Create blacklist database tables"""
     with app.app_context():
-        blacklist_db.create_all(bind='blacklist')
+        db.create_all(bind='blacklist')
         print("Blacklist database tables created successfully!")
 
-class Blacklist(blacklist_db.Model):
+class Blacklist(db.Model):
     """
     Blacklist model - represents blacklisted alliances and players
     
@@ -45,11 +43,11 @@ class Blacklist(blacklist_db.Model):
     __tablename__ = 'blacklist'
     __bind_key__ = 'blacklist'  # Use the blacklist database
     
-    id = blacklist_db.Column(blacklist_db.Integer, primary_key=True)
-    alliance_name = blacklist_db.Column(blacklist_db.String(100), nullable=True)  # Optional alliance tag
-    player_name = blacklist_db.Column(blacklist_db.String(100), nullable=True)    # Optional player name
-    created_at = blacklist_db.Column(blacklist_db.DateTime, default=datetime.utcnow)
-    updated_at = blacklist_db.Column(blacklist_db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    id = db.Column(db.Integer, primary_key=True)
+    alliance_name = db.Column(db.String(100), nullable=True)  # Optional alliance tag
+    player_name = db.Column(db.String(100), nullable=True)    # Optional player name
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     def __repr__(self):
         if self.alliance_name:
