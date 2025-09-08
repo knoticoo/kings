@@ -9,9 +9,14 @@
             <h1 class="h2 text-primary">
                 <i class="bi bi-calendar-event-fill me-2"></i>Управление событиями
             </h1>
-            <a href="{{ url_for('events.add_event') }}" class="btn btn-primary">
-                <i class="bi bi-calendar-plus me-1"></i>Добавить событие
-            </a>
+            <div>
+                <a href="{{ url_for('events.add_event') }}" class="btn btn-primary me-2">
+                    <i class="bi bi-calendar-plus me-1"></i>Добавить событие
+                </a>
+                <a href="{{ url_for('events.list_templates') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-collection me-1"></i>Шаблоны
+                </a>
+            </div>
         </div>
     </div>
 </div>

@@ -207,7 +207,6 @@ class EventTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
-    category = db.Column(db.String(50), default='General')  # Daily, Weekly, Special, Tournament, etc.
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     usage_count = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -222,7 +221,6 @@ class EventTemplate(db.Model):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'category': self.category,
             'is_active': self.is_active,
             'usage_count': self.usage_count,
             'created_at': self.created_at.isoformat() if self.created_at else None,

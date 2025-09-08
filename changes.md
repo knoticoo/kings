@@ -172,4 +172,54 @@ As requested, no modifications were made to the database schema, models, or any 
 
 ---
 
+## Latest Updates - Event Persistence & Templates
+
+### 4. Event Persistence Fix ✅
+**Problem Solved:**
+- Events were disappearing from assignment dropdowns once MVP/winner was assigned
+- Users had to recreate events repeatedly
+- Events would reappear later causing confusion
+
+**Solution Implemented:**
+- Modified event filtering logic to show ALL events (not just unassigned ones)
+- Added reassignment capability - users can now reassign MVP/winner to events
+- Updated templates to clearly show which events already have assignments
+- Events now persist in database and are always available for assignment
+
+**Files Modified:**
+- `/workspace/routes/player_routes.py` - Updated MVP assignment logic
+- `/workspace/routes/alliance_routes.py` - Updated winner assignment logic  
+- `/workspace/routes/event_routes.py` - Updated API endpoints
+- `/workspace/templates/players/assign_mvp.html` - Added assignment status indicators
+- `/workspace/templates/alliances/assign_winner.html` - Added assignment status indicators
+
+### 5. Event Templates System ✅
+**New Feature:**
+- Created reusable event templates for common events
+- Templates can be used to quickly create events without typing
+- Templates are sorted by usage frequency
+- Integrated into the add event form for easy access
+
+**Files Created:**
+- `/workspace/models.py` - Added EventTemplate model
+- `/workspace/routes/event_routes.py` - Added template management routes
+- `/workspace/templates/events/templates.html` - Template management page
+- `/workspace/templates/events/add_template.html` - Add template form
+- `/workspace/init_templates.sql` - SQL script for default templates
+- `/workspace/init_templates.py` - Python script for template initialization
+
+**Files Modified:**
+- `/workspace/templates/events/add.html` - Added template selection interface
+- `/workspace/templates/base.html` - Added templates to navigation menu
+- `/workspace/templates/events/list.html` - Added templates link
+
+**Template Features:**
+- Create, view, and delete event templates
+- Use templates to quickly create events
+- Track template usage statistics
+- Default templates for common event types
+- Integrated template selection in add event form
+
+---
+
 **Note:** All changes maintain the existing Russian language interface and preserve the current functionality while adding the requested features.
