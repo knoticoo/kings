@@ -18,7 +18,7 @@
 
 <div class="row">
     <!-- Main Content -->
-    <div class="col-lg-8">
+    <div class="col-12">
         <article class="card">
             {% if guide.featured_image %}
             <img src="{{ guide.featured_image }}" class="card-img-top" alt="{{ guide.title }}" style="height: 300px; object-fit: cover;">
@@ -56,89 +56,6 @@
                 </div>
             </div>
         </article>
-    </div>
-    
-    <!-- Sidebar -->
-    <div class="col-lg-4">
-        <!-- Related Guides -->
-        {% if related_guides %}
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-book me-2"></i>{{ _("Related Guides") }}
-                </h5>
-            </div>
-            <div class="card-body">
-                {% for related_guide in related_guides %}
-                <div class="d-flex mb-3">
-                    {% if related_guide.featured_image %}
-                    <img src="{{ related_guide.featured_image }}" class="rounded me-3" alt="{{ related_guide.title }}" style="width: 60px; height: 60px; object-fit: cover;">
-                    {% endif %}
-                    <div class="flex-grow-1">
-                        <h6 class="card-title">
-                            <a href="{{ url_for('guides.view_guide', slug=related_guide.slug) }}" class="text-decoration-none">
-                                {{ related_guide.title }}
-                            </a>
-                        </h6>
-                        <small class="text-muted">
-                            {% if related_guide.view_count > 0 %}
-                            <i class="bi bi-eye me-1"></i>{{ related_guide.view_count }}
-                            {% else %}
-                            <i class="bi bi-calendar me-1"></i>{{ related_guide.created_at.strftime('%Y-%m-%d') if related_guide.created_at }}
-                            {% endif %}
-                        </small>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-        
-        <!-- Guide Info -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="bi bi-info-circle me-2"></i>{{ _("Guide Information") }}
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row g-2">
-                    <div class="col-6">
-                        <strong>{{ _("Category") }}:</strong>
-                    </div>
-                    <div class="col-6">
-                        <i class="bi bi-{{ guide.category.icon }} me-1"></i>{{ guide.category.name }}
-                    </div>
-                    {% if guide.view_count > 0 %}
-                    <div class="col-6">
-                        <strong>{{ _("Views") }}:</strong>
-                    </div>
-                    <div class="col-6">
-                        <span class="badge bg-primary">{{ guide.view_count }}</span>
-                    </div>
-                    {% endif %}
-                    <div class="col-6">
-                        <strong>{{ _("Created") }}:</strong>
-                    </div>
-                    <div class="col-6">
-                        <small class="text-muted">{{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}</small>
-                    </div>
-                    <div class="col-6">
-                        <strong>{{ _("Updated") }}:</strong>
-                    </div>
-                    <div class="col-6">
-                        <small class="text-muted">{{ guide.updated_at.strftime('%Y-%m-%d') if guide.updated_at }}</small>
-                    </div>
-                    {% if guide.is_featured %}
-                    <div class="col-12">
-                        <span class="badge bg-warning">
-                            <i class="bi bi-star-fill me-1"></i>{{ _("Featured Guide") }}
-                        </span>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 {% endblock %}

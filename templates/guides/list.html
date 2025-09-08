@@ -19,23 +19,6 @@
     </div>
 </div>
 
-<!-- Search Bar -->
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <form method="GET" action="{{ url_for('guides.search_guides') }}">
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="q" placeholder="{{ _('Search Guides') }}..." value="{{ request.args.get('q', '') }}">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="bi bi-search me-1"></i>{{ _("Search") }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Featured Guides -->
 {% if featured_guides %}
