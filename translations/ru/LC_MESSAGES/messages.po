@@ -408,3 +408,31 @@ msgstr "Создано:"
 
 msgid "Last Updated:"
 msgstr "Последнее обновление:"
+
+# Blacklist flash messages
+msgid "Failed to load blacklist data"
+msgstr "Не удалось загрузить данные черного списка"
+
+msgid "Either alliance name or player name is required"
+msgstr "Необходимо указать либо название альянса, либо имя игрока"
+
+msgid "This entry already exists in the blacklist"
+msgstr "Эта запись уже существует в черном списке"
+
+msgid "Blacklist entry added successfully!"
+msgstr "Запись в черный список успешно добавлена!"
+
+msgid "Failed to add blacklist entry"
+msgstr "Не удалось добавить запись в черный список"
+
+msgid "Blacklist entry updated successfully!"
+msgstr "Запись в черном списке успешно обновлена!"
+
+msgid "Failed to update blacklist entry"
+msgstr "Не удалось обновить запись в черном списке"
+
+msgid "Blacklist entry deleted successfully!"
+msgstr "Запись в черном списке успешно удалена!"
+
+msgid "Failed to delete blacklist entry"
+msgstr "Не удалось удалить запись из черного списка"
