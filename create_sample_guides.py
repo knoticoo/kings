@@ -14,33 +14,33 @@ def create_sample_data():
         # Create tables if they don't exist
         create_tables()
         
-        # Create sample categories
+        # Create sample categories (Russian translations)
         categories_data = [
             {
-                'name': 'Knights',
+                'name': 'Рыцари',
                 'slug': 'knights',
-                'description': 'Comprehensive guides for all types of knights including tier lists, builds, and strategies.',
+                'description': 'Подробные руководства по всем типам рыцарей, включая списки уровней, сборки и стратегии.',
                 'icon': 'bi-shield-fill',
                 'sort_order': 1
             },
             {
-                'name': 'Events',
+                'name': 'События',
                 'slug': 'events',
-                'description': 'Event guides and strategies for Alliance Arena, Twilight Castle, and other game events.',
+                'description': 'Руководства и стратегии по событиям для Арены Альянса, Сумеречного Замка и других игровых событий.',
                 'icon': 'bi-calendar-event-fill',
                 'sort_order': 2
             },
             {
-                'name': 'Alliance',
+                'name': 'Альянс',
                 'slug': 'alliance',
-                'description': 'Alliance management, strategies, and coordination guides.',
+                'description': 'Управление альянсом, стратегии и руководства по координации.',
                 'icon': 'bi-people-fill',
                 'sort_order': 3
             },
             {
-                'name': 'Resources',
+                'name': 'Ресурсы',
                 'slug': 'resources',
-                'description': 'Resource management, farming guides, and optimization tips.',
+                'description': 'Управление ресурсами, руководства по фарму и советы по оптимизации.',
                 'icon': 'bi-gem',
                 'sort_order': 4
             }
@@ -60,10 +60,10 @@ def create_sample_data():
         knights_cat = GuideCategory.query.filter_by(slug='knights').first()
         events_cat = GuideCategory.query.filter_by(slug='events').first()
         
-        # Create sample guides
+        # Create sample guides (Russian translations)
         guides_data = [
             {
-                'title': 'Strength Knight Tier List',
+                'title': 'Список уровней рыцарей силы',
                 'slug': 'strength-knights',
                 'content': '''<h1><strong>STRENGTH KNIGHT TIER LIST</strong></h1>
 
@@ -167,13 +167,13 @@ def create_sample_data():
 <li>Andrew</li>
 <li>Bontemps</li>
 </ul>''',
-                'excerpt': 'Complete tier list ranking all Strength Knights from EX+ to F tier, with detailed explanations of each knight\'s viability.',
+                'excerpt': 'Полный список уровней, ранжирующий всех рыцарей силы от EX+ до F уровня, с подробными объяснениями жизнеспособности каждого рыцаря.',
                 'category_id': knights_cat.id,
                 'is_published': True,
                 'is_featured': True
             },
             {
-                'title': 'Intellect Knight Tier List',
+                'title': 'Список уровней рыцарей интеллекта',
                 'slug': 'intellect-knights',
                 'content': '''<h1><strong>INTELLECT KNIGHT TIER LIST</strong></h1>
 
@@ -232,13 +232,13 @@ def create_sample_data():
 <ul>
 <li>All other Intellect Knights not listed above</li>
 </ul>''',
-                'excerpt': 'Comprehensive tier list for all Intellect Knights, ranking them based on research capabilities and kingdom development.',
+                'excerpt': 'Подробный список уровней для всех рыцарей интеллекта, ранжирующий их на основе исследовательских способностей и развития королевства.',
                 'category_id': knights_cat.id,
                 'is_published': True,
                 'is_featured': True
             },
             {
-                'title': 'Alliance Arena Guide',
+                'title': 'Руководство по Арене Альянса',
                 'slug': 'alliance-arena',
                 'content': '''<h1><strong>ALLIANCE ARENA GUIDE</strong></h1>
 
@@ -270,13 +270,13 @@ def create_sample_data():
 <li>Frederick Barbarossa (SSS)</li>
 <li>Charlemagne (SSS)</li>
 </ul>''',
-                'excerpt': 'Complete guide to Alliance Arena including mechanics, strategies, and recommended knights for competitive play.',
+                'excerpt': 'Полное руководство по Арене Альянса, включая механику, стратегии и рекомендуемых рыцарей для соревновательной игры.',
                 'category_id': events_cat.id,
                 'is_published': True,
                 'is_featured': False
             },
             {
-                'title': 'Twilight Castle Guide',
+                'title': 'Руководство по Сумеречному Замку',
                 'slug': 'twilight-castle',
                 'content': '''<h1><strong>TWILIGHT CASTLE GUIDE</strong></h1>
 
@@ -307,7 +307,7 @@ def create_sample_data():
 <li><strong>Magic Floors:</strong> Include Intellect knights for magical damage</li>
 <li><strong>Balanced Floors:</strong> Mix of all knight types</li>
 </ul>''',
-                'excerpt': 'Detailed guide to Twilight Castle event including floor mechanics, preparation tips, and recommended team compositions.',
+                'excerpt': 'Подробное руководство по событию Сумеречного Замка, включая механику этажей, советы по подготовке и рекомендуемые составы команд.',
                 'category_id': events_cat.id,
                 'is_published': True,
                 'is_featured': False
