@@ -126,3 +126,11 @@
     </div>
 </div>
 {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/html-categorizer.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/html-categorizer.js') }}"></script>
+{% endblock %}

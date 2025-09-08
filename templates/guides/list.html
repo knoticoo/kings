@@ -59,7 +59,11 @@
                                 <i class="bi bi-{{ guide.category.icon }} me-1"></i>{{ guide.category.name }}
                             </small>
                             <small class="text-muted">
+                                {% if guide.view_count > 0 %}
                                 <i class="bi bi-eye me-1"></i>{{ guide.view_count }}
+                                {% else %}
+                                <i class="bi bi-calendar me-1"></i>{{ guide.created_at.strftime('%Y-%m-%d') if guide.created_at }}
+                                {% endif %}
                             </small>
                         </div>
                     </div>
