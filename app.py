@@ -88,7 +88,7 @@ def set_language(language=None):
     return redirect(url_for('main.dashboard'))
 
 def create_tables():
-    """Create all database tables"""
+    """Create all database tables including blacklist"""
     create_all_tables(app)
     create_blacklist_tables(app)
 
