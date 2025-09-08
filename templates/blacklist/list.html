@@ -223,6 +223,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const exportText = document.getElementById('exportText');
     const exportFormat = document.getElementById('exportFormat');
     
+    // Translation strings for JavaScript
+    const translations = {
+        blacklistOpen: "{{ _('Blacklist [') }}",
+        blacklistClose: "{{ _(']') }}",
+        alliances: "{{ _('Alliances:') }}",
+        players: "{{ _('Players:') }}",
+        blacklistExport: "{{ _('Blacklist Export -') }}"
+    };
+    
     exportModal.addEventListener('show.bs.modal', function() {
         generateExportText();
     });
@@ -239,22 +248,22 @@ document.addEventListener('DOMContentLoaded', function() {
         let text = '';
         
         if (format === 'formatted') {
-            text = `Blacklist [ ${dateStr} ]\n\n`;
-            text += `Alliances:\n`;
+            text = `${translations.blacklistOpen} ${dateStr} ${translations.blacklistClose}\n\n`;
+            text += `${translations.alliances}\n`;
             {% for entry in alliance_entries %}
             text += `- {{ entry.alliance_name }}\n`;
             {% endfor %}
-            text += `\nPlayers:\n`;
+            text += `\n${translations.players}\n`;
             {% for entry in player_entries %}
             text += `- {{ entry.get_display_name() }}\n`;
             {% endfor %}
         } else {
-            text = `Blacklist Export - ${dateStr}\n\n`;
-            text += `Alliances:\n`;
+            text = `${translations.blacklistExport} ${dateStr}\n\n`;
+            text += `${translations.alliances}\n`;
             {% for entry in alliance_entries %}
             text += `{{ entry.alliance_name }}\n`;
             {% endfor %}
-            text += `\nPlayers:\n`;
+            text += `\n${translations.players}\n`;
             {% for entry in player_entries %}
             text += `{{ entry.get_display_name() }}\n`;
             {% endfor %}

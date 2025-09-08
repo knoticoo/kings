@@ -100,38 +100,42 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5 class="card-title">{{ _("Quick Actions") }}</h5>
-                        <p class="mb-0">{{ _("Add and assign") }}</p>
+                        <h5 class="card-title">{{ _("Blacklist") }}</h5>
+                        <h2 class="mb-0">{{ total_blacklist_entries }}</h2>
                     </div>
                     <div class="align-self-center">
-                        <i class="bi bi-lightning-fill fs-1"></i>
+                        <i class="bi bi-shield-exclamation fs-1"></i>
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <div class="dropdown">
-                    <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                        {{ _("Actions") }}
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ url_for('players.add_player') }}">
-                            <i class="bi bi-person-plus me-2"></i>{{ _("Add Player") }}
-                        </a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('alliances.add_alliance') }}">
-                            <i class="bi bi-shield-plus me-2"></i>{{ _("Add Alliance") }}
-                        </a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('events.add_event') }}">
-                            <i class="bi bi-calendar-plus me-2"></i>{{ _("Add Event") }}
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{{ url_for('players.assign_mvp') }}">
-                            <i class="bi bi-award me-2"></i>{{ _("Assign MVP") }}
-                        </a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('alliances.assign_winner') }}">
-                            <i class="bi bi-trophy me-2"></i>{{ _("Assign Winner") }}
-                        </a></li>
-                    </ul>
+                <a href="{{ url_for('blacklist.list_blacklist') }}" class="text-dark text-decoration-none">
+                    <small>{{ _("View blacklist") }} <i class="bi bi-arrow-right"></i></small>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Second Row of Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-secondary text-white h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5 class="card-title">{{ _("Guides") }}</h5>
+                        <h2 class="mb-0">{{ total_guides }}</h2>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="bi bi-book-fill fs-1"></i>
+                    </div>
                 </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('guides.list_guides') }}" class="text-white text-decoration-none">
+                    <small>{{ _("View all guides") }} <i class="bi bi-arrow-right"></i></small>
+                </a>
             </div>
         </div>
     </div>

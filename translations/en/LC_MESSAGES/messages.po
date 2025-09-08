@@ -51,6 +51,9 @@ msgstr "Recent Events"
 msgid "Quick Actions"
 msgstr "Quick Actions"
 
+msgid "Management Tools"
+msgstr "Management Tools"
+
 msgid "Add Player"
 msgstr "Add Player"
 
@@ -122,6 +125,12 @@ msgstr "View all alliances"
 
 msgid "View all events"
 msgstr "View all events"
+
+msgid "View blacklist"
+msgstr "View blacklist"
+
+msgid "View all guides"
+msgstr "View all guides"
 
 msgid "Create first event"
 msgstr "Create first event"
@@ -467,3 +476,19 @@ msgstr "Copied!"
 
 msgid "Close"
 msgstr "Close"
+
+# JavaScript export strings
+msgid "Blacklist ["
+msgstr "Blacklist ["
+
+msgid "]"
+msgstr "]"
+
+msgid "Alliances:"
+msgstr "Alliances:"
+
+msgid "Players:"
+msgstr "Players:"
+
+msgid "Blacklist Export -"
+msgstr "Blacklist Export -"

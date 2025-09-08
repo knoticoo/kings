@@ -51,6 +51,9 @@ msgstr "Последние события"
 msgid "Quick Actions"
 msgstr "Быстрые действия"
 
+msgid "Management Tools"
+msgstr "Инструменты управления"
+
 msgid "Add Player"
 msgstr "Добавить игрока"
 
@@ -122,6 +125,12 @@ msgstr "Посмотреть все альянсы"
 
 msgid "View all events"
 msgstr "Посмотреть все события"
+
+msgid "View blacklist"
+msgstr "Посмотреть черный список"
+
+msgid "View all guides"
+msgstr "Посмотреть все руководства"
 
 msgid "Create first event"
 msgstr "Создать первое событие"
@@ -467,3 +476,19 @@ msgstr "Скопировано!"
 
 msgid "Close"
 msgstr "Закрыть"
+
+# JavaScript export strings
+msgid "Blacklist ["
+msgstr "Черный список ["
+
+msgid "]"
+msgstr "]"
+
+msgid "Alliances:"
+msgstr "Альянсы:"
+
+msgid "Players:"
+msgstr "Игроки:"
+
+msgid "Blacklist Export -"
+msgstr "Экспорт черного списка -"
