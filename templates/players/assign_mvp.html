@@ -115,13 +115,14 @@
                                 {% for event in available_events %}
                                     <option value="{{ event.id }}">
                                         {{ event.name }}
-                                        <small>({{ event.event_date.strftime('%Y-%m-%d') if event.event_date }})</small>
+                                        <small>({{ event.event_date.strftime('%Y-%m-%d') if event.event_date }})
+                                        {% if event.has_mvp %} - Уже есть MVP{% endif %}</small>
                                     </option>
                                 {% endfor %}
                             </select>
                             <div class="form-text">
                                 <i class="bi bi-info-circle me-1"></i>
-                                Показаны только события без MVP.
+                                Показаны все события. Можно назначать несколько MVP для одного события.
                             </div>
                         </div>
                     </div>
@@ -134,6 +135,7 @@
                             <li>Любой предыдущий статус MVP будет убран у других игроков</li>
                             <li>Счетчик MVP игрока будет увеличен</li>
                             <li>Событие будет отмечено как имеющее назначенного MVP</li>
+                            <li><strong>Новое:</strong> Можно назначать несколько MVP для одного события (для повторяющихся событий)</li>
                         </ul>
                     </div>
                     

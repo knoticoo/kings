@@ -228,11 +228,8 @@ def assign_mvp():
             player = Player.query.get_or_404(player_id)
             event = Event.query.get_or_404(event_id)
             
-            # Check if event already has MVP
-            existing_assignment = MVPAssignment.query.filter_by(event_id=event_id).first()
-            if existing_assignment:
-                flash(f'Event "{event.name}" already has an MVP assigned', 'error')
-                return redirect(url_for('players.assign_mvp'))
+            # Allow multiple MVP assignments per event for recurring events
+            # No need to check if event already has MVP - we allow multiple assignments
             
             # Remove current MVP status from all players
             Player.query.update({'is_current_mvp': False})
@@ -245,7 +242,7 @@ def assign_mvp():
             player.is_current_mvp = True
             player.mvp_count += 1
             
-            # Update event status
+            # Update event status - mark as having at least one MVP
             event.has_mvp = True
             
             db.session.commit()
@@ -273,8 +270,8 @@ def assign_mvp():
         can_assign = can_assign_mvp()
         eligible_players = get_eligible_players() if can_assign else []
         
-        # Get events that don't have MVP assigned yet
-        available_events = Event.query.filter_by(has_mvp=False).order_by(Event.event_date.desc()).all()
+        # Get all events - allow multiple MVP assignments per event for recurring events
+        available_events = Event.query.order_by(Event.event_date.desc()).all()
         
         return render_template('players/assign_mvp.html',
                              can_assign_mvp=can_assign,

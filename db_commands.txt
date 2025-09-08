@@ -1,0 +1,55 @@
+# Database Management Commands for King's Choice App
+
+## View Database
+./view_database.sh
+
+## Interactive SQLite3 Session
+sqlite3 kings_choice.db
+
+## Common SQLite3 Commands (when in interactive mode)
+.tables                    # Show all tables
+.schema                    # Show all table schemas
+.schema table_name         # Show schema for specific table
+.headers on               # Show column headers
+.mode column              # Format output in columns
+.quit                     # Exit SQLite3
+
+## Useful Queries
+
+# Show all players
+SELECT * FROM players;
+
+# Show all events
+SELECT * FROM events;
+
+# Show all alliances
+SELECT * FROM alliances;
+
+# Show MVP assignments with player and event names
+SELECT ma.id, p.name as player, e.name as event, ma.assigned_at 
+FROM mvp_assignments ma 
+JOIN players p ON ma.player_id = p.id 
+JOIN events e ON ma.event_id = e.id;
+
+# Show winner assignments with alliance and event names
+SELECT wa.id, a.name as alliance, e.name as event, wa.assigned_at 
+FROM winner_assignments wa 
+JOIN alliances a ON wa.alliance_id = a.id 
+JOIN events e ON wa.event_id = e.id;
+
+# Count records in each table
+SELECT 'players' as table_name, COUNT(*) as count FROM players
+UNION ALL
+SELECT 'events', COUNT(*) FROM events
+UNION ALL
+SELECT 'alliances', COUNT(*) FROM alliances
+UNION ALL
+SELECT 'mvp_assignments', COUNT(*) FROM mvp_assignments
+UNION ALL
+SELECT 'winner_assignments', COUNT(*) FROM winner_assignments;
+
+## Backup Database
+cp kings_choice.db kings_choice_backup_$(date +%Y%m%d_%H%M%S).db
+
+## Restore Database
+cp kings_choice_backup_YYYYMMDD_HHMMSS.db kings_choice.db
