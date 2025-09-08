@@ -26,7 +26,7 @@ def init_blacklist_app(app):
 def create_blacklist_tables(app):
     """Create blacklist database tables"""
     with app.app_context():
-        db.create_all(bind='blacklist')
+        db.create_all(bind_key='blacklist')
         print("Blacklist database tables created successfully!")
 
 class Blacklist(db.Model):
