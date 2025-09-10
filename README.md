@@ -1,208 +1,172 @@
-# King's Choice Management App
+# Canon ViaPrint 3200 Manager
 
-A complete web application for managing MVP (Most Valuable Player) and alliance winner assignments for the King's Choice game with fair rotation logic.
+A web application for managing paper types and cross-side corrections for Canon ViaPrint 3200 printers.
 
-## 🎯 Features
+## Features
 
-- **Fair MVP Rotation**: Ensures all players get MVP before anyone gets it again
-- **Alliance Winner Management**: Fair rotation system for alliance victories
-- **Modern Web Interface**: Responsive design that works on all devices
-- **Real-time Updates**: Live rotation status and dashboard updates
-- **Complete CRUD Operations**: Full management of players, alliances, and events
-- **Production Ready**: Complete deployment and management tools
+- **Paper Database**: Manage 20+ different paper types with specifications
+- **Cross-side Corrections**: Save and quickly apply correction settings for each paper type
+- **Quick Apply**: One-click application of saved settings
+- **Search & Filter**: Find papers by weight, finish, or name
+- **Persistent Storage**: Settings saved in browser storage
 
-## 🚀 Quick Start
+## Quick Start
 
-### Automatic Installation
+### Option 1: Docker (Recommended)
+
+1. **Make the deployment script executable:**
+   ```bash
+   chmod +x deploy.sh
+   ```
+
+2. **Deploy the application:**
+   ```bash
+   ./deploy.sh
+   ```
+
+3. **Access the app:**
+   - Open your browser to `http://your-vps-ip:6000`
+
+### Option 2: Manual Docker Compose
+
+1. **Start the application:**
+   ```bash
+   docker-compose up -d
+   ```
+
+2. **Check status:**
+   ```bash
+   docker-compose ps
+   ```
+
+3. **View logs:**
+   ```bash
+   docker-compose logs -f
+   ```
+
+### Option 3: Direct Node.js (Development)
+
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+2. **Start the server:**
+   ```bash
+   npm start
+   ```
+
+3. **Access the app:**
+   - Open your browser to `http://localhost:6000`
+
+## Configuration
+
+### Environment Variables
+
+- `PORT`: Server port (default: 6000)
+- `NODE_ENV`: Environment (production/development)
+- `ALLOWED_ORIGINS`: Comma-separated list of allowed origins for CORS
+
+### Port Configuration
+
+The app runs on port 6000 by default to avoid conflicts with other applications like Next.js (which typically runs on port 3000).
+
+## Usage
+
+### Managing Papers
+
+1. **View Papers**: All paper types are displayed in the main database view
+2. **Search**: Use the search bar to find specific papers
+3. **Filter**: Filter by weight or finish type
+4. **Add New**: Click "Add Paper" to add new paper types
+
+### Cross-side Corrections
+
+1. **Quick Apply**: 
+   - Select a paper type from the dropdown
+   - Click "Apply Saved Settings" to instantly load saved corrections
+
+2. **Manual Settings**:
+   - Select a paper type
+   - Enter correction values (Cross 1, 2, 3, 4)
+   - Click "Save Settings" to store for future use
+
+3. **Load Saved Settings**:
+   - Select a paper type
+   - Click "Load Saved Settings" to populate the form with saved values
+
+## API Endpoints
+
+- `GET /api/health` - Health check
+- `GET /api/papers` - Get all papers
+- `POST /api/papers` - Add new paper
+- `PUT /api/papers/:id/corrections` - Save corrections for paper
+
+## File Structure
+
+```
+├── index.html          # Main HTML file
+├── styles.css          # CSS styles
+├── script.js           # Frontend JavaScript
+├── server.js           # Express server
+├── package.json        # Node.js dependencies
+├── data/
+│   └── papers.json     # Paper database
+├── Dockerfile          # Docker configuration
+├── docker-compose.yml  # Docker Compose setup
+└── deploy.sh           # Deployment script
+```
+
+## Troubleshooting
+
+### Port Already in Use
+
+If port 6000 is already in use:
+
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd kings-choice-management
+# Check what's using the port
+lsof -i :6000
 
-# Run complete installation
-./start.sh install
-
-# Start the application
-./start.sh start
-
-# Access the app at http://localhost:5000
+# Stop the existing service
+docker-compose down
 ```
 
-### Manual Installation
-```bash
-# Install system dependencies (Ubuntu/Debian)
-sudo apt-get install python3 python3-pip python3-venv sqlite3
+### Service Won't Start
 
-# Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
+1. **Check logs:**
+   ```bash
+   docker-compose logs
+   ```
 
-# Install Python dependencies
-pip install -r requirements.txt
+2. **Check Docker status:**
+   ```bash
+   docker-compose ps
+   ```
 
-# Initialize database
-python3 -c "from app import create_tables; create_tables()"
+3. **Rebuild the container:**
+   ```bash
+   docker-compose up --build -d
+   ```
 
-# Start application
-python3 app.py
-```
+### Data Persistence
 
-## 📱 Usage
+Paper corrections are stored in the `data/` directory and persist between container restarts.
 
-### Dashboard
-- View current MVP and winning alliance
-- See statistics and recent events
-- Quick access to all management functions
+## Security
 
-### Player Management
-- Add, edit, and delete players
-- Assign MVP with automatic rotation enforcement
-- Visual indicators for MVP status
+- The app uses Helmet.js for security headers
+- CORS is configured to prevent conflicts with other apps
+- Non-root user in Docker container
+- Input validation and sanitization
 
-### Alliance Management
-- Add, edit, and delete alliances
-- Assign winners with fair rotation
-- Track alliance victory history
+## Support
 
-### Event Management
-- Create and manage game events
-- Assign MVP and winners to events
-- View detailed event information
-
-## 🔧 Management Commands
+For issues or questions, check the logs first:
 
 ```bash
-./start.sh install     # Complete setup and installation
-./start.sh start       # Start the application
-./start.sh stop        # Stop the application
-./start.sh restart     # Restart the application
-./start.sh status      # Show application status
-./start.sh logs [N]    # Show last N lines of logs
-./start.sh backup      # Backup the database
-./start.sh test        # Run application tests
-./start.sh update      # Update dependencies and restart
-./start.sh clean       # Clean up temporary files
-./start.sh help        # Show help message
+docker-compose logs -f
 ```
 
-## 🏗️ Architecture
+## License
 
-### Core Components
-- **Flask Application**: Modern Python web framework
-- **SQLite Database**: Lightweight, reliable data storage
-- **Bootstrap UI**: Responsive, mobile-friendly interface
-- **Modular Design**: Easy to extend and maintain
-
-### File Structure
-```
-├── app.py                 # Main application
-├── database.py            # Database management
-├── models.py              # Data models
-├── routes/                # Route handlers
-├── utils/                 # Utility functions
-├── templates/             # HTML templates
-├── static/                # CSS, JS, assets
-└── start.sh              # Management script
-```
-
-## 🔄 Rotation Logic
-
-### MVP Assignment Rules
-1. **First Round**: Any player can be assigned MVP
-2. **Subsequent Rounds**: Only assign MVP when all players have been MVP at least once
-3. **Fair Distribution**: Players with fewer MVP awards get priority
-
-### Alliance Winner Rules
-1. **First Round**: Any alliance can win
-2. **Subsequent Rounds**: Only assign winner when all alliances have won at least once
-3. **Equal Opportunities**: Alliances with fewer wins get priority
-
-## 📊 Database Schema
-
-### Tables
-- **players**: Player information and MVP tracking
-- **alliances**: Alliance information and win tracking
-- **events**: Game events requiring assignments
-- **mvp_assignments**: MVP assignment history
-- **winner_assignments**: Alliance winner history
-
-### Relationships
-- One MVP per event (enforced by unique constraint)
-- One winning alliance per event
-- Cascading deletes maintain data integrity
-
-## 🛡️ Security
-
-- **Input Validation**: Server-side validation for all forms
-- **SQL Injection Prevention**: SQLAlchemy ORM protection
-- **XSS Protection**: Jinja2 template auto-escaping
-- **Data Integrity**: Foreign key constraints and transactions
-
-## 📖 Documentation
-
-- **TODO.md**: Comprehensive feature documentation
-- **Code Comments**: Every function thoroughly documented
-- **API Documentation**: All endpoints explained
-- **Setup Guide**: Complete installation instructions
-
-## 🧪 Testing
-
-Run tests to verify functionality:
-```bash
-./start.sh test
-```
-
-Tests include:
-- Module import validation
-- Database model creation
-- Route accessibility
-- Rotation logic verification
-
-## 🚀 Production Deployment
-
-### System Requirements
-- Python 3.8 or higher
-- SQLite3
-- 1GB RAM (minimum)
-- 100MB disk space
-
-### Performance
-- Handles hundreds of concurrent users
-- Efficient database queries
-- Static file caching
-- Production server support (Gunicorn)
-
-### Monitoring
-- Application status monitoring
-- Log file management
-- Database backup system
-- Error tracking and recovery
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Update documentation
-6. Submit a pull request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🆘 Support
-
-For issues and questions:
-1. Check the TODO.md for detailed documentation
-2. Review the application logs: `./start.sh logs`
-3. Verify system status: `./start.sh status`
-4. Create an issue in the repository
-
-## 🎮 About King's Choice
-
-This application is designed to manage fair competition in the King's Choice game by ensuring equal opportunities for all players and alliances to receive recognition through the MVP and winner rotation systems.
-
----
-
-**Ready to manage your King's Choice competitions fairly and efficiently!** 🏆
+MIT License - feel free to modify and use as needed.

@@ -1,0 +1,136 @@
+[
+    {
+        "id": 1,
+        "name": "MultiArt Silk 90gr",
+        "weight": 90,
+        "dimensions": "360×315",
+        "finish": "silk",
+        "notes": "High-quality silk finish"
+    },
+    {
+        "id": 2,
+        "name": "G-Print 100gr",
+        "weight": 100,
+        "dimensions": "445×315",
+        "finish": "matte",
+        "notes": "Standard G-Print series"
+    },
+    {
+        "id": 3,
+        "name": "G-Print 130gr",
+        "weight": 130,
+        "dimensions": "320×252",
+        "finish": "matte",
+        "notes": "Heavy weight G-Print",
+        "corrections": {
+            "cross1": 0.2,
+            "cross2": -0.2,
+            "cross3": 0.1,
+            "cross4": -0.1
+        }
+    },
+    {
+        "id": 4,
+        "name": "Arctic Volume White 130gr",
+        "weight": 130,
+        "dimensions": "320×252",
+        "finish": "white",
+        "notes": "Arctic series white"
+    },
+    {
+        "id": 5,
+        "name": "Arctic Volume Ice 130gr",
+        "weight": 130,
+        "dimensions": "320×252",
+        "finish": "ice",
+        "notes": "Arctic series ice finish"
+    },
+    {
+        "id": 6,
+        "name": "G-Print 170gr",
+        "weight": 170,
+        "dimensions": "320×252",
+        "finish": "matte",
+        "notes": "Extra heavy G-Print"
+    },
+    {
+        "id": 7,
+        "name": "Amber Graphic 140gr",
+        "weight": 140,
+        "dimensions": "355×252",
+        "finish": "matte",
+        "notes": "Amber Graphic series"
+    },
+    {
+        "id": 8,
+        "name": "Amber Graphic 140gr",
+        "weight": 140,
+        "dimensions": "355×310",
+        "finish": "matte",
+        "notes": "Amber Graphic series - larger format"
+    },
+    {
+        "id": 9,
+        "name": "Munken Premium Cream 115gr",
+        "weight": 115,
+        "dimensions": "355×310",
+        "finish": "cream",
+        "notes": "Premium Munken cream"
+    },
+    {
+        "id": 10,
+        "name": "Munken Pure 130gr",
+        "weight": 130,
+        "dimensions": "355×310",
+        "finish": "white",
+        "notes": "Munken Pure series"
+    },
+    {
+        "id": 11,
+        "name": "Amber Graphic 120gr",
+        "weight": 120,
+        "dimensions": "320×252",
+        "finish": "matte",
+        "notes": "Lighter Amber Graphic"
+    },
+    {
+        "id": 12,
+        "name": "Amber Graphic 100gr",
+        "weight": 100,
+        "dimensions": "320×252",
+        "finish": "matte",
+        "notes": "Lightest Amber Graphic"
+    },
+    {
+        "id": 13,
+        "name": "Munken Print Cream 80gr",
+        "weight": 80,
+        "dimensions": "320×252",
+        "finish": "cream",
+        "notes": "Light Munken Print"
+    },
+    {
+        "id": 14,
+        "name": "Magno Volume 150gr",
+        "weight": 150,
+        "dimensions": "487×320",
+        "finish": "matte",
+        "notes": "Large format Magno"
+    },
+    {
+        "id": 15,
+        "name": "Munken Lynx Rough 150gr",
+        "weight": 150,
+        "dimensions": "445×315",
+        "finish": "rough",
+        "notes": "Rough texture Munken"
+    },
+    {
+        "id": 16,
+        "name": "Munken Polar Rough 120gr",
+        "weight": 120,
+        "dimensions": "445×315",
+        "finish": "rough",
+        "notes": "Polar rough texture"
+    }
+]
