@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon ViaPrint 3200 - Paper Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-print"></i>
+                    <h1>Canon ViaPrint 3200</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="addPaperBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Paper
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <nav class="nav">
+                    <a href="#" class="nav-item active" data-tab="papers">
+                        <i class="fas fa-layer-group"></i>
+                        Paper Database
+                    </a>
+                    <a href="#" class="nav-item" data-tab="corrections">
+                        <i class="fas fa-calculator"></i>
+                        Cross-side Corrections
+                    </a>
+                    <a href="#" class="nav-item" data-tab="settings">
+                        <i class="fas fa-cog"></i>
+                        Print Settings
+                    </a>
+                    <a href="#" class="nav-item" data-tab="inventory">
+                        <i class="fas fa-boxes"></i>
+                        Inventory
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="content">
+                <!-- Search and Filters -->
+                <div class="search-section">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search papers by name, weight, or dimensions...">
+                    </div>
+                    <div class="filters">
+                        <select id="weightFilter">
+                            <option value="">All Weights</option>
+                            <option value="80">80gr</option>
+                            <option value="90">90gr</option>
+                            <option value="100">100gr</option>
+                            <option value="115">115gr</option>
+                            <option value="120">120gr</option>
+                            <option value="130">130gr</option>
+                            <option value="140">140gr</option>
+                            <option value="150">150gr</option>
+                            <option value="170">170gr</option>
+                        </select>
+                        <select id="finishFilter">
+                            <option value="">All Finishes</option>
+                            <option value="silk">Silk</option>
+                            <option value="matte">Matte</option>
+                            <option value="cream">Cream</option>
+                            <option value="white">White</option>
+                            <option value="ice">Ice</option>
+                            <option value="rough">Rough</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Papers Tab -->
+                <div class="tab-content active" id="papers-tab">
+                    <div class="papers-grid" id="papersGrid">
+                        <!-- Papers will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Corrections Tab -->
+                <div class="tab-content" id="corrections-tab">
+                    <div class="corrections-container">
+                        <h2>Cross-side Correction Calculator</h2>
+                        <div class="correction-form">
+                            <div class="form-group">
+                                <label for="paperSelect">Select Paper Type:</label>
+                                <select id="paperSelect">
+                                    <option value="">Choose a paper...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="originalSize">Original Size (mm):</label>
+                                <input type="text" id="originalSize" placeholder="e.g., 320×252">
+                            </div>
+                            <div class="form-group">
+                                <label for="targetSize">Target Size (mm):</label>
+                                <input type="text" id="targetSize" placeholder="e.g., 355×310">
+                            </div>
+                            <button class="btn btn-primary" id="calculateBtn">Calculate Corrections</button>
+                        </div>
+                        <div class="correction-results" id="correctionResults"></div>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-content" id="settings-tab">
+                    <div class="settings-container">
+                        <h2>Print Settings by Paper Type</h2>
+                        <div class="settings-grid" id="settingsGrid">
+                            <!-- Settings will be dynamically loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Tab -->
+                <div class="tab-content" id="inventory-tab">
+                    <div class="inventory-container">
+                        <h2>Paper Inventory</h2>
+                        <div class="inventory-grid" id="inventoryGrid">
+                            <!-- Inventory will be dynamically loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Paper Modal -->
+    <div class="modal" id="addPaperModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Paper Type</h3>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="addPaperForm">
+                <div class="form-group">
+                    <label for="paperName">Paper Name:</label>
+                    <input type="text" id="paperName" required>
+                </div>
+                <div class="form-group">
+                    <label for="paperWeight">Weight (gr):</label>
+                    <input type="number" id="paperWeight" required>
+                </div>
+                <div class="form-group">
+                    <label for="paperDimensions">Dimensions (mm):</label>
+                    <input type="text" id="paperDimensions" placeholder="e.g., 320×252" required>
+                </div>
+                <div class="form-group">
+                    <label for="paperFinish">Finish:</label>
+                    <select id="paperFinish">
+                        <option value="silk">Silk</option>
+                        <option value="matte">Matte</option>
+                        <option value="cream">Cream</option>
+                        <option value="white">White</option>
+                        <option value="ice">Ice</option>
+                        <option value="rough">Rough</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paperNotes">Notes:</label>
+                    <textarea id="paperNotes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelAdd">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Paper</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
