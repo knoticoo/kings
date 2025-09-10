@@ -89,25 +89,64 @@
                 <!-- Corrections Tab -->
                 <div class="tab-content" id="corrections-tab">
                     <div class="corrections-container">
-                        <h2>Cross-side Correction Calculator</h2>
-                        <div class="correction-form">
-                            <div class="form-group">
-                                <label for="paperSelect">Select Paper Type:</label>
-                                <select id="paperSelect">
-                                    <option value="">Choose a paper...</option>
-                                </select>
+                        <h2>Cross-side Correction Settings</h2>
+                        
+                        <!-- Quick Apply Section -->
+                        <div class="quick-apply-section">
+                            <h3>Quick Apply Saved Settings</h3>
+                            <div class="quick-apply-form">
+                                <div class="form-group">
+                                    <label for="quickPaperSelect">Select Paper Type:</label>
+                                    <select id="quickPaperSelect">
+                                        <option value="">Choose a paper...</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" id="quickApplyBtn">Apply Saved Settings</button>
                             </div>
-                            <div class="form-group">
-                                <label for="originalSize">Original Size (mm):</label>
-                                <input type="text" id="originalSize" placeholder="e.g., 320×252">
-                            </div>
-                            <div class="form-group">
-                                <label for="targetSize">Target Size (mm):</label>
-                                <input type="text" id="targetSize" placeholder="e.g., 355×310">
-                            </div>
-                            <button class="btn btn-primary" id="calculateBtn">Calculate Corrections</button>
                         </div>
-                        <div class="correction-results" id="correctionResults"></div>
+
+                        <!-- Manual Settings Section -->
+                        <div class="manual-settings-section">
+                            <h3>Manual Correction Settings</h3>
+                            <div class="correction-form">
+                                <div class="form-group">
+                                    <label for="paperSelect">Select Paper Type:</label>
+                                    <select id="paperSelect">
+                                        <option value="">Choose a paper...</option>
+                                    </select>
+                                </div>
+                                <div class="correction-inputs">
+                                    <div class="form-group">
+                                        <label for="cross1">Cross 1:</label>
+                                        <input type="number" id="cross1" step="0.1" placeholder="0.2">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cross2">Cross 2:</label>
+                                        <input type="number" id="cross2" step="0.1" placeholder="-0.2">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cross3">Cross 3:</label>
+                                        <input type="number" id="cross3" step="0.1" placeholder="+0.1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cross4">Cross 4:</label>
+                                        <input type="number" id="cross4" step="0.1" placeholder="-0.1">
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button class="btn btn-secondary" id="loadSettingsBtn">Load Saved Settings</button>
+                                    <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Settings Display -->
+                        <div class="current-settings" id="currentSettings">
+                            <h3>Current Settings</h3>
+                            <div class="settings-display" id="settingsDisplay">
+                                <p class="no-settings">No settings applied yet</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
