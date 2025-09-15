@@ -29,9 +29,20 @@ def setup_system():
     
     with app.app_context():
         print("📊 Initializing main database...")
-        init_app(app)
-        create_all_tables(app)
-        print("✅ Main database initialized")
+        # Check if database is already initialized
+        try:
+            # Try to create tables - this will work if db is already initialized
+            create_all_tables(app)
+            print("✅ Main database initialized")
+        except Exception as e:
+            # If there's an error, try to initialize the database
+            if "already been registered" in str(e):
+                print("📊 Database already initialized, creating tables...")
+                create_all_tables(app)
+                print("✅ Main database tables created")
+            else:
+                print(f"❌ Error initializing database: {str(e)}")
+                return
         
         # Check if any users exist
         if User.query.first():
