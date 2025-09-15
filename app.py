@@ -8,6 +8,7 @@ with rotation logic to ensure fair distribution of awards.
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_babel import Babel, gettext, ngettext, get_locale
+from flask_login import LoginManager, current_user
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -22,7 +23,14 @@ app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "kings_choice.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'your-secret-key-here'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here-change-in-production')
+
+# Initialize Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth.login'
+login_manager.login_message = 'Please log in to access this page.'
+login_manager.login_message_category = 'info'
 
 # Babel configuration
 app.config['LANGUAGES'] = {
@@ -61,12 +69,19 @@ from database import db, init_app, create_all_tables
 init_app(app)
 
 # Import models after database initialization
-from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Guide, GuideCategory, Blacklist
+from models import User, Player, Alliance, Event, MVPAssignment, WinnerAssignment, Guide, GuideCategory, Blacklist
+
+# User loader for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # Import routes
 from routes import main_routes, player_routes, alliance_routes, event_routes, guide_routes, blacklist_routes
+from auth import auth_bp
 
 # Register blueprints
+app.register_blueprint(auth_bp)
 app.register_blueprint(main_routes.bp)
 app.register_blueprint(player_routes.bp)
 app.register_blueprint(alliance_routes.bp)

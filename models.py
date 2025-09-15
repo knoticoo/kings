@@ -13,6 +13,76 @@ This module contains all SQLAlchemy models for:
 
 from datetime import datetime
 from database import db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+class User(UserMixin, db.Model):
+    """
+    User model - represents application users with isolated data
+    
+    Attributes:
+        id: Primary key
+        username: Unique username for login
+        email: User email address
+        password_hash: Hashed password
+        is_admin: Boolean flag for admin privileges
+        is_active: Boolean flag for account status
+        created_at: When user was created
+        last_login: Last login timestamp
+        database_path: Path to user's isolated database file
+        telegram_bot_token: Telegram bot token for this user
+        telegram_chat_id: Telegram chat ID for this user
+        telegram_enabled: Whether Telegram notifications are enabled
+        discord_bot_token: Discord bot token for this user
+        discord_channel_id: Discord channel ID for this user
+        discord_enabled: Whether Discord notifications are enabled
+    """
+    __tablename__ = 'users'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login = db.Column(db.DateTime)
+    database_path = db.Column(db.String(255), nullable=False)
+    
+    # Telegram configuration
+    telegram_bot_token = db.Column(db.String(255), nullable=True)
+    telegram_chat_id = db.Column(db.String(100), nullable=True)
+    telegram_enabled = db.Column(db.Boolean, default=False, nullable=False)
+    
+    # Discord configuration
+    discord_bot_token = db.Column(db.String(255), nullable=True)
+    discord_channel_id = db.Column(db.String(100), nullable=True)
+    discord_enabled = db.Column(db.Boolean, default=False, nullable=False)
+    
+    def set_password(self, password):
+        """Set password hash"""
+        self.password_hash = generate_password_hash(password)
+    
+    def check_password(self, password):
+        """Check password against hash"""
+        return check_password_hash(self.password_hash, password)
+    
+    def __repr__(self):
+        return f'<User {self.username}>'
+    
+    def to_dict(self):
+        """Convert user to dictionary for API responses"""
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'is_admin': self.is_admin,
+            'is_active': self.is_active,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'last_login': self.last_login.isoformat() if self.last_login else None,
+            'telegram_enabled': self.telegram_enabled,
+            'discord_enabled': self.discord_enabled
+        }
 
 class Player(db.Model):
     """
@@ -20,7 +90,8 @@ class Player(db.Model):
     
     Attributes:
         id: Primary key
-        name: Player name (unique)
+        user_id: Foreign key to User (for data isolation)
+        name: Player name (unique per user)
         is_current_mvp: Boolean flag for current MVP status
         is_excluded: Boolean flag for exclusion from MVP rotation
         mvp_count: Total number of times this player was MVP
@@ -30,12 +101,16 @@ class Player(db.Model):
     __tablename__ = 'players'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     is_current_mvp = db.Column(db.Boolean, default=False, nullable=False)
     is_excluded = db.Column(db.Boolean, default=False, nullable=False)
     mvp_count = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Unique constraint on name per user
+    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='unique_player_per_user'),)
     
     # Relationships
     mvp_assignments = db.relationship('MVPAssignment', backref='player', lazy=True, cascade='all, delete-orphan')
@@ -61,7 +136,8 @@ class Alliance(db.Model):
     
     Attributes:
         id: Primary key
-        name: Alliance name (unique)
+        user_id: Foreign key to User (for data isolation)
+        name: Alliance name (unique per user)
         is_current_winner: Boolean flag for current winner status
         win_count: Total number of times this alliance won
         created_at: When alliance was added
@@ -70,11 +146,15 @@ class Alliance(db.Model):
     __tablename__ = 'alliances'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     is_current_winner = db.Column(db.Boolean, default=False, nullable=False)
     win_count = db.Column(db.Integer, default=0, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Unique constraint on name per user
+    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='unique_alliance_per_user'),)
     
     # Relationships
     winner_assignments = db.relationship('WinnerAssignment', backref='alliance', lazy=True, cascade='all, delete-orphan')
@@ -99,6 +179,7 @@ class Event(db.Model):
     
     Attributes:
         id: Primary key
+        user_id: Foreign key to User (for data isolation)
         name: Event name
         description: Optional event description
         event_date: When the event occurred
@@ -109,6 +190,7 @@ class Event(db.Model):
     __tablename__ = 'events'
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text)
     event_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -201,6 +283,7 @@ class GuideCategory(db.Model):
     
     Attributes:
         id: Primary key
+        user_id: Foreign key to User (for data isolation)
         name: Category name (e.g., "Knights", "Events")
         slug: URL-friendly version of name (e.g., "knights", "events")
         description: Category description
@@ -213,14 +296,18 @@ class GuideCategory(db.Model):
     __tablename__ = 'guide_categories'
     
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True)
-    slug = db.Column(db.String(100), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    slug = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     icon = db.Column(db.String(50), default='bi-book')
     sort_order = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Unique constraint on name per user
+    __table_args__ = (db.UniqueConstraint('user_id', 'name', name='unique_category_per_user'),)
     
     # Relationships
     guides = db.relationship('Guide', backref='category', lazy=True, cascade='all, delete-orphan')
@@ -249,6 +336,7 @@ class Guide(db.Model):
     
     Attributes:
         id: Primary key
+        user_id: Foreign key to User (for data isolation)
         title: Guide title
         slug: URL-friendly version of title
         content: Rich HTML content of the guide
@@ -265,8 +353,9 @@ class Guide(db.Model):
     __tablename__ = 'guides'
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     title = db.Column(db.String(200), nullable=False)
-    slug = db.Column(db.String(200), nullable=False, unique=True)
+    slug = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     excerpt = db.Column(db.Text)
     category_id = db.Column(db.Integer, db.ForeignKey('guide_categories.id'), nullable=False)
@@ -277,6 +366,9 @@ class Guide(db.Model):
     sort_order = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Unique constraint on slug per user
+    __table_args__ = (db.UniqueConstraint('user_id', 'slug', name='unique_guide_slug_per_user'),)
     
     def __repr__(self):
         return f'<Guide {self.title}>'
@@ -311,6 +403,7 @@ class Blacklist(db.Model):
     
     Attributes:
         id: Primary key
+        user_id: Foreign key to User (for data isolation)
         alliance_name: Alliance name (optional, can be null for individual players)
         player_name: Player name (optional, can be null for alliance-only entries)
         created_at: When entry was added
@@ -319,6 +412,7 @@ class Blacklist(db.Model):
     __tablename__ = 'blacklist'
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     alliance_name = db.Column(db.String(100), nullable=True)  # Optional alliance tag
     player_name = db.Column(db.String(100), nullable=True)    # Optional player name
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
