@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Create User - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="bi bi-person-plus me-2"></i>Create New User
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person"></i>
+                                </span>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="form-text">Choose a unique username for login</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="form-text">Minimum 6 characters recommended</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_admin" name="is_admin">
+                                <label class="form-check-label" for="is_admin">
+                                    <i class="bi bi-shield-check me-1"></i>Admin privileges
+                                </label>
+                            </div>
+                            <div class="form-text">Admins can manage other users and access admin features</div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <h5 class="mb-3">
+                            <i class="bi bi-telegram me-2"></i>Telegram Configuration
+                        </h5>
+                        
+                        <div class="mb-3">
+                            <label for="telegram_bot_token" class="form-label">Telegram Bot Token</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-robot"></i>
+                                </span>
+                                <input type="text" class="form-control" id="telegram_bot_token" name="telegram_bot_token" placeholder="Enter your Telegram bot token">
+                            </div>
+                            <div class="form-text">Get this from @BotFather on Telegram</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="telegram_chat_id" class="form-label">Telegram Chat ID</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-chat-dots"></i>
+                                </span>
+                                <input type="text" class="form-control" id="telegram_chat_id" name="telegram_chat_id" placeholder="-1001234567890">
+                            </div>
+                            <div class="form-text">Channel or group ID where messages will be sent</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="telegram_enabled" name="telegram_enabled">
+                                <label class="form-check-label" for="telegram_enabled">
+                                    <i class="bi bi-telegram me-1"></i>Enable Telegram notifications
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <h5 class="mb-3">
+                            <i class="bi bi-discord me-2"></i>Discord Configuration
+                        </h5>
+                        
+                        <div class="mb-3">
+                            <label for="discord_bot_token" class="form-label">Discord Bot Token</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-robot"></i>
+                                </span>
+                                <input type="text" class="form-control" id="discord_bot_token" name="discord_bot_token" placeholder="Enter your Discord bot token">
+                            </div>
+                            <div class="form-text">Get this from Discord Developer Portal</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="discord_channel_id" class="form-label">Discord Channel ID</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-hash"></i>
+                                </span>
+                                <input type="text" class="form-control" id="discord_channel_id" name="discord_channel_id" placeholder="123456789012345678">
+                            </div>
+                            <div class="form-text">Channel ID where messages will be sent</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="discord_enabled" name="discord_enabled">
+                                <label class="form-check-label" for="discord_enabled">
+                                    <i class="bi bi-discord me-1"></i>Enable Discord notifications
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('auth.admin_users') }}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-person-plus me-2"></i>Create User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

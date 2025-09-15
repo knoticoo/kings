@@ -6,14 +6,17 @@ Shows current MVP player and winning alliance information.
 """
 
 from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash
+from flask_login import login_required, current_user
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Guide
 from database import db
+from database_manager import query_user_data, get_user_data_by_id
 from telegram_bot import send_manual_message
 
 # Create blueprint for main routes
 bp = Blueprint('main', __name__)
 
 @bp.route('/')
+@login_required
 def dashboard():
     """
     Main dashboard route - shows current MVP and winning alliance
@@ -25,33 +28,38 @@ def dashboard():
     - Quick stats
     """
     try:
-        # Get current MVP player
-        current_mvp = Player.query.filter_by(is_current_mvp=True).first()
+        # Get current MVP player (user-specific)
+        current_mvp = query_user_data(Player, current_user.id, is_current_mvp=True)
+        current_mvp = current_mvp[0] if current_mvp else None
         
-        # Get current winning alliance
-        current_winner = Alliance.query.filter_by(is_current_winner=True).first()
+        # Get current winning alliance (user-specific)
+        current_winner = query_user_data(Alliance, current_user.id, is_current_winner=True)
+        current_winner = current_winner[0] if current_winner else None
         
-        # Get all events with MVP assignments (not limited to recent 10)
+        # Get all events with MVP assignments (user-specific)
         recent_events = []
-        events = Event.query.filter(Event.has_mvp == True).order_by(Event.event_date.desc()).all()
+        events = query_user_data(Event, current_user.id)
+        events_with_mvp = [e for e in events if e.has_mvp]
+        events_with_mvp.sort(key=lambda x: x.event_date, reverse=True)
         
-        for event in events:
+        for event in events_with_mvp:
             # Get all MVP assignments for this event (since events can be reused)
-            mvp_assignments = MVPAssignment.query.filter_by(event_id=event.id).order_by(MVPAssignment.assigned_at.desc()).all()
+            mvp_assignments = query_user_data(MVPAssignment, current_user.id, event_id=event.id)
+            mvp_assignments.sort(key=lambda x: x.assigned_at, reverse=True)
             
             # Add MVP data to event object for template access
             event.mvp_assignments = mvp_assignments
-            event.mvp_players = [assignment.player.name for assignment in mvp_assignments]
+            event.mvp_players = [assignment.player.name for assignment in mvp_assignments if hasattr(assignment, 'player')]
             event.mvp_count = len(mvp_assignments)
             
             recent_events.append(event)
         
-        # Get total counts for stats
-        total_players = Player.query.count()
-        total_alliances = Alliance.query.count()
-        total_events = Event.query.count()
-        total_blacklist_entries = Blacklist.query.count()
-        total_guides = Guide.query.count()
+        # Get total counts for stats (user-specific)
+        total_players = len(query_user_data(Player, current_user.id))
+        total_alliances = len(query_user_data(Alliance, current_user.id))
+        total_events = len(query_user_data(Event, current_user.id))
+        total_blacklist_entries = len(query_user_data(Blacklist, current_user.id))
+        total_guides = len(query_user_data(Guide, current_user.id))
         
         return render_template('dashboard.html', 
                              current_mvp=current_mvp,
@@ -76,6 +84,7 @@ def dashboard():
                              total_guides=0)
 
 @bp.route('/api/dashboard-data')
+@login_required
 def dashboard_data():
     """
     API endpoint to get dashboard data in JSON format
@@ -84,24 +93,30 @@ def dashboard_data():
     Useful for AJAX updates or mobile apps
     """
     try:
-        # Get current MVP player
-        current_mvp = Player.query.filter_by(is_current_mvp=True).first()
+        # Get current MVP player (user-specific)
+        current_mvp = query_user_data(Player, current_user.id, is_current_mvp=True)
+        current_mvp = current_mvp[0] if current_mvp else None
         
-        # Get current winning alliance
-        current_winner = Alliance.query.filter_by(is_current_winner=True).first()
+        # Get current winning alliance (user-specific)
+        current_winner = query_user_data(Alliance, current_user.id, is_current_winner=True)
+        current_winner = current_winner[0] if current_winner else None
         
-        # Get all events with MVP assignments
+        # Get all events with MVP assignments (user-specific)
         recent_events = []
-        events = Event.query.filter(Event.has_mvp == True).order_by(Event.event_date.desc()).all()
+        events = query_user_data(Event, current_user.id)
+        events_with_mvp = [e for e in events if e.has_mvp]
+        events_with_mvp.sort(key=lambda x: x.event_date, reverse=True)
         
-        for event in events:
+        for event in events_with_mvp:
             event_data = event.to_dict()
             
             # Add ALL MVP assignments for this event (since events can be reused)
-            mvp_assignments = MVPAssignment.query.filter_by(event_id=event.id).order_by(MVPAssignment.assigned_at.desc()).all()
+            mvp_assignments = query_user_data(MVPAssignment, current_user.id, event_id=event.id)
+            mvp_assignments.sort(key=lambda x: x.assigned_at, reverse=True)
+            
             if mvp_assignments:
                 event_data['mvp_assignments'] = [assignment.to_dict() for assignment in mvp_assignments]
-                event_data['mvp_players'] = [assignment.player.name for assignment in mvp_assignments]
+                event_data['mvp_players'] = [assignment.player.name for assignment in mvp_assignments if hasattr(assignment, 'player')]
                 event_data['mvp_count'] = len(mvp_assignments)
             else:
                 event_data['mvp_assignments'] = []
@@ -109,19 +124,19 @@ def dashboard_data():
                 event_data['mvp_count'] = 0
             
             # Add winner info if exists
-            winner_assignment = WinnerAssignment.query.filter_by(event_id=event.id).first()
-            if winner_assignment:
-                event_data['winning_alliance'] = winner_assignment.alliance.name
+            winner_assignments = query_user_data(WinnerAssignment, current_user.id, event_id=event.id)
+            if winner_assignments:
+                event_data['winning_alliance'] = winner_assignments[0].alliance.name if hasattr(winner_assignments[0], 'alliance') else None
             
             recent_events.append(event_data)
         
-        # Get total counts for stats
+        # Get total counts for stats (user-specific)
         stats = {
-            'total_players': Player.query.count(),
-            'total_alliances': Alliance.query.count(),
-            'total_events': Event.query.count(),
-            'mvp_assignments': MVPAssignment.query.count(),
-            'winner_assignments': WinnerAssignment.query.count()
+            'total_players': len(query_user_data(Player, current_user.id)),
+            'total_alliances': len(query_user_data(Alliance, current_user.id)),
+            'total_events': len(query_user_data(Event, current_user.id)),
+            'mvp_assignments': len(query_user_data(MVPAssignment, current_user.id)),
+            'winner_assignments': len(query_user_data(WinnerAssignment, current_user.id))
         }
         
         return jsonify({
@@ -139,6 +154,7 @@ def dashboard_data():
         }), 500
 
 @bp.route('/telegram-message', methods=['GET', 'POST'])
+@login_required
 def telegram_message():
     """
     Manual Telegram message posting interface

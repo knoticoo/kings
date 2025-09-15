@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}User Management - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-people me-2"></i>User Management</h2>
+                <a href="{{ url_for('auth.create_user') }}" class="btn btn-primary">
+                    <i class="bi bi-person-plus me-2"></i>Create User
+                </a>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Telegram</th>
+                                    <th>Discord</th>
+                                    <th>Created</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>
+                                        <strong>{{ user.username }}</strong>
+                                        {% if user.id == current_user.id %}
+                                            <span class="badge bg-info ms-2">You</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.email }}</td>
+                                    <td>
+                                        {% if user.is_admin %}
+                                            <span class="badge bg-danger">Admin</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">User</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.telegram_enabled %}
+                                            <span class="badge bg-info">
+                                                <i class="bi bi-telegram me-1"></i>Enabled
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-telegram me-1"></i>Disabled
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if user.discord_enabled %}
+                                            <span class="badge bg-primary">
+                                                <i class="bi bi-discord me-1"></i>Enabled
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-discord me-1"></i>Disabled
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else 'N/A' }}</td>
+                                    <td>{{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else 'Never' }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            {% if user.id != current_user.id %}
+                                                <form method="POST" action="{{ url_for('auth.toggle_user_status', user_id=user.id) }}" class="d-inline">
+                                                    <button type="submit" class="btn btn-{{ 'warning' if user.is_active else 'success' }} btn-sm">
+                                                        <i class="bi bi-{{ 'pause' if user.is_active else 'play' }}"></i>
+                                                    </button>
+                                                </form>
+                                                <form method="POST" action="{{ url_for('auth.delete_user', user_id=user.id) }}" class="d-inline" 
+                                                      onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.')">
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
