@@ -359,11 +359,13 @@ start_app() {
         print_status "Starting with Gunicorn (production server)..."
         nohup gunicorn \
             --bind "$HOST:$PORT" \
-            --workers 4 \
+            --workers 1 \
             --worker-class sync \
-            --timeout 60 \
-            --max-requests 1000 \
-            --max-requests-jitter 100 \
+            --timeout 120 \
+            --max-requests 500 \
+            --max-requests-jitter 50 \
+            --worker-connections 1000 \
+            --preload \
             --access-logfile "$LOG_FILE" \
             --error-logfile "$ERROR_LOG" \
             --log-level info \
