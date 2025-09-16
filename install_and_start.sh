@@ -396,6 +396,32 @@ start_app() {
     fi
 }
 
+# Function to check if telegram bot is configured
+is_telegram_configured() {
+    # Check if any user has telegram configured
+    source "$VENV_DIR/bin/activate"
+    cd "$APP_DIR"
+    
+    python3 -c "
+import sys
+sys.path.insert(0, '.')
+from models import User
+from database import db, init_app
+from app import app
+
+with app.app_context():
+    users = User.query.filter(
+        User.telegram_enabled == True,
+        User.telegram_bot_token.isnot(None),
+        User.telegram_chat_id.isnot(None)
+    ).all()
+    if users:
+        print('configured')
+    else:
+        print('not_configured')
+" 2>/dev/null | grep -q "configured"
+}
+
 # Function to start telegram bot
 start_telegram() {
     if [ -f "$APP_DIR/telegram_bot.py" ]; then
@@ -403,6 +429,12 @@ start_telegram() {
         
         if is_telegram_running; then
             print_warning "Telegram bot is already running"
+            return
+        fi
+        
+        # Check if telegram is configured
+        if ! is_telegram_configured; then
+            print_warning "Telegram bot not configured - no users have set up Telegram API keys"
             return
         fi
         
@@ -421,6 +453,32 @@ start_telegram() {
     fi
 }
 
+# Function to check if discord bot is configured
+is_discord_configured() {
+    # Check if any user has discord configured
+    source "$VENV_DIR/bin/activate"
+    cd "$APP_DIR"
+    
+    python3 -c "
+import sys
+sys.path.insert(0, '.')
+from models import User
+from database import db, init_app
+from app import app
+
+with app.app_context():
+    users = User.query.filter(
+        User.discord_enabled == True,
+        User.discord_bot_token.isnot(None),
+        User.discord_channel_id.isnot(None)
+    ).all()
+    if users:
+        print('configured')
+    else:
+        print('not_configured')
+" 2>/dev/null | grep -q "configured"
+}
+
 # Function to start discord bot
 start_discord() {
     if [ -f "$APP_DIR/discord_bot.py" ]; then
@@ -428,6 +486,12 @@ start_discord() {
         
         if is_discord_running; then
             print_warning "Discord bot is already running"
+            return
+        fi
+        
+        # Check if discord is configured
+        if ! is_discord_configured; then
+            print_warning "Discord bot not configured - no users have set up Discord API keys"
             return
         fi
         
@@ -478,15 +542,19 @@ show_status() {
     # Telegram bot status
     if is_telegram_running; then
         echo -e "${GREEN}Telegram Bot:${NC} Running (PID: $(cat $TELEGRAM_PID_FILE))"
+    elif is_telegram_configured; then
+        echo -e "${YELLOW}Telegram Bot:${NC} Not running (configured)"
     else
-        echo -e "${RED}Telegram Bot:${NC} Not running"
+        echo -e "${RED}Telegram Bot:${NC} Not running (not configured)"
     fi
     
     # Discord bot status
     if is_discord_running; then
         echo -e "${GREEN}Discord Bot:${NC} Running (PID: $(cat $DISCORD_PID_FILE))"
+    elif is_discord_configured; then
+        echo -e "${YELLOW}Discord Bot:${NC} Not running (configured)"
     else
-        echo -e "${RED}Discord Bot:${NC} Not running"
+        echo -e "${RED}Discord Bot:${NC} Not running (not configured)"
     fi
     
     echo -e "${BLUE}Logs:${NC} $LOG_FILE"
