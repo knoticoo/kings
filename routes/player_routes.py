@@ -249,7 +249,8 @@ def assign_mvp():
             # Send Telegram announcement
             try:
                 from telegram_bot import send_mvp_announcement
-                send_mvp_announcement(event.name, player.name)
+                from flask_login import current_user
+                send_mvp_announcement(event.name, player.name, current_user)
                 print(f"Telegram MVP announcement sent: {event.name} -> {player.name}")
             except Exception as e:
                 print(f"Failed to send Telegram MVP announcement: {e}")

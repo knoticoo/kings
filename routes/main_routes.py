@@ -173,7 +173,7 @@ def telegram_message():
             # Send manual message via Telegram
             try:
                 from telegram_bot import send_manual_message
-                success = send_manual_message(message_text)
+                success = send_manual_message(message_text, current_user)
             except Exception as e:
                 print(f"Failed to send manual message: {e}")
                 success = False
