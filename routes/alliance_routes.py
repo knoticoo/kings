@@ -10,14 +10,17 @@ Handles all alliance-related operations:
 """
 
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
+from flask_login import login_required, current_user
 from models import Alliance, Event, WinnerAssignment
 from database import db
+from database_manager import query_user_data
 from utils.rotation_logic import can_assign_winner, get_eligible_alliances
 
 # Create blueprint for alliance routes
 bp = Blueprint('alliances', __name__, url_prefix='/alliances')
 
 @bp.route('/')
+@login_required
 def list_alliances():
     """
     Display all alliances with their winner status and management options
@@ -29,11 +32,12 @@ def list_alliances():
     - Add/Edit/Delete buttons
     """
     try:
-        alliances = Alliance.query.order_by(Alliance.name).all()
+        alliances = query_user_data(Alliance, current_user.id)
+        alliances.sort(key=lambda x: x.name)
         
         # Check rotation status for winner assignments
-        can_assign = can_assign_winner()
-        eligible_alliances = get_eligible_alliances() if can_assign else []
+        can_assign = can_assign_winner(current_user.id)
+        eligible_alliances = get_eligible_alliances(current_user.id) if can_assign else []
         
         return render_template('alliances/list.html', 
                              alliances=alliances,
@@ -255,10 +259,12 @@ def assign_winner():
 # API Routes for AJAX operations
 
 @bp.route('/api/list')
+@login_required
 def api_list_alliances():
     """API endpoint to get all alliances as JSON"""
     try:
-        alliances = Alliance.query.order_by(Alliance.name).all()
+        alliances = query_user_data(Alliance, current_user.id)
+        alliances.sort(key=lambda x: x.name)
         return jsonify({
             'success': True,
             'alliances': [alliance.to_dict() for alliance in alliances]

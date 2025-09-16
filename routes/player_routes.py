@@ -10,14 +10,17 @@ Handles all player-related operations:
 """
 
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
+from flask_login import login_required, current_user
 from models import Player, Event, MVPAssignment
 from database import db
+from database_manager import query_user_data
 from utils.rotation_logic import can_assign_mvp, get_eligible_players
 
 # Create blueprint for player routes
 bp = Blueprint('players', __name__, url_prefix='/players')
 
 @bp.route('/')
+@login_required
 def list_players():
     """
     Display all players with their MVP status and management options
@@ -29,11 +32,12 @@ def list_players():
     - Add/Edit/Delete buttons
     """
     try:
-        players = Player.query.order_by(Player.name).all()
+        players = query_user_data(Player, current_user.id)
+        players.sort(key=lambda x: x.name)
         
         # Check rotation status for MVP assignments
-        can_assign = can_assign_mvp()
-        eligible_players = get_eligible_players() if can_assign else []
+        can_assign = can_assign_mvp(current_user.id)
+        eligible_players = get_eligible_players(current_user.id) if can_assign else []
         
         return render_template('players/list.html', 
                              players=players,
@@ -286,10 +290,12 @@ def assign_mvp():
 # API Routes for AJAX operations
 
 @bp.route('/api/list')
+@login_required
 def api_list_players():
     """API endpoint to get all players as JSON"""
     try:
-        players = Player.query.order_by(Player.name).all()
+        players = query_user_data(Player, current_user.id)
+        players.sort(key=lambda x: x.name)
         return jsonify({
             'success': True,
             'players': [player.to_dict() for player in players]

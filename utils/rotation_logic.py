@@ -17,9 +17,12 @@ def get_models():
     from models import Player, Alliance, MVPAssignment, WinnerAssignment
     return Player, Alliance, MVPAssignment, WinnerAssignment
 
-def can_assign_mvp():
+def can_assign_mvp(user_id=None):
     """
     Check if we can assign MVP based on rotation logic
+    
+    Args:
+        user_id: User ID for data isolation (required)
     
     Returns:
         bool: True if MVP can be assigned, False otherwise
@@ -30,16 +33,20 @@ def can_assign_mvp():
         - When all active players have been MVP, eligible players are those with minimum MVP count
     """
     try:
+        if not user_id:
+            return False
+            
+        from database_manager import query_user_data
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
         
-        # Get all active (non-excluded) players
-        all_active_players = Player.query.filter(Player.is_excluded == False).all()
+        # Get all active (non-excluded) players for this user
+        all_active_players = query_user_data(Player, user_id, is_excluded=False)
         
         if not all_active_players:
             return False  # No active players to assign MVP to
         
-        # Check if any MVP assignments have been made
-        total_assignments = MVPAssignment.query.count()
+        # Check if any MVP assignments have been made for this user
+        total_assignments = len(query_user_data(MVPAssignment, user_id))
         
         if total_assignments == 0:
             return True  # First assignment is always allowed
@@ -51,9 +58,12 @@ def can_assign_mvp():
         print(f"Error in can_assign_mvp: {str(e)}")
         return False
 
-def get_eligible_players():
+def get_eligible_players(user_id=None):
     """
     Get list of players eligible for MVP assignment
+    
+    Args:
+        user_id: User ID for data isolation (required)
     
     Returns:
         list: List of Player objects eligible for MVP assignment
@@ -65,40 +75,40 @@ def get_eligible_players():
         - If all active players have been MVP, return active players with the minimum MVP count
     """
     try:
+        if not user_id:
+            return []
+            
+        from database_manager import query_user_data
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
-        # Get only active (non-excluded) players
-        all_active_players = Player.query.filter(Player.is_excluded == False).all()
+        
+        # Get only active (non-excluded) players for this user
+        all_active_players = query_user_data(Player, user_id, is_excluded=False)
         
         if not all_active_players:
             return []
         
         # Check if we're in the first round (not all active players have been MVP)
-        active_players_with_mvp = Player.query.filter(
-            Player.mvp_count > 0, 
-            Player.is_excluded == False
-        ).all()
+        active_players_with_mvp = query_user_data(Player, user_id, is_excluded=False)
+        active_players_with_mvp = [p for p in active_players_with_mvp if p.mvp_count > 0]
         
         if len(active_players_with_mvp) < len(all_active_players):
             # First round: return active players who haven't been MVP yet
-            return Player.query.filter(
-                Player.mvp_count == 0, 
-                Player.is_excluded == False
-            ).all()
+            return [p for p in all_active_players if p.mvp_count == 0]
         else:
             # Subsequent rounds: return active players with minimum MVP count
             min_mvp_count = min(player.mvp_count for player in all_active_players)
-            return Player.query.filter(
-                Player.mvp_count == min_mvp_count,
-                Player.is_excluded == False
-            ).all()
+            return [p for p in all_active_players if p.mvp_count == min_mvp_count]
             
     except Exception as e:
         print(f"Error in get_eligible_players: {str(e)}")
         return []
 
-def can_assign_winner():
+def can_assign_winner(user_id=None):
     """
     Check if we can assign alliance winner based on rotation logic
+    
+    Args:
+        user_id: User ID for data isolation (required)
     
     Returns:
         bool: True if winner can be assigned, False otherwise
@@ -109,22 +119,23 @@ def can_assign_winner():
         - When all alliances have won, eligible alliances are those with minimum win count
     """
     try:
+        if not user_id:
+            return False
+            
+        from database_manager import query_user_data
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
-        # Get all alliances
-        all_alliances = Alliance.query.all()
+        
+        # Get all alliances for this user
+        all_alliances = query_user_data(Alliance, user_id)
         
         if not all_alliances:
             return False  # No alliances to assign winner to
         
-        # Check if any winner assignments have been made
-        total_assignments = WinnerAssignment.query.count()
+        # Check if any winner assignments have been made for this user
+        total_assignments = len(query_user_data(WinnerAssignment, user_id))
         
         if total_assignments == 0:
             return True  # First assignment is always allowed
-        
-        # Check if all alliances have won at least once
-        alliances_with_wins = Alliance.query.filter(Alliance.win_count > 0).count()
-        total_alliances = len(all_alliances)
         
         # Always allow winner assignment - rotation handles fairness automatically
         return True
@@ -133,9 +144,12 @@ def can_assign_winner():
         print(f"Error in can_assign_winner: {str(e)}")
         return False
 
-def get_eligible_alliances():
+def get_eligible_alliances(user_id=None):
     """
     Get list of alliances eligible for winner assignment
+    
+    Args:
+        user_id: User ID for data isolation (required)
     
     Returns:
         list: List of Alliance objects eligible for winner assignment
@@ -146,22 +160,27 @@ def get_eligible_alliances():
         - If all alliances have won, return alliances with the minimum win count
     """
     try:
+        if not user_id:
+            return []
+            
+        from database_manager import query_user_data
         Player, Alliance, MVPAssignment, WinnerAssignment = get_models()
-        all_alliances = Alliance.query.all()
+        
+        all_alliances = query_user_data(Alliance, user_id)
         
         if not all_alliances:
             return []
         
         # Check if we're in the first round (not all alliances have won)
-        alliances_with_wins = Alliance.query.filter(Alliance.win_count > 0).all()
+        alliances_with_wins = [a for a in all_alliances if a.win_count > 0]
         
         if len(alliances_with_wins) < len(all_alliances):
             # First round: return alliances that haven't won yet
-            return Alliance.query.filter(Alliance.win_count == 0).all()
+            return [a for a in all_alliances if a.win_count == 0]
         else:
             # Subsequent rounds: return alliances with minimum win count
             min_win_count = min(alliance.win_count for alliance in all_alliances)
-            return Alliance.query.filter(Alliance.win_count == min_win_count).all()
+            return [a for a in all_alliances if a.win_count == min_win_count]
             
     except Exception as e:
         print(f"Error in get_eligible_alliances: {str(e)}")
