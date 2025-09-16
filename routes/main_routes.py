@@ -10,7 +10,6 @@ from flask_login import login_required, current_user
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Guide
 from database import db
 from database_manager import query_user_data, get_user_data_by_id
-from telegram_bot import send_manual_message
 
 # Create blueprint for main routes
 bp = Blueprint('main', __name__)

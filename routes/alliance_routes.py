@@ -13,7 +13,6 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from models import Alliance, Event, WinnerAssignment
 from database import db
 from utils.rotation_logic import can_assign_winner, get_eligible_alliances
-from telegram_bot import send_winner_announcement
 
 # Create blueprint for alliance routes
 bp = Blueprint('alliances', __name__, url_prefix='/alliances')
@@ -218,7 +217,12 @@ def assign_winner():
             
             # Send Telegram announcement
             try:
-                send_winner_announcement(event.name, alliance.name)
+                # Send Telegram announcement
+                try:
+                    from telegram_bot import send_winner_announcement
+                    send_winner_announcement(event.name, alliance.name)
+                except Exception as e:
+                    print(f"Failed to send Telegram announcement: {e}")
                 print(f"Telegram winner announcement sent: {event.name} -> {alliance.name}")
             except Exception as e:
                 print(f"Failed to send Telegram winner announcement: {e}")
