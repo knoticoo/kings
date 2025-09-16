@@ -10,7 +10,6 @@ from flask_login import login_required, current_user
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Guide
 from database import db
 from database_manager import query_user_data, get_user_data_by_id
-from telegram_bot import send_manual_message
 
 # Create blueprint for main routes
 bp = Blueprint('main', __name__)
@@ -171,7 +170,13 @@ def telegram_message():
                 return render_template('telegram_message.html')
             
             # Send message via Telegram (will be auto-translated to Russian)
-            success = send_manual_message(message_text)
+            # Send manual message via Telegram
+            try:
+                from telegram_bot import send_manual_message
+                success = send_manual_message(message_text, current_user)
+            except Exception as e:
+                print(f"Failed to send manual message: {e}")
+                success = False
             
             if success:
                 flash('Message sent successfully to Telegram channel!', 'success')

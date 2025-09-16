@@ -13,7 +13,6 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from models import Player, Event, MVPAssignment
 from database import db
 from utils.rotation_logic import can_assign_mvp, get_eligible_players
-from telegram_bot import send_mvp_announcement
 
 # Create blueprint for player routes
 bp = Blueprint('players', __name__, url_prefix='/players')
@@ -249,7 +248,9 @@ def assign_mvp():
             
             # Send Telegram announcement
             try:
-                send_mvp_announcement(event.name, player.name)
+                from telegram_bot import send_mvp_announcement
+                from flask_login import current_user
+                send_mvp_announcement(event.name, player.name, current_user)
                 print(f"Telegram MVP announcement sent: {event.name} -> {player.name}")
             except Exception as e:
                 print(f"Failed to send Telegram MVP announcement: {e}")

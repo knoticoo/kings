@@ -23,19 +23,26 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class KingsChoiceTelegramBot:
-    def __init__(self):
-        self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
-        self.channel_id = os.getenv('TELEGRAM_CHANNEL_ID')  # Should start with @channelname or -100...
+    def __init__(self, bot_token=None, channel_id=None):
+        self.bot_token = bot_token or os.getenv('TELEGRAM_BOT_TOKEN')
+        self.channel_id = channel_id or os.getenv('TELEGRAM_CHANNEL_ID')  # Should start with @channelname or -100...
         self.bot = None
-        self.translator = GoogleTranslator(source='auto', target='ru')
+        self._translator = None  # Lazy initialization
         
         if not self.bot_token:
-            logger.warning("TELEGRAM_BOT_TOKEN not found in environment variables")
+            logger.warning("TELEGRAM_BOT_TOKEN not provided")
         if not self.channel_id:
-            logger.warning("TELEGRAM_CHANNEL_ID not found in environment variables")
+            logger.warning("TELEGRAM_CHANNEL_ID not provided")
             
         if self.bot_token:
             self.bot = Bot(token=self.bot_token)
+    
+    @property
+    def translator(self):
+        """Lazy initialization of translator"""
+        if self._translator is None:
+            self._translator = GoogleTranslator(source='auto', target='ru')
+        return self._translator
     
     async def send_message(self, message):
         """Send a message to the configured Telegram channel"""
@@ -127,25 +134,42 @@ class KingsChoiceTelegramBot:
         
         return loop.run_until_complete(self.test_connection())
 
-# Global bot instance
-telegram_bot = KingsChoiceTelegramBot()
+# Helper functions for easy import - now support user-specific configurations
+def send_mvp_announcement(event_name, player_name, user=None):
+    """Helper function to send MVP announcement for a specific user"""
+    if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
+        bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
+        return bot.announce_mvp(event_name, player_name)
+    else:
+        logger.warning("Telegram bot not configured for user - skipping MVP announcement")
+        return False
 
-# Helper functions for easy import
-def send_mvp_announcement(event_name, player_name):
-    """Helper function to send MVP announcement"""
-    return telegram_bot.announce_mvp(event_name, player_name)
+def send_winner_announcement(event_name, alliance_name, user=None):
+    """Helper function to send winner announcement for a specific user"""
+    if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
+        bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
+        return bot.announce_winner(event_name, alliance_name)
+    else:
+        logger.warning("Telegram bot not configured for user - skipping winner announcement")
+        return False
 
-def send_winner_announcement(event_name, alliance_name):
-    """Helper function to send winner announcement"""
-    return telegram_bot.announce_winner(event_name, alliance_name)
+def send_manual_message(text, user=None):
+    """Helper function to translate and send manual message for a specific user"""
+    if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
+        bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
+        return bot.translate_and_send(text)
+    else:
+        logger.warning("Telegram bot not configured for user - skipping manual message")
+        return False
 
-def send_manual_message(text):
-    """Helper function to translate and send manual message"""
-    return telegram_bot.translate_and_send(text)
-
-def test_bot_connection():
-    """Helper function to test bot connection"""
-    return telegram_bot.test_connection_sync()
+def test_bot_connection(user=None):
+    """Helper function to test bot connection for a specific user"""
+    if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
+        bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
+        return bot.test_connection_sync()
+    else:
+        logger.warning("Telegram bot not configured for user")
+        return False, "Telegram bot not configured for user"
 
 if __name__ == "__main__":
     # Test the bot if run directly
