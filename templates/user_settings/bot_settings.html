@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Bot Settings{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('user_settings.settings') }}">Settings</a></li>
+                    <li class="breadcrumb-item active">Bot Configuration</li>
+                </ol>
+            </nav>
+            
+            <h2><i class="bi bi-robot"></i> Bot Configuration</h2>
+            <p class="text-muted">Configure your Discord and Telegram bots for notifications.</p>
+        </div>
+    </div>
+    
+    <form method="POST" id="bot-settings-form">
+        <div class="row mt-4">
+            <!-- Discord Bot Settings -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-discord"></i> Discord Bot</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="discord_enabled" 
+                                   name="discord_enabled" {{ 'checked' if user.discord_enabled else '' }}>
+                            <label class="form-check-label" for="discord_enabled">Enable</label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="discord_token" class="form-label">Bot Token</label>
+                            <input type="password" class="form-control" id="discord_token" 
+                                   name="discord_token" value="{{ user.discord_bot_token or '' }}"
+                                   placeholder="Enter your Discord bot token">
+                            <div class="form-text">
+                                Get your bot token from the Discord Developer Portal
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="discord_channel" class="form-label">Channel ID</label>
+                            <input type="text" class="form-control" id="discord_channel" 
+                                   name="discord_channel" value="{{ user.discord_channel_id or '' }}"
+                                   placeholder="Enter Discord channel ID">
+                            <div class="form-text">
+                                Right-click on a channel and select "Copy ID"
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-primary" onclick="testDiscordBot()">
+                                <i class="bi bi-play-circle"></i> Test Connection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Telegram Bot Settings -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5><i class="bi bi-telegram"></i> Telegram Bot</h5>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="telegram_enabled" 
+                                   name="telegram_enabled" {{ 'checked' if user.telegram_enabled else '' }}>
+                            <label class="form-check-label" for="telegram_enabled">Enable</label>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="telegram_token" class="form-label">Bot Token</label>
+                            <input type="password" class="form-control" id="telegram_token" 
+                                   name="telegram_token" value="{{ user.telegram_bot_token or '' }}"
+                                   placeholder="Enter your Telegram bot token">
+                            <div class="form-text">
+                                Get your bot token from @BotFather
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="telegram_chat" class="form-label">Chat ID</label>
+                            <input type="text" class="form-control" id="telegram_chat" 
+                                   name="telegram_chat" value="{{ user.telegram_chat_id or '' }}"
+                                   placeholder="Enter Telegram chat ID">
+                            <div class="form-text">
+                                Use @userinfobot to get your chat ID
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="button" class="btn btn-outline-primary" onclick="testTelegramBot()">
+                                <i class="bi bi-play-circle"></i> Test Connection
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>Bot Status</h6>
+                                <p class="text-muted mb-0">Current status of your configured bots</p>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-outline-danger me-2" onclick="stopAllBots()">
+                                    <i class="bi bi-stop-circle"></i> Stop All Bots
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Save Settings
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="bot-status-display" class="mt-3">
+                            <!-- Bot status will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+function testDiscordBot() {
+    const token = document.getElementById('discord_token').value;
+    if (!token) {
+        alert('Please enter a Discord bot token first');
+        return;
+    }
+    
+    fetch('/settings/bots/test-discord', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Discord bot test successful!');
+        } else {
+            alert('Discord bot test failed: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error testing Discord bot: ' + error);
+    });
+}
+
+function testTelegramBot() {
+    const token = document.getElementById('telegram_token').value;
+    const chatId = document.getElementById('telegram_chat').value;
+    
+    if (!token || !chatId) {
+        alert('Please enter both Telegram bot token and chat ID first');
+        return;
+    }
+    
+    fetch('/settings/bots/test-telegram', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Telegram bot test successful!');
+        } else {
+            alert('Telegram bot test failed: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error testing Telegram bot: ' + error);
+    });
+}
+
+function stopAllBots() {
+    if (confirm('Are you sure you want to stop all bots?')) {
+        fetch('/settings/bots/stop', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('All bots stopped successfully');
+                location.reload();
+            } else {
+                alert('Failed to stop bots: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error stopping bots: ' + error);
+        });
+    }
+}
+
+function updateBotStatus() {
+    fetch('/settings/api/bot-status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const status = data.status;
+                const statusHtml = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-discord me-2"></i>
+                                <strong>Discord:</strong>
+                                <span class="badge ${status.discord_running ? 'bg-success' : 'bg-danger'} ms-2">
+                                    ${status.discord_running ? 'Running' : 'Stopped'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-telegram me-2"></i>
+                                <strong>Telegram:</strong>
+                                <span class="badge ${status.telegram_running ? 'bg-success' : 'bg-danger'} ms-2">
+                                    ${status.telegram_running ? 'Running' : 'Stopped'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('bot-status-display').innerHTML = statusHtml;
+            }
+        })
+        .catch(error => {
+            console.error('Error updating bot status:', error);
+        });
+}
+
+// Update status on page load and every 10 seconds
+document.addEventListener('DOMContentLoaded', updateBotStatus);
+setInterval(updateBotStatus, 10000);
+</script>
+{% endblock %}

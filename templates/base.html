@@ -177,7 +177,7 @@
                                 <li><a class="dropdown-item" href="{{ url_for('main.dashboard') }}">
                                     <i class="bi bi-house me-2"></i>Dashboard
                                 </a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('auth.user_settings') }}">
+                                <li><a class="dropdown-item" href="{{ url_for('user_settings.settings') }}">
                                     <i class="bi bi-gear me-2"></i>Settings
                                 </a></li>
                                 {% if current_user.is_admin %}

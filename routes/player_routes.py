@@ -112,10 +112,12 @@ def edit_player(player_id):
                 return render_template('players/edit.html', player=player)
             
             # Check if new name conflicts with existing player (excluding current)
-            existing_player = Player.query.filter(
-                Player.name == new_name,
-                Player.id != player_id
-            ).first()
+            existing_players = query_user_data(Player, current_user.id, name=new_name)
+            existing_player = None
+            for p in existing_players:
+                if p.id != player_id:
+                    existing_player = p
+                    break
             
             if existing_player:
                 flash(f'Player name "{new_name}" is already taken', 'error')
@@ -255,9 +257,9 @@ def assign_mvp():
             
             # Send Telegram announcement
             try:
-                from telegram_bot import send_mvp_announcement
-                from flask_login import current_user
-                send_mvp_announcement(event.name, player.name, current_user)
+                from user_bot_manager import send_telegram_message
+                message = f"⭐ MVP события '{event.name}': {player.name}"
+                send_telegram_message(current_user.id, message)
                 print(f"Telegram MVP announcement sent: {event.name} -> {player.name}")
             except Exception as e:
                 print(f"Failed to send Telegram MVP announcement: {e}")
