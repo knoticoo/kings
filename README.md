@@ -13,6 +13,13 @@ A complete web application for managing MVP (Most Valuable Player) and alliance 
 
 ## 🚀 Quick Start
 
+### Default Admin Access
+The application comes with a pre-configured admin user for immediate access:
+
+- **Username:** `knotico`
+- **Password:** `Millie1991`
+- **Admin Features:** Full access to user management and system administration
+
 ### Automatic Installation
 ```bash
 # Clone the repository
@@ -26,6 +33,7 @@ cd kings-choice-management
 ./start.sh start
 
 # Access the app at http://localhost:5000
+# Login with admin credentials above
 ```
 
 ### Manual Installation
@@ -40,8 +48,8 @@ source venv/bin/activate
 # Install Python dependencies
 pip install -r requirements.txt
 
-# Initialize database
-python3 -c "from app import create_tables; create_tables()"
+# Initialize database and create admin user
+python3 scripts/create_admin_user.py
 
 # Start application
 python3 app.py
