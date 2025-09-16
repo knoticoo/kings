@@ -78,6 +78,7 @@ def load_user(user_id):
 
 # Import routes
 from routes import main_routes, player_routes, alliance_routes, event_routes, guide_routes, blacklist_routes
+from routes import user_settings_routes
 from auth import auth_bp
 
 # Register blueprints
@@ -88,6 +89,7 @@ app.register_blueprint(alliance_routes.bp)
 app.register_blueprint(event_routes.bp)
 app.register_blueprint(guide_routes.bp)
 app.register_blueprint(blacklist_routes.bp)
+app.register_blueprint(user_settings_routes.bp)
 
 @app.route('/set_language/<language>')
 def set_language(language=None):
@@ -104,4 +106,9 @@ def create_tables():
 
 if __name__ == '__main__':
     create_tables()
+    
+    # Don't start any bots globally - they will be started per-user when needed
+    print("🚀 Starting King's Choice Management Web App...")
+    print("📝 Bots will be started individually when users configure their tokens")
+    
     app.run(debug=True, host='0.0.0.0', port=5001)

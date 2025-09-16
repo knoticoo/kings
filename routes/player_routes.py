@@ -13,7 +13,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask_login import login_required, current_user
 from models import Player, Event, MVPAssignment
 from database import db
-from database_manager import query_user_data
+from database_manager import query_user_data, get_user_data_by_id
 from utils.rotation_logic import can_assign_mvp, get_eligible_players
 
 # Create blueprint for player routes
@@ -65,14 +65,14 @@ def add_player():
                 flash('Player name is required', 'error')
                 return render_template('players/add.html')
             
-            # Check if player already exists
-            existing_player = Player.query.filter_by(name=player_name).first()
+            # Check if player already exists for this user
+            existing_player = query_user_data(Player, current_user.id, name=player_name)
             if existing_player:
                 flash(f'Player "{player_name}" already exists', 'error')
                 return render_template('players/add.html')
             
             # Create new player
-            new_player = Player(name=player_name)
+            new_player = Player(name=player_name, user_id=current_user.id)
             db.session.add(new_player)
             db.session.commit()
             
@@ -98,7 +98,10 @@ def edit_player(player_id):
     GET: Show edit form with current player data
     POST: Process player updates
     """
-    player = Player.query.get_or_404(player_id)
+    player = get_user_data_by_id(Player, current_user.id, player_id)
+    if not player:
+        flash('Player not found', 'error')
+        return redirect(url_for('players.list_players'))
     
     if request.method == 'POST':
         try:
@@ -109,10 +112,12 @@ def edit_player(player_id):
                 return render_template('players/edit.html', player=player)
             
             # Check if new name conflicts with existing player (excluding current)
-            existing_player = Player.query.filter(
-                Player.name == new_name,
-                Player.id != player_id
-            ).first()
+            existing_players = query_user_data(Player, current_user.id, name=new_name)
+            existing_player = None
+            for p in existing_players:
+                if p.id != player_id:
+                    existing_player = p
+                    break
             
             if existing_player:
                 flash(f'Player name "{new_name}" is already taken', 'error')
@@ -252,9 +257,9 @@ def assign_mvp():
             
             # Send Telegram announcement
             try:
-                from telegram_bot import send_mvp_announcement
-                from flask_login import current_user
-                send_mvp_announcement(event.name, player.name, current_user)
+                from user_bot_manager import send_telegram_message
+                message = f"⭐ MVP события '{event.name}': {player.name}"
+                send_telegram_message(current_user.id, message)
                 print(f"Telegram MVP announcement sent: {event.name} -> {player.name}")
             except Exception as e:
                 print(f"Failed to send Telegram MVP announcement: {e}")

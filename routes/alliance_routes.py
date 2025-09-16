@@ -13,7 +13,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask_login import login_required, current_user
 from models import Alliance, Event, WinnerAssignment
 from database import db
-from database_manager import query_user_data
+from database_manager import query_user_data, get_user_data_by_id
 from utils.rotation_logic import can_assign_winner, get_eligible_alliances
 
 # Create blueprint for alliance routes
@@ -65,14 +65,14 @@ def add_alliance():
                 flash('Alliance name is required', 'error')
                 return render_template('alliances/add.html')
             
-            # Check if alliance already exists
-            existing_alliance = Alliance.query.filter_by(name=alliance_name).first()
+            # Check if alliance already exists for this user
+            existing_alliance = query_user_data(Alliance, current_user.id, name=alliance_name)
             if existing_alliance:
                 flash(f'Alliance "{alliance_name}" already exists', 'error')
                 return render_template('alliances/add.html')
             
             # Create new alliance
-            new_alliance = Alliance(name=alliance_name)
+            new_alliance = Alliance(name=alliance_name, user_id=current_user.id)
             db.session.add(new_alliance)
             db.session.commit()
             
@@ -98,7 +98,10 @@ def edit_alliance(alliance_id):
     GET: Show edit form with current alliance data
     POST: Process alliance updates
     """
-    alliance = Alliance.query.get_or_404(alliance_id)
+    alliance = get_user_data_by_id(Alliance, current_user.id, alliance_id)
+    if not alliance:
+        flash('Alliance not found', 'error')
+        return redirect(url_for('alliances.list_alliances'))
     
     if request.method == 'POST':
         try:
@@ -109,10 +112,12 @@ def edit_alliance(alliance_id):
                 return render_template('alliances/edit.html', alliance=alliance)
             
             # Check if new name conflicts with existing alliance (excluding current)
-            existing_alliance = Alliance.query.filter(
-                Alliance.name == new_name,
-                Alliance.id != alliance_id
-            ).first()
+            existing_alliances = query_user_data(Alliance, current_user.id, name=new_name)
+            existing_alliance = None
+            for a in existing_alliances:
+                if a.id != alliance_id:
+                    existing_alliance = a
+                    break
             
             if existing_alliance:
                 flash(f'Alliance name "{new_name}" is already taken', 'error')
@@ -145,7 +150,10 @@ def delete_alliance(alliance_id):
     This will also delete all winner assignments for this alliance
     """
     try:
-        alliance = Alliance.query.get_or_404(alliance_id)
+        alliance = get_user_data_by_id(Alliance, current_user.id, alliance_id)
+        if not alliance:
+            flash('Alliance not found', 'error')
+            return redirect(url_for('alliances.list_alliances'))
         alliance_name = alliance.name
         
         # Remove current winner status if this alliance is current winner
@@ -185,26 +193,37 @@ def assign_winner():
                 return redirect(url_for('alliances.assign_winner'))
             
             # Check rotation logic
-            if not can_assign_winner():
+            if not can_assign_winner(current_user.id):
                 flash('Cannot assign winner: Not all alliances have won yet', 'error')
                 return redirect(url_for('alliances.assign_winner'))
             
-            eligible_alliances = get_eligible_alliances()
+            eligible_alliances = get_eligible_alliances(current_user.id)
             if alliance_id not in [a.id for a in eligible_alliances]:
                 flash('Selected alliance is not eligible for winner assignment', 'error')
                 return redirect(url_for('alliances.assign_winner'))
             
-            alliance = Alliance.query.get_or_404(alliance_id)
-            event = Event.query.get_or_404(event_id)
+            alliance = get_user_data_by_id(Alliance, current_user.id, alliance_id)
+            event = get_user_data_by_id(Event, current_user.id, event_id)
+            if not alliance or not event:
+                flash('Alliance or event not found', 'error')
+                return redirect(url_for('alliances.assign_winner'))
             
             # Check if event already has winner
-            existing_assignment = WinnerAssignment.query.filter_by(event_id=event_id).first()
+            existing_assignments = query_user_data(WinnerAssignment, current_user.id)
+            existing_assignment = None
+            for assignment in existing_assignments:
+                if assignment.event_id == event_id:
+                    existing_assignment = assignment
+                    break
+            
             if existing_assignment:
                 flash(f'Event "{event.name}" already has a winning alliance assigned', 'error')
                 return redirect(url_for('alliances.assign_winner'))
             
-            # Remove current winner status from all alliances
-            Alliance.query.update({'is_current_winner': False})
+            # Remove current winner status from all alliances for this user
+            user_alliances = query_user_data(Alliance, current_user.id)
+            for user_alliance in user_alliances:
+                user_alliance.is_current_winner = False
             
             # Create winner assignment
             assignment = WinnerAssignment(alliance_id=alliance_id, event_id=event_id)
@@ -221,9 +240,9 @@ def assign_winner():
             
             # Send Telegram announcement
             try:
-                from telegram_bot import send_winner_announcement
-                from flask_login import current_user
-                send_winner_announcement(event.name, alliance.name, current_user)
+                from user_bot_manager import send_telegram_message
+                message = f"🏆 Победитель события '{event.name}': {alliance.name}"
+                send_telegram_message(current_user.id, message)
                 print(f"Telegram winner announcement sent: {event.name} -> {alliance.name}")
             except Exception as e:
                 print(f"Failed to send Telegram winner announcement: {e}")
@@ -241,11 +260,13 @@ def assign_winner():
     # GET request - show assignment form
     try:
         # Check if we can assign winner
-        can_assign = can_assign_winner()
-        eligible_alliances = get_eligible_alliances() if can_assign else []
+        can_assign = can_assign_winner(current_user.id)
+        eligible_alliances = get_eligible_alliances(current_user.id) if can_assign else []
         
-        # Get events that don't have winner assigned yet
-        available_events = Event.query.filter_by(has_winner=False).order_by(Event.event_date.desc()).all()
+        # Get events that don't have winner assigned yet for this user
+        user_events = query_user_data(Event, current_user.id)
+        available_events = [e for e in user_events if not e.has_winner]
+        available_events.sort(key=lambda x: x.event_date, reverse=True)
         
         return render_template('alliances/assign_winner.html',
                              can_assign_winner=can_assign,
@@ -279,8 +300,8 @@ def api_list_alliances():
 def api_rotation_status():
     """API endpoint to check winner rotation status"""
     try:
-        can_assign = can_assign_winner()
-        eligible_alliances = get_eligible_alliances() if can_assign else []
+        can_assign = can_assign_winner(current_user.id)
+        eligible_alliances = get_eligible_alliances(current_user.id) if can_assign else []
         
         return jsonify({
             'success': True,
