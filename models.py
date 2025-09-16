@@ -12,6 +12,7 @@ This module contains all SQLAlchemy models for:
 """
 
 from datetime import datetime
+import hashlib
 from database import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -65,6 +66,25 @@ class User(UserMixin, db.Model):
     
     def check_password(self, password):
         """Check password against hash"""
+        # Handle simple SHA256 hash format for testing
+        if self.password_hash.startswith('sha256:'):
+            try:
+                parts = self.password_hash.split(':')
+                if len(parts) == 3:
+                    salt_hex = parts[1]
+                    stored_hash = parts[2]
+                    
+                    # Recreate the hash
+                    salt = bytes.fromhex(salt_hex)
+                    hash_obj = hashlib.sha256()
+                    hash_obj.update(salt + password.encode('utf-8'))
+                    computed_hash = hash_obj.hexdigest()
+                    
+                    return computed_hash == stored_hash
+            except Exception:
+                pass
+        
+        # Fall back to werkzeug's check_password_hash for other formats
         return check_password_hash(self.password_hash, password)
     
     def __repr__(self):
