@@ -190,6 +190,15 @@ setup_multi_user_database() {
         print_error "setup_multi_user.py not found"
         exit 1
     fi
+    
+    # Run database optimization
+    print_status "Optimizing database performance..."
+    if [ -f "$APP_DIR/optimize_database.py" ]; then
+        python3 optimize_database.py
+        print_success "Database optimization completed"
+    else
+        print_warning "Database optimization script not found, skipping..."
+    fi
 }
 
 # Function to run tests
@@ -348,11 +357,17 @@ start_app() {
     # Change to app directory
     cd "$APP_DIR"
     
+    # Run database optimization if needed
+    print_status "Checking database optimization..."
+    if [ -f "$APP_DIR/optimize_database.py" ]; then
+        python3 optimize_database.py > /dev/null 2>&1
+    fi
+    
     # Create log files if they don't exist
     touch "$LOG_FILE" "$ERROR_LOG"
     
     # Start the application
-    print_status "Starting $APP_NAME on $HOST:$PORT..."
+    print_status "Starting $APP_NAME on $HOST:$PORT with performance optimizations..."
     
     # Use gunicorn if available, otherwise use Flask development server
     if command_exists gunicorn; then
@@ -630,9 +645,9 @@ show_help() {
     echo "Usage: $0 [COMMAND]"
     echo ""
     echo "Commands:"
-    echo "  install     - Complete installation (system deps, venv, app deps, multi-user setup)"
-    echo "  start       - Start all services (app, telegram, discord)"
-    echo "  start-app   - Start only the main application"
+    echo "  install     - Complete installation (system deps, venv, app deps, multi-user setup + optimization)"
+    echo "  start       - Start all services (app, telegram, discord) with performance optimizations"
+    echo "  start-app   - Start only the main application with performance optimizations"
     echo "  start-telegram - Start only the Telegram bot"
     echo "  start-discord  - Start only the Discord bot"
     echo "  stop        - Stop all services"
@@ -645,6 +660,7 @@ show_help() {
     echo "  backup      - Backup the database"
     echo "  test        - Run application tests"
     echo "  update      - Update dependencies and restart all services"
+    echo "  optimize    - Run database performance optimization"
     echo "  clean       - Clean up temporary files and logs"
     echo "  help        - Show this help message"
     echo ""
@@ -766,6 +782,18 @@ main() {
             ;;
         "clean")
             clean_app
+            ;;
+        "optimize")
+            print_status "Running database performance optimization..."
+            source "$VENV_DIR/bin/activate"
+            cd "$APP_DIR"
+            if [ -f "$APP_DIR/optimize_database.py" ]; then
+                python3 optimize_database.py
+                print_success "Database optimization completed"
+            else
+                print_error "Database optimization script not found"
+                exit 1
+            fi
             ;;
         "help"|"--help"|"-h")
             show_help

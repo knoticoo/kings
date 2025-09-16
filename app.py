@@ -9,15 +9,46 @@ with rotation logic to ensure fair distribution of awards.
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_babel import Babel, gettext, ngettext, get_locale
 from flask_login import LoginManager, current_user
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
+from functools import wraps
 
 # Load environment variables
 load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
+
+# Simple in-memory cache for API responses
+api_cache = {}
+
+def cache_response(timeout_seconds=30):
+    """Decorator to cache API responses"""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            cache_key = f"{f.__name__}_{str(args)}_{str(kwargs)}"
+            now = datetime.now()
+            
+            # Check if cached response exists and is still valid
+            if cache_key in api_cache:
+                cached_data, timestamp = api_cache[cache_key]
+                if now - timestamp < timedelta(seconds=timeout_seconds):
+                    return cached_data
+            
+            # Execute function and cache result
+            result = f(*args, **kwargs)
+            api_cache[cache_key] = (result, now)
+            
+            # Clean old cache entries
+            for key in list(api_cache.keys()):
+                if now - api_cache[key][1] > timedelta(seconds=timeout_seconds * 2):
+                    del api_cache[key]
+            
+            return result
+        return decorated_function
+    return decorator
 
 # Database configuration
 basedir = os.path.abspath(os.path.dirname(__file__))
