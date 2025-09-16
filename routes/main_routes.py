@@ -170,7 +170,13 @@ def telegram_message():
                 return render_template('telegram_message.html')
             
             # Send message via Telegram (will be auto-translated to Russian)
-            success = send_manual_message(message_text)
+            # Send manual message via Telegram
+            try:
+                from telegram_bot import send_manual_message
+                success = send_manual_message(message_text)
+            except Exception as e:
+                print(f"Failed to send manual message: {e}")
+                success = False
             
             if success:
                 flash('Message sent successfully to Telegram channel!', 'success')

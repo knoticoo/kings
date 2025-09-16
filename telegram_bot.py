@@ -27,7 +27,7 @@ class KingsChoiceTelegramBot:
         self.bot_token = os.getenv('TELEGRAM_BOT_TOKEN')
         self.channel_id = os.getenv('TELEGRAM_CHANNEL_ID')  # Should start with @channelname or -100...
         self.bot = None
-        self.translator = GoogleTranslator(source='auto', target='ru')
+        self._translator = None  # Lazy initialization
         
         if not self.bot_token:
             logger.warning("TELEGRAM_BOT_TOKEN not found in environment variables")
@@ -36,6 +36,13 @@ class KingsChoiceTelegramBot:
             
         if self.bot_token:
             self.bot = Bot(token=self.bot_token)
+    
+    @property
+    def translator(self):
+        """Lazy initialization of translator"""
+        if self._translator is None:
+            self._translator = GoogleTranslator(source='auto', target='ru')
+        return self._translator
     
     async def send_message(self, message):
         """Send a message to the configured Telegram channel"""
@@ -127,25 +134,48 @@ class KingsChoiceTelegramBot:
         
         return loop.run_until_complete(self.test_connection())
 
-# Global bot instance
-telegram_bot = KingsChoiceTelegramBot()
+# Global bot instance - will be created lazily when needed
+_telegram_bot = None
+
+def get_telegram_bot():
+    """Get or create the telegram bot instance lazily"""
+    global _telegram_bot
+    if _telegram_bot is None:
+        _telegram_bot = KingsChoiceTelegramBot()
+    return _telegram_bot
 
 # Helper functions for easy import
 def send_mvp_announcement(event_name, player_name):
     """Helper function to send MVP announcement"""
-    return telegram_bot.announce_mvp(event_name, player_name)
+    bot = get_telegram_bot()
+    if not bot.bot_token or not bot.channel_id:
+        logger.warning("Telegram bot not configured - skipping MVP announcement")
+        return False
+    return bot.announce_mvp(event_name, player_name)
 
 def send_winner_announcement(event_name, alliance_name):
     """Helper function to send winner announcement"""
-    return telegram_bot.announce_winner(event_name, alliance_name)
+    bot = get_telegram_bot()
+    if not bot.bot_token or not bot.channel_id:
+        logger.warning("Telegram bot not configured - skipping winner announcement")
+        return False
+    return bot.announce_winner(event_name, alliance_name)
 
 def send_manual_message(text):
     """Helper function to translate and send manual message"""
-    return telegram_bot.translate_and_send(text)
+    bot = get_telegram_bot()
+    if not bot.bot_token or not bot.channel_id:
+        logger.warning("Telegram bot not configured - skipping manual message")
+        return False
+    return bot.translate_and_send(text)
 
 def test_bot_connection():
     """Helper function to test bot connection"""
-    return telegram_bot.test_connection_sync()
+    bot = get_telegram_bot()
+    if not bot.bot_token or not bot.channel_id:
+        logger.warning("Telegram bot not configured")
+        return False, "Telegram bot not configured"
+    return bot.test_connection_sync()
 
 if __name__ == "__main__":
     # Test the bot if run directly
