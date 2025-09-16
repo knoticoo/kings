@@ -9,7 +9,8 @@ from flask import Blueprint, render_template, jsonify, request, redirect, url_fo
 from flask_login import login_required, current_user
 from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Guide
 from database import db
-from database_manager import query_user_data, get_user_data_by_id
+from database_manager import query_user_data, get_user_data_by_id, get_user_data_optimized
+from app import cache_response
 
 # Create blueprint for main routes
 bp = Blueprint('main', __name__)
@@ -27,48 +28,18 @@ def dashboard():
     - Quick stats
     """
     try:
-        # Get current MVP player (user-specific)
-        current_mvp = query_user_data(Player, current_user.id, is_current_mvp=True)
-        current_mvp = current_mvp[0] if current_mvp else None
-        
-        # Get current winning alliance (user-specific)
-        current_winner = query_user_data(Alliance, current_user.id, is_current_winner=True)
-        current_winner = current_winner[0] if current_winner else None
-        
-        # Get all events with MVP assignments (user-specific)
-        recent_events = []
-        events = query_user_data(Event, current_user.id)
-        events_with_mvp = [e for e in events if e.has_mvp]
-        events_with_mvp.sort(key=lambda x: x.event_date, reverse=True)
-        
-        for event in events_with_mvp:
-            # Get all MVP assignments for this event (since events can be reused)
-            mvp_assignments = query_user_data(MVPAssignment, current_user.id, event_id=event.id)
-            mvp_assignments.sort(key=lambda x: x.assigned_at, reverse=True)
-            
-            # Add MVP data to event object for template access
-            event.mvp_assignments = mvp_assignments
-            event.mvp_players = [assignment.player.name for assignment in mvp_assignments if hasattr(assignment, 'player')]
-            event.mvp_count = len(mvp_assignments)
-            
-            recent_events.append(event)
-        
-        # Get total counts for stats (user-specific)
-        total_players = len(query_user_data(Player, current_user.id))
-        total_alliances = len(query_user_data(Alliance, current_user.id))
-        total_events = len(query_user_data(Event, current_user.id))
-        total_blacklist_entries = len(query_user_data(Blacklist, current_user.id))
-        total_guides = len(query_user_data(Guide, current_user.id))
+        # Use optimized single query to get all dashboard data
+        data = get_user_data_optimized(current_user.id, include_stats=True)
         
         return render_template('dashboard.html', 
-                             current_mvp=current_mvp,
-                             current_winner=current_winner,
-                             recent_events=recent_events,
-                             total_players=total_players,
-                             total_alliances=total_alliances,
-                             total_events=total_events,
-                             total_blacklist_entries=total_blacklist_entries,
-                             total_guides=total_guides)
+                             current_mvp=data['current_mvp'],
+                             current_winner=data['current_winner'],
+                             recent_events=data['recent_events'],
+                             total_players=data['stats']['total_players'],
+                             total_alliances=data['stats']['total_alliances'],
+                             total_events=data['stats']['total_events'],
+                             total_blacklist_entries=data['stats']['total_blacklist_entries'],
+                             total_guides=data['stats']['total_guides'])
     except Exception as e:
         print(f"Error in dashboard route: {str(e)}")
         return render_template('dashboard.html', 
@@ -84,6 +55,7 @@ def dashboard():
 
 @bp.route('/api/dashboard-data')
 @login_required
+@cache_response(timeout_seconds=30)
 def dashboard_data():
     """
     API endpoint to get dashboard data in JSON format
@@ -92,58 +64,24 @@ def dashboard_data():
     Useful for AJAX updates or mobile apps
     """
     try:
-        # Get current MVP player (user-specific)
-        current_mvp = query_user_data(Player, current_user.id, is_current_mvp=True)
-        current_mvp = current_mvp[0] if current_mvp else None
+        # Use optimized single query to get all dashboard data
+        data = get_user_data_optimized(current_user.id, include_stats=True)
         
-        # Get current winning alliance (user-specific)
-        current_winner = query_user_data(Alliance, current_user.id, is_current_winner=True)
-        current_winner = current_winner[0] if current_winner else None
-        
-        # Get all events with MVP assignments (user-specific)
+        # Convert events to dict format for JSON response
         recent_events = []
-        events = query_user_data(Event, current_user.id)
-        events_with_mvp = [e for e in events if e.has_mvp]
-        events_with_mvp.sort(key=lambda x: x.event_date, reverse=True)
-        
-        for event in events_with_mvp:
+        for event in data['recent_events']:
             event_data = event.to_dict()
-            
-            # Add ALL MVP assignments for this event (since events can be reused)
-            mvp_assignments = query_user_data(MVPAssignment, current_user.id, event_id=event.id)
-            mvp_assignments.sort(key=lambda x: x.assigned_at, reverse=True)
-            
-            if mvp_assignments:
-                event_data['mvp_assignments'] = [assignment.to_dict() for assignment in mvp_assignments]
-                event_data['mvp_players'] = [assignment.player.name for assignment in mvp_assignments if hasattr(assignment, 'player')]
-                event_data['mvp_count'] = len(mvp_assignments)
-            else:
-                event_data['mvp_assignments'] = []
-                event_data['mvp_players'] = []
-                event_data['mvp_count'] = 0
-            
-            # Add winner info if exists
-            winner_assignments = query_user_data(WinnerAssignment, current_user.id, event_id=event.id)
-            if winner_assignments:
-                event_data['winning_alliance'] = winner_assignments[0].alliance.name if hasattr(winner_assignments[0], 'alliance') else None
-            
+            event_data['mvp_assignments'] = [assignment.to_dict() for assignment in event.mvp_assignments]
+            event_data['mvp_players'] = event.mvp_players
+            event_data['mvp_count'] = event.mvp_count
             recent_events.append(event_data)
-        
-        # Get total counts for stats (user-specific)
-        stats = {
-            'total_players': len(query_user_data(Player, current_user.id)),
-            'total_alliances': len(query_user_data(Alliance, current_user.id)),
-            'total_events': len(query_user_data(Event, current_user.id)),
-            'mvp_assignments': len(query_user_data(MVPAssignment, current_user.id)),
-            'winner_assignments': len(query_user_data(WinnerAssignment, current_user.id))
-        }
         
         return jsonify({
             'success': True,
-            'current_mvp': current_mvp.to_dict() if current_mvp else None,
-            'current_winner': current_winner.to_dict() if current_winner else None,
+            'current_mvp': data['current_mvp'].to_dict() if data['current_mvp'] else None,
+            'current_winner': data['current_winner'].to_dict() if data['current_winner'] else None,
             'recent_events': recent_events,
-            'stats': stats
+            'stats': data['stats']
         })
         
     except Exception as e:

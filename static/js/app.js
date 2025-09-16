@@ -4,9 +4,11 @@
 const KingsChoice = {
     // Configuration
     config: {
-        refreshInterval: 30000, // 30 seconds
+        refreshInterval: 60000, // 60 seconds (reduced frequency)
         apiBaseUrl: '/api',
-        debug: false
+        debug: false,
+        cacheTimeout: 30000, // 30 seconds cache
+        maxRetries: 3
     },
     
     // Utility functions
@@ -88,10 +90,24 @@ const KingsChoice = {
     
     // API functions
     api: {
-        // Generic API call
+        // Cache for API responses
+        cache: new Map(),
+        
+        // Generic API call with caching
         call: async function(endpoint, options = {}) {
             try {
                 const url = KingsChoice.config.apiBaseUrl + endpoint;
+                const cacheKey = `${url}_${JSON.stringify(options)}`;
+                
+                // Check cache first
+                if (this.cache.has(cacheKey)) {
+                    const cached = this.cache.get(cacheKey);
+                    if (Date.now() - cached.timestamp < KingsChoice.config.cacheTimeout) {
+                        KingsChoice.utils.log('Using cached response for:', endpoint);
+                        return cached.data;
+                    }
+                }
+                
                 const response = await fetch(url, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -106,11 +122,23 @@ const KingsChoice = {
                     throw new Error(data.error || 'API call failed');
                 }
                 
+                // Cache successful responses
+                this.cache.set(cacheKey, {
+                    data: data,
+                    timestamp: Date.now()
+                });
+                
                 return data;
             } catch (error) {
                 KingsChoice.utils.log('API Error:', error);
                 throw error;
             }
+        },
+        
+        // Clear cache
+        clearCache: function() {
+            this.cache.clear();
+            KingsChoice.utils.log('API cache cleared');
         },
         
         // Get dashboard data
@@ -359,6 +387,14 @@ const KingsChoice = {
             try {
                 // Only refresh if user is not actively interacting
                 if (document.hidden) return;
+                
+                // Check if user is actively typing or interacting
+                if (document.activeElement && 
+                    (document.activeElement.tagName === 'INPUT' || 
+                     document.activeElement.tagName === 'TEXTAREA' ||
+                     document.activeElement.isContentEditable)) {
+                    return; // Skip refresh if user is typing
+                }
                 
                 // Update rotation status on relevant pages
                 const currentPage = window.location.pathname;
