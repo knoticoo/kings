@@ -10,8 +10,10 @@ Handles all alliance-related operations:
 """
 
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
+from flask_login import login_required, current_user
 from models import Alliance, Event, WinnerAssignment
 from database import db
+from database_manager import query_user_data
 from utils.rotation_logic import can_assign_winner, get_eligible_alliances
 
 # Create blueprint for alliance routes
