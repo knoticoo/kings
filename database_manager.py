@@ -10,6 +10,8 @@ from contextlib import contextmanager
 from flask import g
 from database import db
 from models import User
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 def get_user_database_path(user_id):
     """Get the database path for a specific user"""
@@ -30,25 +32,17 @@ def user_database_context(user_id):
     if not db_path or not os.path.exists(db_path):
         raise FileNotFoundError(f"Database not found for user {user_id}")
     
-    # Store original database URI
-    original_uri = db.engine.url
+    # Create a new engine and session for the user's database
+    user_uri = f'sqlite:///{db_path}'
+    user_engine = create_engine(user_uri)
+    UserSession = sessionmaker(bind=user_engine)
+    user_session = UserSession()
     
     try:
-        # Switch to user's database
-        user_uri = f'sqlite:///{db_path}'
-        db.engine.url = user_uri
-        
-        # Create a new session for this database
-        session = db.create_scoped_session()
-        g.db_session = session
-        
-        yield session
+        yield user_session
     finally:
-        # Restore original database URI
-        db.engine.url = original_uri
-        if hasattr(g, 'db_session'):
-            g.db_session.close()
-            delattr(g, 'db_session')
+        user_session.close()
+        user_engine.dispose()
 
 def get_current_user_session():
     """Get the current user's database session"""
