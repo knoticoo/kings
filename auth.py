@@ -12,17 +12,18 @@ import os
 import sqlite3
 from database import db
 from models import User
+from config import Config
 
 # Create blueprint for authentication routes
 auth_bp = Blueprint('auth', __name__)
 
 def create_user_database(user_id, username):
     """Create a separate database file for a user"""
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    user_db_path = os.path.join(basedir, 'user_databases', f'user_{user_id}_{username}.db')
+    # Use configuration to get the correct path
+    user_db_path = Config.get_user_database_path(user_id, username)
     
-    # Create user_databases directory if it doesn't exist
-    os.makedirs(os.path.dirname(user_db_path), exist_ok=True)
+    # Ensure the user database directory exists
+    Config.ensure_user_database_directory()
     
     # Create the database file and initialize tables
     conn = sqlite3.connect(user_db_path)
@@ -226,8 +227,12 @@ def create_user():
             flash('Email already exists', 'error')
             return render_template('auth/create_user.html')
         
-        # Create user database path
-        user_db_path = os.path.join(os.path.dirname(__file__), 'user_databases', f'user_{username}.db')
+        # Get next user ID for database path
+        max_id = db.session.query(db.func.max(User.id)).scalar() or 0
+        next_user_id = max_id + 1
+        
+        # Create user database path using configuration
+        user_db_path = Config.get_user_database_path(next_user_id, username)
         
         # Create new user
         user = User(

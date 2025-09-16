@@ -26,6 +26,7 @@ def setup_system():
     from database import db, init_app, create_all_tables
     from models import User
     from auth import create_user_database
+    from config import Config
     
     with app.app_context():
         print("📊 Initializing main database...")
@@ -78,9 +79,12 @@ def setup_system():
         discord_channel_id = input("Discord Channel ID (press Enter to skip): ").strip()
         discord_enabled = bool(discord_bot_token and discord_channel_id)
         
-        # Create database path
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        admin_db_path = os.path.join(basedir, 'user_databases', f'admin_{admin_username}.db')
+        # Get next user ID for database path
+        max_id = db.session.query(db.func.max(User.id)).scalar() or 0
+        next_user_id = max_id + 1
+        
+        # Create database path using configuration
+        admin_db_path = Config.get_user_database_path(next_user_id, admin_username)
         
         # Create admin user
         admin_user = User(
