@@ -615,10 +615,9 @@ stop_all() {
 
 # Function to start all services
 start_all() {
-    print_step "Starting all services..."
+    print_step "Starting main application..."
     start_app
-    start_telegram
-    start_discord
+    print_status "Bots will be started individually when users configure their tokens in settings"
 }
 
 # Function to backup database
@@ -646,10 +645,10 @@ show_help() {
     echo ""
     echo "Commands:"
     echo "  install     - Complete installation (system deps, venv, app deps, multi-user setup + optimization)"
-    echo "  start       - Start all services (app, telegram, discord) with performance optimizations"
+    echo "  start       - Start the main application (bots managed per-user in web interface)"
     echo "  start-app   - Start only the main application with performance optimizations"
-    echo "  start-telegram - Start only the Telegram bot"
-    echo "  start-discord  - Start only the Discord bot"
+    echo "  start-telegram - (Deprecated) Bots now managed per-user in web interface"
+    echo "  start-discord  - (Deprecated) Bots now managed per-user in web interface"
     echo "  stop        - Stop all services"
     echo "  stop-app    - Stop only the main application"
     echo "  stop-telegram - Stop only the Telegram bot"
@@ -745,10 +744,10 @@ main() {
             start_app
             ;;
         "start-telegram")
-            start_telegram
+            print_warning "Telegram bots are now managed per-user in the web interface settings"
             ;;
         "start-discord")
-            start_discord
+            print_warning "Discord bots are now managed per-user in the web interface settings"
             ;;
         "stop")
             stop_all

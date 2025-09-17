@@ -255,15 +255,14 @@ def assign_mvp():
             
             db.session.commit()
             
-            # Send Telegram announcement
+            # Send MVP announcement
             try:
-                from user_bot_manager import send_telegram_message
-                message = f"⭐ MVP события '{event.name}': {player.name}"
-                send_telegram_message(current_user.id, message)
-                print(f"Telegram MVP announcement sent: {event.name} -> {player.name}")
+                from user_notifications import send_mvp_announcement
+                results = send_mvp_announcement(current_user.id, player.name, event.name)
+                print(f"MVP announcement sent: {event.name} -> {player.name}, Results: {results}")
             except Exception as e:
-                print(f"Failed to send Telegram MVP announcement: {e}")
-                # Don't fail the assignment if Telegram fails
+                print(f"Failed to send MVP announcement: {e}")
+                # Don't fail the assignment if notification fails
             
             flash(f'{player.name} assigned as MVP for "{event.name}"', 'success')
             return redirect(url_for('players.list_players'))

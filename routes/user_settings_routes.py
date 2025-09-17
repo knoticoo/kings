@@ -60,7 +60,7 @@ def bot_settings():
                 stop_user_bots(current_user.id)
                 flash('Discord bot stopped', 'info')
             
-            if telegram_enabled and telegram_token:
+            if telegram_enabled and telegram_token and telegram_chat:
                 result = start_user_bots(
                     current_user.id,
                     telegram_token=telegram_token,
@@ -128,14 +128,14 @@ def test_telegram_bot():
                               telegram_chat=current_user.telegram_chat_id):
             return jsonify({'success': False, 'error': 'Failed to start Telegram bot'})
         
-        # Send test message
-        from user_bot_manager import send_telegram_message
-        success = send_telegram_message(current_user.id, "🤖 Telegram bot connection test")
+        # Test connection using bot manager
+        from user_bot_manager import test_telegram_connection
+        success, message = test_telegram_connection(current_user.id)
         
         if success:
-            return jsonify({'success': True, 'message': 'Telegram bot test successful'})
+            return jsonify({'success': True, 'message': f'Telegram bot test successful: {message}'})
         else:
-            return jsonify({'success': False, 'error': 'Failed to send test message'})
+            return jsonify({'success': False, 'error': f'Telegram bot test failed: {message}'})
             
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})

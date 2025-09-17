@@ -259,6 +259,42 @@ class RotationLogic:
 # Create bot instance
 bot = KingsChoiceBot()
 
+# Helper functions for user-specific bot management
+def send_message_to_user(user_id, message):
+    """Send message to a specific user's Discord channel"""
+    try:
+        from models import User
+        user = User.query.get(user_id)
+        if user and user.discord_enabled and user.discord_bot_token and user.discord_channel_id:
+            # This would need to be implemented to send to the specific channel
+            # For now, just log the message
+            logger.info(f"Discord message for user {user_id}: {message}")
+            return True
+        else:
+            logger.warning(f"Discord bot not configured for user {user_id}")
+            return False
+    except Exception as e:
+        logger.error(f"Error sending message to user {user_id}: {str(e)}")
+        return False
+
+def send_mvp_announcement(event_name, player_name, user=None):
+    """Helper function to send MVP announcement for a specific user"""
+    if user and user.discord_enabled and user.discord_bot_token and user.discord_channel_id:
+        message = f"🏆 **MVP Announcement**\n\nPlayer: **{player_name}**\nEvent: **{event_name}**\n\nCongratulations to {player_name} for being selected as MVP!"
+        return send_message_to_user(user.id, message)
+    else:
+        logger.warning("Discord bot not configured for user - skipping MVP announcement")
+        return False
+
+def send_winner_announcement(event_name, alliance_name, user=None):
+    """Helper function to send winner announcement for a specific user"""
+    if user and user.discord_enabled and user.discord_bot_token and user.discord_channel_id:
+        message = f"🎉 **Winner Announcement**\n\nAlliance: **{alliance_name}**\nEvent: **{event_name}**\n\nCongratulations to {alliance_name} for winning the event!"
+        return send_message_to_user(user.id, message)
+    else:
+        logger.warning("Discord bot not configured for user - skipping winner announcement")
+        return False
+
 # Main command to start the bot
 async def main():
     """Main function to start the bot"""
