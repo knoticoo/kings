@@ -28,6 +28,21 @@ def dashboard():
     - Quick stats
     """
     try:
+        # Check if user has a database path configured
+        if not current_user.database_path:
+            # User hasn't set up their database yet
+            flash('Please configure your database path in user settings before using the dashboard.', 'warning')
+            return render_template('dashboard.html', 
+                                 error="Database not configured. Please set up your database path in user settings.",
+                                 current_mvp=None,
+                                 current_winner=None,
+                                 recent_events=[],
+                                 total_players=0,
+                                 total_alliances=0,
+                                 total_events=0,
+                                 total_blacklist_entries=0,
+                                 total_guides=0)
+        
         # Use optimized single query to get all dashboard data
         data = get_user_data_optimized(current_user.id, include_stats=True)
         
@@ -40,10 +55,25 @@ def dashboard():
                              total_events=data['stats']['total_events'],
                              total_blacklist_entries=data['stats']['total_blacklist_entries'],
                              total_guides=data['stats']['total_guides'])
+    except FileNotFoundError as e:
+        print(f"Database file not found: {str(e)}")
+        flash('Your database file was not found. Please check your database configuration in user settings.', 'error')
+        return render_template('dashboard.html', 
+                             error="Database file not found. Please check your database configuration.",
+                             current_mvp=None,
+                             current_winner=None,
+                             recent_events=[],
+                             total_players=0,
+                             total_alliances=0,
+                             total_events=0,
+                             total_blacklist_entries=0,
+                             total_guides=0)
     except Exception as e:
         print(f"Error in dashboard route: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return render_template('dashboard.html', 
-                             error="Failed to load dashboard data",
+                             error="Failed to load dashboard data. Please check your configuration.",
                              current_mvp=None,
                              current_winner=None,
                              recent_events=[],
@@ -64,6 +94,13 @@ def dashboard_data():
     Useful for AJAX updates or mobile apps
     """
     try:
+        # Check if user has a database path configured
+        if not current_user.database_path:
+            return jsonify({
+                'success': False,
+                'error': 'Database not configured. Please set up your database path in user settings.'
+            }), 400
+        
         # Use optimized single query to get all dashboard data
         data = get_user_data_optimized(current_user.id, include_stats=True)
         
@@ -84,10 +121,18 @@ def dashboard_data():
             'stats': data['stats']
         })
         
-    except Exception as e:
+    except FileNotFoundError as e:
         return jsonify({
             'success': False,
-            'error': str(e)
+            'error': 'Database file not found. Please check your database configuration.'
+        }), 404
+    except Exception as e:
+        print(f"Error in dashboard_data API: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': 'Failed to load dashboard data. Please check your configuration.'
         }), 500
 
 @bp.route('/telegram-message', methods=['GET', 'POST'])

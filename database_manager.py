@@ -29,8 +29,11 @@ def user_database_context(user_id):
     
     # Get the user's database path
     db_path = get_user_database_path(user_id)
-    if not db_path or not os.path.exists(db_path):
-        raise FileNotFoundError(f"Database not found for user {user_id}")
+    if not db_path:
+        raise FileNotFoundError(f"Database path not configured for user {user_id}. Please set up your database in user settings.")
+    
+    if not os.path.exists(db_path):
+        raise FileNotFoundError(f"Database file not found: {db_path}. Please check your database configuration.")
     
     # Create a new engine and session for the user's database
     user_uri = f'sqlite:///{db_path}'
