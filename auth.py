@@ -11,11 +11,34 @@ from datetime import datetime
 import os
 import sqlite3
 from database import db
-from models import User
+from models import User, SubUser
 from config import Config
 
 # Create blueprint for authentication routes
 auth_bp = Blueprint('auth', __name__)
+
+def get_effective_user_id():
+    """Get the effective user ID for data access (handles both regular users and sub-users)"""
+    if not current_user.is_authenticated:
+        return None
+    
+    # If it's a sub-user, return the parent user ID
+    if hasattr(current_user, 'parent_user_id'):
+        return current_user.parent_user_id
+    
+    # If it's a regular user, return their own ID
+    return current_user.id
+
+def is_sub_user():
+    """Check if current user is a sub-user"""
+    return hasattr(current_user, 'parent_user_id') if current_user.is_authenticated else False
+
+def has_sub_user_permission(permission):
+    """Check if current sub-user has specific permission"""
+    if not is_sub_user():
+        return True  # Regular users have all permissions
+    
+    return current_user.has_permission(permission)
 
 def create_user_database(user_id, username):
     """Create a separate database file for a user"""
@@ -156,6 +179,7 @@ def login():
             flash('Username and password are required', 'error')
             return render_template('auth/login.html')
         
+        # Try to find regular user first
         user = User.query.filter_by(username=username, is_active=True).first()
         
         if user and user.check_password(password):
@@ -165,8 +189,20 @@ def login():
             
             flash(f'Welcome back, {user.username}!', 'success')
             return redirect(url_for('main.dashboard'))
-        else:
-            flash('Invalid username or password', 'error')
+        
+        # If not found, try sub-user
+        sub_user = SubUser.query.filter_by(username=username, is_active=True).first()
+        
+        if sub_user and sub_user.check_password(password):
+            login_user(sub_user)
+            sub_user.last_login = datetime.utcnow()
+            db.session.commit()
+            
+            flash(f'Welcome back, {sub_user.username}! (Helper for {sub_user.parent_user.username})', 'success')
+            return redirect(url_for('main.dashboard'))
+        
+        # If neither found
+        flash('Invalid username or password', 'error')
     
     return render_template('auth/login.html')
 

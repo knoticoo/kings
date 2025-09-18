@@ -9,6 +9,7 @@ with rotation logic to ensure fair distribution of awards.
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_babel import Babel, gettext, ngettext, get_locale
 from flask_login import LoginManager, current_user
+from database import db
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
@@ -73,16 +74,22 @@ from database import db, init_app, create_all_tables
 init_app(app)
 
 # Import models after database initialization
-from models import User, Player, Alliance, Event, MVPAssignment, WinnerAssignment, Guide, GuideCategory, Blacklist
+from models import User, SubUser, Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist
 
 # User loader for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    # Try to find regular user first
+    user = User.query.get(int(user_id))
+    if user:
+        return user
+    
+    # If not found, try sub-user
+    return SubUser.query.get(int(user_id))
 
 # Import routes
-from routes import main_routes, player_routes, alliance_routes, event_routes, guide_routes, blacklist_routes
-from routes import user_settings_routes
+from routes import main_routes, player_routes, alliance_routes, event_routes, blacklist_routes
+from routes import user_settings_routes, feedback_routes, subuser_routes
 from auth import auth_bp
 
 # Register blueprints
@@ -91,14 +98,24 @@ app.register_blueprint(main_routes.bp)
 app.register_blueprint(player_routes.bp)
 app.register_blueprint(alliance_routes.bp)
 app.register_blueprint(event_routes.bp)
-app.register_blueprint(guide_routes.bp)
 app.register_blueprint(blacklist_routes.bp)
 app.register_blueprint(user_settings_routes.bp)
+app.register_blueprint(feedback_routes.bp)
+app.register_blueprint(subuser_routes.subuser_bp)
 
 @app.route('/set_language/<language>')
 def set_language(language=None):
     """Set the language for the user"""
     if language and language in app.config['LANGUAGES']:
+        # Update user's language preference in database if logged in
+        if current_user.is_authenticated:
+            try:
+                current_user.language = language
+                db.session.commit()
+                print(f"Updated user {current_user.username} language to {language}")
+            except Exception as e:
+                print(f"Failed to update user language: {e}")
+        
         response = redirect(request.referrer or url_for('main.dashboard'))
         response.set_cookie('language', language, max_age=60*60*24*365)  # 1 year
         return response

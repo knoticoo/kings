@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Sub-Users Management{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-users-cog"></i> Sub-Users Management</h2>
+                <a href="{{ url_for('subuser.create_subuser') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create Sub-User
+                </a>
+            </div>
+
+            {% if subusers %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Alliance Leader Helpers</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Parent User</th>
+                                    <th>Status</th>
+                                    <th>Permissions</th>
+                                    <th>Created</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subuser in subusers %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ subuser.username }}</strong>
+                                        {% if subuser.id == current_user.id %}
+                                            <span class="badge badge-info">You</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ subuser.email }}</td>
+                                    <td>
+                                        <span class="badge badge-secondary">{{ subuser.parent_user.username }}</span>
+                                    </td>
+                                    <td>
+                                        {% if subuser.is_active %}
+                                            <span class="badge badge-success">Active</span>
+                                        {% else %}
+                                            <span class="badge badge-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="permission-badges">
+                                            {% for perm, value in subuser.permissions.items() %}
+                                                {% if value %}
+                                                    <span class="badge badge-light badge-sm" title="{{ perm.replace('_', ' ').title() }}">
+                                                        {{ perm.replace('can_', '').replace('_', ' ').title()[:3] }}
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ subuser.created_at.strftime('%Y-%m-%d %H:%M') if subuser.created_at else 'N/A' }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            {{ subuser.last_login.strftime('%Y-%m-%d %H:%M') if subuser.last_login else 'Never' }}
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ url_for('subuser.edit_subuser', subuser_id=subuser.id) }}" 
+                                               class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% if subuser.id != current_user.id %}
+                                            <form method="POST" action="{{ url_for('subuser.delete_subuser', subuser_id=subuser.id) }}" 
+                                                  class="d-inline" 
+                                                  onsubmit="return confirm('Are you sure you want to delete this sub-user? This action cannot be undone.')">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No Sub-Users Found</h4>
+                    <p class="text-muted">Create your first alliance leader helper to get started.</p>
+                    <a href="{{ url_for('subuser.create_subuser') }}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create Sub-User
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.permission-badges .badge {
+    margin-right: 2px;
+    font-size: 0.7em;
+}
+
+.badge-sm {
+    padding: 0.25em 0.4em;
+    font-size: 0.7em;
+}
+</style>
+{% endblock %}
