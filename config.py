@@ -9,16 +9,26 @@ import os
 class Config:
     """Base configuration class"""
     
-    # Detect if we're running on VPS (you can set this environment variable)
-    IS_VPS = os.environ.get('KINGS_CHOICE_VPS', 'false').lower() == 'true'
+    # Get application directory (where this config.py file is located)
+    APP_DIR = os.path.dirname(os.path.abspath(__file__))
     
-    # Base directory for user databases
-    if IS_VPS:
-        # VPS configuration
-        USER_DATABASE_BASE_PATH = '/root/kings/user_databases'
-    else:
-        # Local development configuration
-        USER_DATABASE_BASE_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'user_databases')
+    # Base directory for user databases - configurable via environment variable
+    USER_DATABASE_BASE_PATH = os.environ.get(
+        'KINGS_CHOICE_DB_PATH', 
+        os.path.join(APP_DIR, 'user_databases')
+    )
+    
+    # Alternative: Check for common deployment patterns
+    if not os.environ.get('KINGS_CHOICE_DB_PATH'):
+        # If we're in /root/kings or similar structure, use that
+        if '/root/kings' in APP_DIR or APP_DIR.endswith('/kings'):
+            USER_DATABASE_BASE_PATH = os.path.join(APP_DIR, 'user_databases')
+        # If we detect we're in a workspace-like environment
+        elif '/workspace' in APP_DIR:
+            USER_DATABASE_BASE_PATH = os.path.join(APP_DIR, 'user_databases')
+        # Default to app directory + user_databases
+        else:
+            USER_DATABASE_BASE_PATH = os.path.join(APP_DIR, 'user_databases')
     
     @staticmethod
     def get_user_database_path(user_id, username):
