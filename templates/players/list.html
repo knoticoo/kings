@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Игроки - Управление King's Choice{% endblock %}
+{% block title %}{{ _("Players") }} - {{ _("King's Choice Management") }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,14 +8,14 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-people-fill me-2"></i>Управление игроками
+                <i class="bi bi-people-fill me-2"></i>{{ _("Player Management") }}
             </h1>
             <div class="btn-group">
                 <a href="{{ url_for('players.add_player') }}" class="btn btn-primary">
-                    <i class="bi bi-person-plus me-1"></i>Добавить игрока
+                    <i class="bi bi-person-plus me-1"></i>{{ _("Add Player") }}
                 </a>
                 <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-success">
-                    <i class="bi bi-award me-1"></i>Назначить MVP
+                    <i class="bi bi-award me-1"></i>{{ _("Assign MVP") }}
                 </a>
             </div>
         </div>
@@ -40,7 +40,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-arrow-repeat me-2"></i>Статус ротации MVP
+                    <i class="bi bi-arrow-repeat me-2"></i>{{ _("MVP Rotation Status") }}
                 </h5>
             </div>
             <div class="card-body">
@@ -48,8 +48,8 @@
                     <div class="alert alert-success d-flex align-items-center mb-0">
                         <i class="bi bi-check-circle-fill me-2"></i>
                         <div>
-                            <strong>Назначение MVP доступно</strong><br>
-                            <small>Подходящие игроки: 
+                            <strong>{{ _("MVP Assignment Available") }}</strong><br>
+                            <small>{{ _("Eligible Players") }}: 
                                 {% for player in eligible_players %}
                                     <span class="badge bg-primary me-1">{{ player.name }}</span>
                                 {% endfor %}
@@ -60,8 +60,8 @@
                     <div class="alert alert-warning d-flex align-items-center mb-0">
                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
                         <div>
-                            <strong>Назначение MVP недоступно</strong><br>
-                            <small>Нет подходящих игроков или событий.</small>
+                            <strong>{{ _("MVP Assignment Not Available") }}</strong><br>
+                            <small>{{ _("No eligible players or events.") }}</small>
                         </div>
                     </div>
                 {% endif %}
@@ -76,7 +76,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-list me-2"></i>Все игроки
+                    <i class="bi bi-list me-2"></i>{{ _("All Players") }}
                 </h5>
             </div>
             <div class="card-body">
@@ -85,12 +85,12 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Игрок</th>
-                                    <th>Статус</th>
-                                    <th>Количество MVP</th>
-                                    <th>Ротация</th>
-                                    <th>Создан</th>
-                                    <th>Действия</th>
+                                    <th>{{ _("Player") }}</th>
+                                    <th>{{ _("Status") }}</th>
+                                    <th>{{ _("MVP Count") }}</th>
+                                    <th>{{ _("Rotation") }}</th>
+                                    <th>{{ _("Created") }}</th>
+                                    <th>{{ _("Actions") }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,9 +99,9 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             {% if player.is_current_mvp %}
-                                                <i class="bi bi-trophy-fill text-warning me-2" title="Текущий MVP"></i>
+                                                <i class="bi bi-trophy-fill text-warning me-2" title="{{ _('Current MVP') }}"></i>
                                             {% elif player.is_excluded %}
-                                                <i class="bi bi-pause-circle-fill text-muted me-2" title="Исключен из ротации"></i>
+                                                <i class="bi bi-pause-circle-fill text-muted me-2" title="{{ _('Excluded from rotation') }}"></i>
                                             {% else %}
                                                 <i class="bi bi-person-circle text-muted me-2"></i>
                                             {% endif %}
@@ -109,7 +109,7 @@
                                                 <a href="#" class="text-decoration-none player-name-link" 
                                                    data-player-id="{{ player.id }}" 
                                                    data-player-name="{{ player.name }}"
-                                                   title="Показать историю MVP">
+                                                   title="{{ _('Show MVP History') }}">
                                                     {{ player.name }}
                                                 </a>
                                             </strong>
@@ -118,15 +118,15 @@
                                     <td>
                                         {% if player.is_current_mvp %}
                                             <span class="badge bg-warning text-dark">
-                                                <i class="bi bi-award me-1"></i>Текущий MVP
+                                                <i class="bi bi-award me-1"></i>{{ _("Current MVP") }}
                                             </span>
                                         {% elif player.mvp_count > 0 %}
                                             <span class="badge bg-success">
-                                                <i class="bi bi-check-circle me-1"></i>Предыдущий MVP
+                                                <i class="bi bi-check-circle me-1"></i>{{ _("Previous MVP") }}
                                             </span>
                                         {% else %}
                                             <span class="badge bg-secondary">
-                                                <i class="bi bi-dash-circle me-1"></i>Никогда не был MVP
+                                                <i class="bi bi-dash-circle me-1"></i>{{ _("Never MVP") }}
                                             </span>
                                         {% endif %}
                                     </td>
@@ -136,11 +136,11 @@
                                     <td>
                                         {% if player.is_excluded %}
                                             <span class="badge bg-secondary">
-                                                <i class="bi bi-pause me-1"></i>Исключен
+                                                <i class="bi bi-pause me-1"></i>{{ _("Excluded") }}
                                             </span>
                                         {% else %}
                                             <span class="badge bg-success">
-                                                <i class="bi bi-play me-1"></i>Активен
+                                                <i class="bi bi-play me-1"></i>{{ _("Active") }}
                                             </span>
                                         {% endif %}
                                     </td>
@@ -152,24 +152,30 @@
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ url_for('players.edit_player', player_id=player.id) }}" 
-                                               class="btn btn-outline-primary" title="Редактировать игрока">
+                                               class="btn btn-outline-primary" title="{{ _('Edit Player') }}">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
-                                            {% if player.is_excluded %}
+                                            {% if player.is_current_mvp %}
+                                                <button type="button" class="btn btn-outline-danger" 
+                                                        title="{{ _('Unassign MVP') }}"
+                                                        onclick="confirmUnassignMVP('{{ player.name }}', {{ player.mvp_assignment_id }})">
+                                                    <i class="bi bi-x-circle"></i>
+                                                </button>
+                                            {% elif player.is_excluded %}
                                                 <button type="button" class="btn btn-outline-success" 
-                                                        title="Включить в ротацию MVP"
+                                                        title="{{ _('Include in MVP Rotation') }}"
                                                         onclick="toggleExclusion('{{ player.name }}', {{ player.id }}, false)">
                                                     <i class="bi bi-play"></i>
                                                 </button>
                                             {% else %}
                                                 <button type="button" class="btn btn-outline-warning" 
-                                                        title="Исключить из ротации MVP"
+                                                        title="{{ _('Exclude from MVP Rotation') }}"
                                                         onclick="toggleExclusion('{{ player.name }}', {{ player.id }}, true)">
                                                     <i class="bi bi-pause"></i>
                                                 </button>
                                             {% endif %}
                                             <button type="button" class="btn btn-outline-danger" 
-                                                    title="Удалить игрока"
+                                                    title="{{ _('Delete Player') }}"
                                                     onclick="confirmDelete('{{ player.name }}', {{ player.id }})">
                                                 <i class="bi bi-trash"></i>
                                             </button>
@@ -187,7 +193,7 @@
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h5 class="text-primary">{{ players|length }}</h5>
-                                    <small class="text-muted">Всего игроков</small>
+                                    <small class="text-muted">{{ _("Total Players") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +203,7 @@
                                     <h5 class="text-warning">
                                         {{ players|selectattr('is_current_mvp', 'equalto', true)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Текущий MVP</small>
+                                    <small class="text-muted">{{ _("Current MVP") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -207,7 +213,7 @@
                                     <h5 class="text-success">
                                         {{ players|selectattr('mvp_count', 'greaterthan', 0)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Предыдущие MVP</small>
+                                    <small class="text-muted">{{ _("Previous MVPs") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -217,7 +223,7 @@
                                     <h5 class="text-info">
                                         {{ players|sum(attribute='mvp_count') }}
                                     </h5>
-                                    <small class="text-muted">Всего наград MVP</small>
+                                    <small class="text-muted">{{ _("Total MVP Awards") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -231,7 +237,7 @@
                                     <h5 class="text-success">
                                         {{ players|selectattr('is_excluded', 'equalto', false)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Активных игроков</small>
+                                    <small class="text-muted">{{ _("Active Players") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -241,7 +247,7 @@
                                     <h5 class="text-secondary">
                                         {{ players|selectattr('is_excluded', 'equalto', true)|list|length }}
                                     </h5>
-                                    <small class="text-muted">Исключенных игроков</small>
+                                    <small class="text-muted">{{ _("Excluded Players") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -251,7 +257,7 @@
                                     <h5 class="text-primary">
                                         {{ eligible_players|length if eligible_players else 0 }}
                                     </h5>
-                                    <small class="text-muted">Подходящих для MVP</small>
+                                    <small class="text-muted">{{ _("Eligible for MVP") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -259,10 +265,10 @@
                 {% else %}
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-people" style="font-size: 4rem;"></i>
-                        <h4 class="mt-3">Пока нет игроков</h4>
-                        <p>Игроки ещё не добавлены в систему.</p>
+                        <h4 class="mt-3">{{ _("No Players Yet") }}</h4>
+                        <p>{{ _("Players have not been added to the system yet.") }}</p>
                         <a href="{{ url_for('players.add_player') }}" class="btn btn-primary">
-                            <i class="bi bi-person-plus me-1"></i>Добавить первого игрока
+                            <i class="bi bi-person-plus me-1"></i>{{ _("Add First Player") }}
                         </a>
                     </div>
                 {% endif %}
@@ -276,21 +282,21 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Подтвердить удаление</h5>
+                <h5 class="modal-title">{{ _("Confirm Deletion") }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Вы уверены, что хотите удалить игрока <strong id="playerName"></strong>?</p>
+                <p>{{ _("Are you sure you want to delete player") }} <strong id="playerName"></strong>?</p>
                 <div class="alert alert-warning">
                     <i class="bi bi-exclamation-triangle me-2"></i>
-                    Это также удалит все назначения MVP для этого игрока и не может быть отменено.
+                    {{ _("This will also delete all MVP assignments for this player and cannot be undone.") }}
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
                 <form id="deleteForm" method="POST" style="display: inline;">
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-1"></i>Удалить игрока
+                        <i class="bi bi-trash me-1"></i>{{ _("Delete Player") }}
                     </button>
                 </form>
             </div>
@@ -303,7 +309,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exclusionModalTitle">Подтвердить изменение</h5>
+                <h5 class="modal-title" id="exclusionModalTitle">{{ _("Confirm Change") }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -314,7 +320,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
                 <form id="exclusionForm" method="POST" style="display: inline;">
                     <button type="submit" class="btn" id="exclusionSubmitBtn">
                         <i class="bi me-1" id="exclusionSubmitIcon"></i>
@@ -332,16 +338,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="bi bi-trophy me-2"></i>История MVP: <span id="historyPlayerName"></span>
+                    <i class="bi bi-trophy me-2"></i>{{ _("MVP History") }}: <span id="historyPlayerName"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div id="historyLoading" class="text-center py-4">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Загрузка...</span>
+                        <span class="visually-hidden">{{ _("Loading...") }}</span>
                     </div>
-                    <p class="mt-2">Загрузка истории MVP...</p>
+                    <p class="mt-2">{{ _("Loading MVP history...") }}</p>
                 </div>
                 
                 <div id="historyContent" style="display: none;">
@@ -350,7 +356,7 @@
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h4 class="text-primary mb-0" id="totalMvpCount">0</h4>
-                                    <small class="text-muted">Всего наград MVP</small>
+                                    <small class="text-muted">{{ _("Total MVP Awards") }}</small>
                                 </div>
                             </div>
                         </div>
@@ -358,14 +364,14 @@
                             <div class="card bg-light">
                                 <div class="card-body text-center">
                                     <h4 class="text-success mb-0" id="totalEvents">0</h4>
-                                    <small class="text-muted">Участий в событиях</small>
+                                    <small class="text-muted">{{ _("Event Participations") }}</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
                     <h6 class="mb-3">
-                        <i class="bi bi-list-ul me-2"></i>Детальная история
+                        <i class="bi bi-list-ul me-2"></i>{{ _("Detailed History") }}
                     </h6>
                     
                     <div id="historyList">
@@ -374,8 +380,8 @@
                     
                     <div id="noHistory" class="text-center text-muted py-4" style="display: none;">
                         <i class="bi bi-trophy" style="font-size: 3rem;"></i>
-                        <h5 class="mt-3">Пока нет истории MVP</h5>
-                        <p>Этот игрок еще не получал награду MVP.</p>
+                        <h5 class="mt-3">{{ _("No MVP History Yet") }}</h5>
+                        <p>{{ _("This player has not received MVP awards yet.") }}</p>
                     </div>
                 </div>
                 
@@ -385,7 +391,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Close") }}</button>
             </div>
         </div>
     </div>
@@ -422,6 +428,28 @@ function confirmDelete(playerName, playerId) {
     modal.show();
 }
 
+function confirmUnassignMVP(playerName, assignmentId) {
+    if (confirm(`{{ _("Are you sure you want to unassign MVP for") }} ${playerName}?`)) {
+        // Create a form and submit it
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/players/unassign-mvp/${assignmentId}`;
+        
+        // Add CSRF token if available
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        if (csrfToken) {
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrf_token';
+            csrfInput.value = csrfToken.getAttribute('content');
+            form.appendChild(csrfInput);
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
 function toggleExclusion(playerName, playerId, toExclude) {
     const modalTitle = document.getElementById('exclusionModalTitle');
     const modalText = document.getElementById('exclusionModalText');
@@ -432,19 +460,19 @@ function toggleExclusion(playerName, playerId, toExclude) {
     const form = document.getElementById('exclusionForm');
     
     if (toExclude) {
-        modalTitle.textContent = 'Исключить из ротации MVP';
-        modalText.innerHTML = `Вы уверены, что хотите исключить игрока <strong>${playerName}</strong> из ротации MVP?`;
-        modalInfo.textContent = 'Игрок останется видимым в списке, но не будет участвовать в ротации MVP до повторного включения.';
+        modalTitle.textContent = '{{ _("Exclude from MVP Rotation") }}';
+        modalText.innerHTML = `{{ _("Are you sure you want to exclude player") }} <strong>${playerName}</strong> {{ _("from MVP rotation?") }}`;
+        modalInfo.textContent = '{{ _("Player will remain visible in the list but will not participate in MVP rotation until re-enabled.") }}';
         submitBtn.className = 'btn btn-warning';
         submitIcon.className = 'bi bi-pause me-1';
-        submitText.textContent = 'Исключить';
+        submitText.textContent = '{{ _("Exclude") }}';
     } else {
-        modalTitle.textContent = 'Включить в ротацию MVP';
-        modalText.innerHTML = `Вы уверены, что хотите включить игрока <strong>${playerName}</strong> в ротацию MVP?`;
-        modalInfo.textContent = 'Игрок снова станет доступен для назначения MVP согласно логике ротации.';
+        modalTitle.textContent = '{{ _("Include in MVP Rotation") }}';
+        modalText.innerHTML = `{{ _("Are you sure you want to include player") }} <strong>${playerName}</strong> {{ _("in MVP rotation?") }}`;
+        modalInfo.textContent = '{{ _("Player will become available for MVP assignment according to rotation logic.") }}';
         submitBtn.className = 'btn btn-success';
         submitIcon.className = 'bi bi-play me-1';
-        submitText.textContent = 'Включить';
+        submitText.textContent = '{{ _("Include") }}';
     }
     
     form.action = `/players/toggle-exclusion/${playerId}`;
@@ -494,12 +522,12 @@ function showMvpHistory(playerId, playerName) {
             if (data.success) {
                 displayMvpHistory(data);
             } else {
-                showHistoryError(data.error || 'Не удалось загрузить историю MVP');
+                showHistoryError(data.error || '{{ _("Failed to load MVP history") }}');
             }
         })
         .catch(error => {
             document.getElementById('historyLoading').style.display = 'none';
-            showHistoryError('Ошибка при загрузке истории MVP: ' + error.message);
+            showHistoryError('{{ _("Error loading MVP history") }}: ' + error.message);
         });
 }
 
@@ -523,8 +551,8 @@ function displayMvpHistory(data) {
         // Generate history list
         let historyHtml = '';
         data.history.forEach(function(item, index) {
-            const eventDate = item.event_date ? new Date(item.event_date).toLocaleDateString('ru-RU') : 'Дата не указана';
-            const assignedDate = item.assigned_at ? new Date(item.assigned_at).toLocaleDateString('ru-RU') : 'Дата не указана';
+            const eventDate = item.event_date ? new Date(item.event_date).toLocaleDateString() : '{{ _("Date not specified") }}';
+            const assignedDate = item.assigned_at ? new Date(item.assigned_at).toLocaleDateString() : '{{ _("Date not specified") }}';
             
             historyHtml += `
                 <div class="card mb-3">
@@ -542,8 +570,8 @@ function displayMvpHistory(data) {
                             </div>
                             <div class="col-md-4 text-end">
                                 <div class="text-muted small">
-                                    <div><strong>Событие:</strong> ${eventDate}</div>
-                                    <div><strong>Назначен:</strong> ${assignedDate}</div>
+                                    <div><strong>{{ _("Event") }}:</strong> ${eventDate}</div>
+                                    <div><strong>{{ _("Assigned") }}:</strong> ${assignedDate}</div>
                                 </div>
                             </div>
                         </div>

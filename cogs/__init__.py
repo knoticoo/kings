@@ -1,1 +1,0 @@
-# Cogs package for King's Choice Discord Bot

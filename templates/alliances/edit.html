@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Редактировать альянс - Управление King's Choice{% endblock %}
+{% block title %}{{ _("Edit Alliance") }} - {{ _("King's Choice Management") }}{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-pencil-square me-2"></i>Редактировать альянс
+                <i class="bi bi-pencil-square me-2"></i>{{ _("Edit Alliance") }}
             </h1>
             <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Назад к альянсам
+                <i class="bi bi-arrow-left me-1"></i>{{ _("Back to Alliances") }}
             </a>
         </div>
     </div>
@@ -21,28 +21,28 @@
         <div class="card mb-4">
             <div class="card-header bg-light">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-info-circle me-2"></i>Текущая информация о альянсе
+                    <i class="bi bi-info-circle me-2"></i>{{ _("Current Alliance Information") }}
                 </h6>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <strong>Текущее название:</strong><br>
+                        <strong>{{ _("Current Name") }}:</strong><br>
                         <span class="text-primary">{{ alliance.name }}</span>
                     </div>
                     <div class="col-md-6">
-                        <strong>Статус победителя:</strong><br>
+                        <strong>{{ _("Winner Status") }}:</strong><br>
                         {% if alliance.is_current_winner %}
                             <span class="badge bg-warning text-dark">
-                                <i class="bi bi-trophy-fill me-1"></i>Текущий победитель
+                                <i class="bi bi-trophy-fill me-1"></i>{{ _("Current Winner") }}
                             </span>
                         {% elif alliance.win_count > 0 %}
                             <span class="badge bg-success">
-                                <i class="bi bi-award me-1"></i>Бывший победитель ({{ alliance.win_count }}x)
+                                <i class="bi bi-award me-1"></i>{{ _("Former Winner") }} ({{ alliance.win_count }}x)
                             </span>
                         {% else %}
                             <span class="badge bg-secondary">
-                                <i class="bi bi-dash-circle me-1"></i>Никогда не побеждал
+                                <i class="bi bi-dash-circle me-1"></i>{{ _("Never Won") }}
                             </span>
                         {% endif %}
                     </div>

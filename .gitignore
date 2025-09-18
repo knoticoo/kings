@@ -1,5 +1,3 @@
-# King's Choice Management App - Git Ignore File
-
 # Python
 __pycache__/
 *.py[cod]
@@ -21,71 +19,70 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-MANIFEST
 
 # Virtual Environment
 venv/
 env/
 ENV/
-.venv/
-.env/
 
 # Database
 *.db
+*.sqlite
 *.sqlite3
-kings_choice.db
 
 # Logs
-logs/
 *.log
-*.log.*
-
-# Backups
-backups/
-*.backup
+logs/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
 # OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# User data
+user_databases/
+user_bots.log
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Cache
+.cache/
+.pytest_cache/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# pyenv
+.python-version
 
 # Flask
 instance/
 .webassets-cache
 
-# Environment variables
-.env
-.flaskenv
+# Translations
+*.pot
+*.mo
 
-# Production
-*.pid
-nohup.out
-
-# Temporary files
-*.tmp
-*.temp
-temp/
-tmp/
-
-# Static file uploads (if any)
-static/uploads/
-
-# Coverage reports
-htmlcov/
-.coverage
-.coverage.*
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
+# Documentation
+*.md
+!README.md

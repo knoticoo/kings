@@ -1,0 +1,5 @@
+{% if session.get('template', 'classic') == 'modern' %}
+    {% extends "modern/base.html" %}
+{% else %}
+    {% extends "base.html" %}
+{% endif %}

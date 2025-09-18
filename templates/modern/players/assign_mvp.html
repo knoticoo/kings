@@ -1,0 +1,305 @@
+{% extends "modern/base.html" %}
+
+{% block title %}Assign MVP - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <div class="bg-primary bg-opacity-10 rounded-circle p-4 d-inline-block mb-4">
+                    <i class="bi bi-award text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h1 class="h2 fw-bold text-primary mb-3">Assign MVP</h1>
+                <p class="text-muted lead">Select a player and event to assign as MVP</p>
+            </div>
+
+            <!-- Assignment Form -->
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    {% if error %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            {{ error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+
+                    {% if can_assign_mvp %}
+                        <form method="POST" id="assignMvpForm">
+                            <div class="row g-4">
+                                <!-- Player Selection -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="player_id" class="form-label fw-semibold">
+                                            <i class="bi bi-person me-2"></i>Select Player
+                                        </label>
+                                        <select class="form-select form-select-lg" id="player_id" name="player_id" required>
+                                            <option value="">Choose a player...</option>
+                                            {% for player in eligible_players %}
+                                                <option value="{{ player.id }}" 
+                                                        data-mvp-count="{{ player.mvp_count or 0 }}"
+                                                        data-last-mvp="{{ player.last_mvp_date.strftime('%Y-%m-%d') if player.last_mvp_date else 'Never' }}">
+                                                    {{ player.name }}
+                                                    {% if player.mvp_count %}
+                                                        ({{ player.mvp_count }} MVP{{ 's' if player.mvp_count != 1 else '' }})
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Choose from eligible players</div>
+                                    </div>
+                                </div>
+
+                                <!-- Event Selection -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="event_id" class="form-label fw-semibold">
+                                            <i class="bi bi-calendar-event me-2"></i>Select Event
+                                        </label>
+                                        <select class="form-select form-select-lg" id="event_id" name="event_id" required>
+                                            <option value="">Choose an event...</option>
+                                            {% for event in available_events %}
+                                                <option value="{{ event.id }}" 
+                                                        data-event-date="{{ event.event_date.strftime('%Y-%m-%d') if event.event_date else 'No date' }}"
+                                                        data-description="{{ event.description or 'No description' }}">
+                                                    {{ event.name }}
+                                                    {% if event.event_date %}
+                                                        ({{ event.event_date.strftime('%Y-%m-%d') }})
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Choose an event for this MVP assignment</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Player Info Card -->
+                            <div id="playerInfoCard" class="card mt-4 bg-light" style="display: none;">
+                                <div class="card-body">
+                                    <h6 class="fw-semibold text-primary mb-3">
+                                        <i class="bi bi-info-circle me-2"></i>Player Information
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="text-center">
+                                                <div class="fw-bold text-primary" id="mvpCount">0</div>
+                                                <small class="text-muted">Previous MVPs</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="text-center">
+                                                <div class="fw-bold text-info" id="lastMvp">Never</div>
+                                                <small class="text-muted">Last MVP</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="text-center">
+                                                <div class="fw-bold text-success" id="playerStatus">Active</div>
+                                                <small class="text-muted">Status</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event Info Card -->
+                            <div id="eventInfoCard" class="card mt-4 bg-light" style="display: none;">
+                                <div class="card-body">
+                                    <h6 class="fw-semibold text-warning mb-3">
+                                        <i class="bi bi-calendar-event me-2"></i>Event Information
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="fw-semibold">Date:</div>
+                                            <div class="text-muted" id="eventDate">No date</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="fw-semibold">Description:</div>
+                                            <div class="text-muted" id="eventDescription">No description</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+                                <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary btn-lg me-md-2">
+                                    <i class="bi bi-arrow-left me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-award me-2"></i>Assign MVP
+                                </button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="bg-warning bg-opacity-10 rounded-circle p-4 d-inline-block mb-4">
+                                <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                            </div>
+                            <h4 class="text-warning mb-3">Cannot Assign MVP</h4>
+                            <p class="text-muted mb-4">All players have already been assigned as MVP. Reset the rotation to continue.</p>
+                            <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Players
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4 border-0 bg-gradient-light">
+                <div class="card-body">
+                    <h6 class="fw-semibold text-primary mb-3">
+                        <i class="bi bi-lightbulb me-2"></i>How MVP Assignment Works
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                    <i class="bi bi-1-circle text-primary"></i>
+                                </div>
+                                <h6 class="fw-semibold">Select Player</h6>
+                                <small class="text-muted">Choose from eligible players</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                    <i class="bi bi-2-circle text-success"></i>
+                                </div>
+                                <h6 class="fw-semibold">Choose Event</h6>
+                                <small class="text-muted">Select the event for this MVP</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                    <i class="bi bi-3-circle text-warning"></i>
+                                </div>
+                                <h6 class="fw-semibold">Assign & Track</h6>
+                                <small class="text-muted">System tracks all assignments</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const playerSelect = document.getElementById('player_id');
+    const eventSelect = document.getElementById('event_id');
+    const playerInfoCard = document.getElementById('playerInfoCard');
+    const eventInfoCard = document.getElementById('eventInfoCard');
+    const form = document.getElementById('assignMvpForm');
+
+    // Player selection handler
+    playerSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const mvpCount = selectedOption.getAttribute('data-mvp-count') || '0';
+            const lastMvp = selectedOption.getAttribute('data-last-mvp') || 'Never';
+            
+            document.getElementById('mvpCount').textContent = mvpCount;
+            document.getElementById('lastMvp').textContent = lastMvp;
+            document.getElementById('playerStatus').textContent = 'Active';
+            
+            playerInfoCard.style.display = 'block';
+            playerInfoCard.classList.add('fade-in-up');
+        } else {
+            playerInfoCard.style.display = 'none';
+        }
+    });
+
+    // Event selection handler
+    eventSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const eventDate = selectedOption.getAttribute('data-event-date') || 'No date';
+            const description = selectedOption.getAttribute('data-description') || 'No description';
+            
+            document.getElementById('eventDate').textContent = eventDate;
+            document.getElementById('eventDescription').textContent = description;
+            
+            eventInfoCard.style.display = 'block';
+            eventInfoCard.classList.add('fade-in-up');
+        } else {
+            eventInfoCard.style.display = 'none';
+        }
+    });
+
+    // Form submission handler
+    form.addEventListener('submit', function(e) {
+        const playerId = playerSelect.value;
+        const eventId = eventSelect.value;
+        
+        if (!playerId || !eventId) {
+            e.preventDefault();
+            showNotification('Please select both a player and an event', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Assigning MVP...';
+        submitBtn.disabled = true;
+    });
+
+    // Add smooth animations
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+
+<style>
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}

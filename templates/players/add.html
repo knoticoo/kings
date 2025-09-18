@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Добавить игрока - Управление King's Choice{% endblock %}
+{% block title %}{{ _("Add Player") }} - {{ _("King's Choice Management") }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,10 +8,10 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-person-plus me-2"></i>Добавить нового игрока
+                <i class="bi bi-person-plus me-2"></i>{{ _("Add New Player") }}
             </h1>
             <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Назад к игрокам
+                <i class="bi bi-arrow-left me-1"></i>{{ _("Back to Players") }}
             </a>
         </div>
     </div>
@@ -22,42 +22,41 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-person-badge me-2"></i>Информация об игроке
+                    <i class="bi bi-person-badge me-2"></i>{{ _("Player Information") }}
                 </h5>
             </div>
             <div class="card-body">
                 <form method="POST" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">
-                            <i class="bi bi-person me-1"></i>Имя игрока
+                            <i class="bi bi-person me-1"></i>{{ _("Player Name") }}
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" 
                                class="form-control" 
                                id="name" 
                                name="name" 
-                               placeholder="Введите имя игрока"
+                               placeholder="{{ _('Enter player name') }}"
                                required
                                autocomplete="off"
                                maxlength="100">
                         <div class="form-text">
                             <i class="bi bi-info-circle me-1"></i>
-                            Имена игроков должны быть уникальными и не могут превышать 100 символов.
+                            {{ _("Player names must be unique and cannot exceed 100 characters.") }}
                         </div>
                     </div>
                     
                     <div class="alert alert-info">
                         <i class="bi bi-lightbulb me-2"></i>
-                        <strong>Ротация MVP:</strong> Новые игроки смогут получить назначение MVP 
-                        после того, как все текущие игроки побывают MVP хотя бы один раз.
+                        <strong>{{ _("MVP Rotation") }}:</strong> {{ _("New players will be able to receive MVP assignment after all current players have been MVP at least once.") }}
                     </div>
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-plus-circle me-2"></i>Добавить игрока
+                            <i class="bi bi-plus-circle me-2"></i>{{ _("Add Player") }}
                         </button>
                         <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-1"></i>Отмена
+                            <i class="bi bi-x-circle me-1"></i>{{ _("Cancel") }}
                         </a>
                     </div>
                 </form>
@@ -68,26 +67,26 @@
         <div class="card mt-4">
             <div class="card-header bg-light">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-question-circle me-2"></i>Нужна помощь?
+                    <i class="bi bi-question-circle me-2"></i>{{ _("Need Help?") }}
                 </h6>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        Используйте осмысленные имена игроков, которые легко идентифицировать
+                        {{ _("Use meaningful player names that are easy to identify") }}
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        Имена игроков должны быть уникальными в системе
+                        {{ _("Player names must be unique in the system") }}
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        После добавления игроки могут быть назначены MVP, когда наступит их очередь
+                        {{ _("After adding, players can be assigned as MVP when it's their turn") }}
                     </li>
                     <li class="mb-0">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        При необходимости вы можете редактировать или удалять игроков позже
+                        {{ _("You can edit or delete players later if needed") }}
                     </li>
                 </ul>
             </div>
@@ -135,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 feedback.className = 'invalid-feedback';
                 nameInput.parentNode.appendChild(feedback);
             }
-            feedback.textContent = 'Имя игрока обязательно.';
+            feedback.textContent = '{{ _("Player name is required.") }}';
         }
     });
     

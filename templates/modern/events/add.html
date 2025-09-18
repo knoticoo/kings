@@ -1,0 +1,179 @@
+{% extends "modern/base.html" %}
+
+{% block title %}Add Event - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                    <i class="bi bi-calendar-plus text-warning" style="font-size: 2rem;"></i>
+                </div>
+                <h1 class="h2 fw-bold text-warning mb-2">Add New Event</h1>
+                <p class="text-muted">Add a new event to your kingdom</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <form method="POST" id="addEventForm">
+                        <div class="mb-4">
+                            <label for="name" class="form-label">
+                                <i class="bi bi-calendar-event me-2"></i>Event Name
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="name" 
+                                   name="name" 
+                                   placeholder="Enter event name"
+                                   required
+                                   autofocus>
+                            <div class="form-text">Choose a descriptive name for this event</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="form-label">
+                                <i class="bi bi-card-text me-2"></i>Description (Optional)
+                            </label>
+                            <textarea class="form-control" 
+                                      id="description" 
+                                      name="description" 
+                                      rows="3" 
+                                      placeholder="Enter event description or details"></textarea>
+                            <div class="form-text">Add any additional information about this event</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="event_date" class="form-label">
+                                <i class="bi bi-calendar-date me-2"></i>Event Date (Optional)
+                            </label>
+                            <input type="datetime-local" 
+                                   class="form-control" 
+                                   id="event_date" 
+                                   name="event_date">
+                            <div class="form-text">Leave empty to use current date and time</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="bi bi-check-lg me-2"></i>Add Event
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body">
+                    <h6 class="fw-semibold text-warning mb-3">
+                        <i class="bi bi-lightbulb me-2"></i>Tips
+                    </h6>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Event names should be descriptive and unique
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Events can be reused for multiple MVP and winner assignments
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            You can assign MVPs and winners after creating the event
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            You can edit event details after creation
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('addEventForm');
+    const nameInput = document.getElementById('name');
+    const dateInput = document.getElementById('event_date');
+    
+    // Set default date to now
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    dateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+    
+    // Add form validation
+    form.addEventListener('submit', function(e) {
+        const name = nameInput.value.trim();
+        
+        if (!name) {
+            e.preventDefault();
+            nameInput.focus();
+            showNotification('Please enter an event name', 'warning');
+            return;
+        }
+        
+        if (name.length < 2) {
+            e.preventDefault();
+            nameInput.focus();
+            showNotification('Event name must be at least 2 characters long', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Adding Event...';
+        submitBtn.disabled = true;
+    });
+    
+    // Auto-save functionality
+    let autoSaveTimeout;
+    function autoSave() {
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            const formData = {
+                name: nameInput.value,
+                description: document.getElementById('description').value,
+                event_date: dateInput.value
+            };
+            localStorage.setItem('autosave_add_event', JSON.stringify(formData));
+        }, 1000);
+    }
+    
+    nameInput.addEventListener('input', autoSave);
+    document.getElementById('description').addEventListener('input', autoSave);
+    dateInput.addEventListener('change', autoSave);
+    
+    // Load auto-saved data
+    const savedData = localStorage.getItem('autosave_add_event');
+    if (savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            nameInput.value = data.name || '';
+            document.getElementById('description').value = data.description || '';
+            if (data.event_date) {
+                dateInput.value = data.event_date;
+            }
+        } catch (error) {
+            console.error('Error loading auto-saved data:', error);
+        }
+    }
+    
+    // Clear auto-save on successful submit
+    form.addEventListener('submit', function() {
+        localStorage.removeItem('autosave_add_event');
+    });
+});
+</script>
+{% endblock %}

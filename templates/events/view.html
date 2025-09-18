@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ event.name }} - Управление King's Choice{% endblock %}
+{% block title %}{{ event.name }} - {{ _("King's Choice Management") }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -11,10 +11,10 @@
             </h1>
             <div class="btn-group">
                 <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil me-1"></i>Редактировать
+                    <i class="bi bi-pencil me-1"></i>{{ _("Edit") }}
                 </a>
                 <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-1"></i>Назад к событиям
+                    <i class="bi bi-arrow-left me-1"></i>{{ _("Back to Events") }}
                 </a>
             </div>
         </div>
@@ -27,17 +27,17 @@
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-info-circle me-2"></i>Подробности события
+                    <i class="bi bi-info-circle me-2"></i>{{ _("Event Details") }}
                 </h5>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <strong>Название события:</strong><br>
+                        <strong>{{ _("Event Name") }}:</strong><br>
                         <span class="text-primary">{{ event.name }}</span>
                     </div>
                     <div class="col-md-6">
-                        <strong>Дата события:</strong><br>
+                        <strong>{{ _("Event Date") }}:</strong><br>
                         <span class="text-muted">
                             {{ event.event_date.strftime('%Y-%m-%d %H:%M') if event.event_date }}
                         </span>
@@ -47,7 +47,7 @@
                 {% if event.description %}
                 <div class="row mt-3">
                     <div class="col-12">
-                        <strong>Описание:</strong><br>
+                        <strong>{{ _("Description") }}:</strong><br>
                         <p class="text-muted mb-0">{{ event.description }}</p>
                     </div>
                 </div>
@@ -55,26 +55,26 @@
                 
                 <div class="row mt-3">
                     <div class="col-md-6">
-                        <strong>Статус MVP:</strong><br>
+                        <strong>{{ _("MVP Status") }}:</strong><br>
                         {% if event.has_mvp %}
                             <span class="badge bg-success">
-                                <i class="bi bi-check-circle me-1"></i>Назначен
+                                <i class="bi bi-check-circle me-1"></i>{{ _("Assigned") }}
                             </span>
                         {% else %}
                             <span class="badge bg-warning">
-                                <i class="bi bi-clock me-1"></i>Ожидает
+                                <i class="bi bi-clock me-1"></i>{{ _("Pending") }}
                             </span>
                         {% endif %}
                     </div>
                     <div class="col-md-6">
-                        <strong>Статус победителя:</strong><br>
+                        <strong>{{ _("Winner Status") }}:</strong><br>
                         {% if event.has_winner %}
                             <span class="badge bg-success">
-                                <i class="bi bi-check-circle me-1"></i>Назначен
+                                <i class="bi bi-check-circle me-1"></i>{{ _("Assigned") }}
                             </span>
                         {% else %}
                             <span class="badge bg-warning">
-                                <i class="bi bi-clock me-1"></i>Ожидает
+                                <i class="bi bi-clock me-1"></i>{{ _("Pending") }}
                             </span>
                         {% endif %}
                     </div>
@@ -86,7 +86,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-award me-2"></i>Назначения события
+                    <i class="bi bi-award me-2"></i>{{ _("Event Assignments") }}
                 </h5>
             </div>
             <div class="card-body">
@@ -96,7 +96,7 @@
                         <div class="card h-100">
                             <div class="card-header bg-primary text-white">
                                 <h6 class="card-title mb-0">
-                                    <i class="bi bi-trophy me-1"></i>Игроки MVP
+                                    <i class="bi bi-trophy me-1"></i>{{ _("MVP Players") }}
                                     {% if mvp_assignments %}
                                         <span class="badge bg-light text-primary ms-2">{{ mvp_assignments|length }}</span>
                                     {% endif %}
@@ -106,7 +106,7 @@
                                 {% if mvp_assignments %}
                                     <div class="text-center mb-3">
                                         <i class="bi bi-person-fill-check text-primary mb-2" style="font-size: 2rem;"></i>
-                                        <h6 class="text-primary">История назначений MVP</h6>
+                                        <h6 class="text-primary">{{ _("MVP Assignment History") }}</h6>
                                     </div>
                                     
                                     <div class="list-group list-group-flush">
@@ -119,7 +119,7 @@
                                                         {{ assignment.player.name }}
                                                     </h6>
                                                     <small class="text-muted">
-                                                        Назначен: {{ assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if assignment.assigned_at }}
+                                                        {{ _("Assigned") }}: {{ assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if assignment.assigned_at }}
                                                     </small>
                                                 </div>
                                                 <div class="text-end">
@@ -134,16 +134,16 @@
                                     
                                     <div class="text-center mt-3">
                                         <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-award me-1"></i>Назначить еще MVP
+                                            <i class="bi bi-award me-1"></i>{{ _("Assign More MVP") }}
                                         </a>
                                     </div>
                                 {% else %}
                                     <div class="text-center">
                                         <i class="bi bi-question-circle text-muted mb-2" style="font-size: 2rem;"></i>
-                                        <h6 class="text-muted">MVP не назначен</h6>
-                                        <p class="text-muted">У этого события еще нет MVP.</p>
+                                        <h6 class="text-muted">{{ _("No MVP Assigned") }}</h6>
+                                        <p class="text-muted">{{ _("This event has no MVP yet.") }}</p>
                                         <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-award me-1"></i>Назначить MVP
+                                            <i class="bi bi-award me-1"></i>{{ _("Assign MVP") }}
                                         </a>
                                     </div>
                                 {% endif %}
@@ -156,7 +156,7 @@
                         <div class="card h-100">
                             <div class="card-header bg-success text-white">
                                 <h6 class="card-title mb-0">
-                                    <i class="bi bi-shield-check me-1"></i>Победивший альянс
+                                    <i class="bi bi-shield-check me-1"></i>{{ _("Winning Alliance") }}
                                 </h6>
                             </div>
                             <div class="card-body text-center">
@@ -164,15 +164,15 @@
                                     <i class="bi bi-shield-fill-check text-success mb-2" style="font-size: 2rem;"></i>
                                     <h5 class="text-success">{{ winner_assignment.alliance.name }}</h5>
                                     <p class="text-muted mb-1">
-                                        Назначен: {{ winner_assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if winner_assignment.assigned_at }}
+                                        {{ _("Assigned") }}: {{ winner_assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if winner_assignment.assigned_at }}
                                     </p>
-                                    <small class="text-muted">Количество побед: {{ winner_assignment.alliance.win_count }}</small>
+                                    <small class="text-muted">{{ _("Win Count") }}: {{ winner_assignment.alliance.win_count }}</small>
                                 {% else %}
                                     <i class="bi bi-question-circle text-muted mb-2" style="font-size: 2rem;"></i>
-                                    <h6 class="text-muted">Победитель не назначен</h6>
-                                    <p class="text-muted">У этого события еще нет победившего альянса.</p>
+                                    <h6 class="text-muted">{{ _("No Winner Assigned") }}</h6>
+                                    <p class="text-muted">{{ _("This event has no winning alliance yet.") }}</p>
                                     <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-success btn-sm">
-                                        <i class="bi bi-trophy me-1"></i>Назначить победителя
+                                        <i class="bi bi-trophy me-1"></i>{{ _("Assign Winner") }}
                                     </a>
                                 {% endif %}
                             </div>
@@ -188,26 +188,26 @@
         <div class="card">
             <div class="card-header">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-bar-chart me-2"></i>Сводка по событию
+                    <i class="bi bi-bar-chart me-2"></i>{{ _("Event Summary") }}
                 </h6>
             </div>
             <div class="card-body">
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
-                        <span>Статус завершения:</span>
+                        <span>{{ _("Completion Status") }}:</span>
                         {% if event.has_mvp and event.has_winner %}
-                            <span class="badge bg-success">Завершено</span>
+                            <span class="badge bg-success">{{ _("Completed") }}</span>
                         {% elif event.has_mvp or event.has_winner %}
-                            <span class="badge bg-warning">Частично</span>
+                            <span class="badge bg-warning">{{ _("Partial") }}</span>
                         {% else %}
-                            <span class="badge bg-danger">Незавершено</span>
+                            <span class="badge bg-danger">{{ _("Incomplete") }}</span>
                         {% endif %}
                     </div>
                 </div>
                 
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
-                        <span>Создано:</span>
+                        <span>{{ _("Created") }}:</span>
                         <small class="text-muted">
                             {{ event.created_at.strftime('%Y-%m-%d') if event.created_at }}
                         </small>
@@ -219,18 +219,18 @@
                 <div class="d-grid gap-2">
                     {% if not event.has_mvp %}
                         <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-award me-1"></i>Назначить MVP
+                            <i class="bi bi-award me-1"></i>{{ _("Assign MVP") }}
                         </a>
                     {% endif %}
                     
                     {% if not event.has_winner %}
                         <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-trophy me-1"></i>Назначить победителя
+                            <i class="bi bi-trophy me-1"></i>{{ _("Assign Winner") }}
                         </a>
                     {% endif %}
                     
                                             <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-pencil me-1"></i>Редактировать событие
+                            <i class="bi bi-pencil me-1"></i>{{ _("Edit Event") }}
                         </a>
                 </div>
             </div>

@@ -502,3 +502,1214 @@ msgstr "Mayima"
 
 msgid "(ATG) besia"
 msgstr "(ATG) besia"
+
+# Additional missing translations
+msgid "Settings"
+msgstr "Settings"
+
+msgid "My Feedback"
+msgstr "My Feedback"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Remember Me"
+msgstr "Remember Me"
+
+msgid "Forgot Password?"
+msgstr "Forgot Password?"
+
+msgid "Don't have an account?"
+msgstr "Don't have an account?"
+
+msgid "Already have an account?"
+msgstr "Already have an account?"
+
+msgid "Sign Up"
+msgstr "Sign Up"
+
+msgid "Sign In"
+msgstr "Sign In"
+
+# Player management
+msgid "Player Management"
+msgstr "Player Management"
+
+msgid "Add Player"
+msgstr "Add Player"
+
+msgid "Edit Player"
+msgstr "Edit Player"
+
+msgid "Player Name"
+msgstr "Player Name"
+
+msgid "Alliance"
+msgstr "Alliance"
+
+msgid "MVP Count"
+msgstr "MVP Count"
+
+msgid "Win Count"
+msgstr "Win Count"
+
+msgid "Is Current MVP"
+msgstr "Is Current MVP"
+
+msgid "Is Blacklisted"
+msgstr "Is Blacklisted"
+
+msgid "Created At"
+msgstr "Created At"
+
+msgid "Updated At"
+msgstr "Updated At"
+
+msgid "Player Details"
+msgstr "Player Details"
+
+msgid "MVP History"
+msgstr "MVP History"
+
+msgid "Assign MVP"
+msgstr "Assign MVP"
+
+msgid "Unassign MVP"
+msgstr "Unassign MVP"
+
+msgid "Select Player"
+msgstr "Select Player"
+
+msgid "Select Event"
+msgstr "Select Event"
+
+msgid "Assign"
+msgstr "Assign"
+
+msgid "Unassign"
+msgstr "Unassign"
+
+msgid "Player added successfully!"
+msgstr "Player added successfully!"
+
+msgid "Player updated successfully!"
+msgstr "Player updated successfully!"
+
+msgid "Player deleted successfully!"
+msgstr "Player deleted successfully!"
+
+msgid "Failed to add player"
+msgstr "Failed to add player"
+
+msgid "Failed to update player"
+msgstr "Failed to update player"
+
+msgid "Failed to delete player"
+msgstr "Failed to delete player"
+
+msgid "MVP assigned successfully!"
+msgstr "MVP assigned successfully!"
+
+msgid "Failed to assign MVP"
+msgstr "Failed to assign MVP"
+
+msgid "MVP unassigned successfully!"
+msgstr "MVP unassigned successfully!"
+
+msgid "Failed to unassign MVP"
+msgstr "Failed to unassign MVP"
+
+# Alliance management
+msgid "Alliance Management"
+msgstr "Alliance Management"
+
+msgid "Add Alliance"
+msgstr "Add Alliance"
+
+msgid "Edit Alliance"
+msgstr "Edit Alliance"
+
+msgid "Alliance Name"
+msgstr "Alliance Name"
+
+msgid "Alliance Details"
+msgstr "Alliance Details"
+
+msgid "Win Count"
+msgstr "Win Count"
+
+msgid "Is Current Winner"
+msgstr "Is Current Winner"
+
+msgid "Alliance added successfully!"
+msgstr "Alliance added successfully!"
+
+msgid "Alliance updated successfully!"
+msgstr "Alliance updated successfully!"
+
+msgid "Alliance deleted successfully!"
+msgstr "Alliance deleted successfully!"
+
+msgid "Failed to add alliance"
+msgstr "Failed to add alliance"
+
+msgid "Failed to update alliance"
+msgstr "Failed to update alliance"
+
+msgid "Failed to delete alliance"
+msgstr "Failed to delete alliance"
+
+msgid "Winner assigned successfully!"
+msgstr "Winner assigned successfully!"
+
+msgid "Failed to assign winner"
+msgstr "Failed to assign winner"
+
+msgid "Winner unassigned successfully!"
+msgstr "Winner unassigned successfully!"
+
+msgid "Failed to unassign winner"
+msgstr "Failed to unassign winner"
+
+# Event management
+msgid "Event Management"
+msgstr "Event Management"
+
+msgid "Add Event"
+msgstr "Add Event"
+
+msgid "Edit Event"
+msgstr "Edit Event"
+
+msgid "Event Name"
+msgstr "Event Name"
+
+msgid "Event Date"
+msgstr "Event Date"
+
+msgid "Event Description"
+msgstr "Event Description"
+
+msgid "Event Status"
+msgstr "Event Status"
+
+msgid "Has MVP"
+msgstr "Has MVP"
+
+msgid "Has Winner"
+msgstr "Has Winner"
+
+msgid "Event Details"
+msgstr "Event Details"
+
+msgid "Event Assignments"
+msgstr "Event Assignments"
+
+msgid "MVP Players"
+msgstr "MVP Players"
+
+msgid "Winning Alliance"
+msgstr "Winning Alliance"
+
+msgid "Event Summary"
+msgstr "Event Summary"
+
+msgid "Completion Status"
+msgstr "Completion Status"
+
+msgid "Created"
+msgstr "Created"
+
+msgid "Event added successfully!"
+msgstr "Event added successfully!"
+
+msgid "Event updated successfully!"
+msgstr "Event updated successfully!"
+
+msgid "Event deleted successfully!"
+msgstr "Event deleted successfully!"
+
+msgid "Failed to add event"
+msgstr "Failed to add event"
+
+msgid "Failed to update event"
+msgstr "Failed to update event"
+
+msgid "Failed to delete event"
+msgstr "Failed to delete event"
+
+msgid "Failed to load event details"
+msgstr "Failed to load event details"
+
+# Common UI elements
+msgid "Back to Events"
+msgstr "Back to Events"
+
+msgid "Back to Players"
+msgstr "Back to Players"
+
+msgid "Back to Alliances"
+msgstr "Back to Alliances"
+
+msgid "View Event"
+msgstr "View Event"
+
+msgid "View Player"
+msgstr "View Player"
+
+msgid "View Alliance"
+msgstr "View Alliance"
+
+msgid "Are you sure?"
+msgstr "Are you sure?"
+
+msgid "This action cannot be undone."
+msgstr "This action cannot be undone."
+
+msgid "Yes, delete it!"
+msgstr "Yes, delete it!"
+
+msgid "No, cancel"
+msgstr "No, cancel"
+
+msgid "Loading..."
+msgstr "Loading..."
+
+msgid "No data available"
+msgstr "No data available"
+
+msgid "Search..."
+msgstr "Search..."
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Clear"
+msgstr "Clear"
+
+msgid "Apply"
+msgstr "Apply"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "First"
+msgstr "First"
+
+msgid "Last"
+msgstr "Last"
+
+msgid "Page"
+msgstr "Page"
+
+msgid "of"
+msgstr "of"
+
+msgid "entries"
+msgstr "entries"
+
+msgid "Show"
+msgstr "Show"
+
+msgid "per page"
+msgstr "per page"
+
+# Time and date
+msgid "Today"
+msgstr "Today"
+
+msgid "Yesterday"
+msgstr "Yesterday"
+
+msgid "This Week"
+msgstr "This Week"
+
+msgid "This Month"
+msgstr "This Month"
+
+msgid "This Year"
+msgstr "This Year"
+
+msgid "Never"
+msgstr "Never"
+
+msgid "Just now"
+msgstr "Just now"
+
+msgid "minutes ago"
+msgstr "minutes ago"
+
+msgid "hours ago"
+msgstr "hours ago"
+
+msgid "days ago"
+msgstr "days ago"
+
+msgid "weeks ago"
+msgstr "weeks ago"
+
+msgid "months ago"
+msgstr "months ago"
+
+msgid "years ago"
+msgstr "years ago"
+
+# Form validation
+msgid "This field is required"
+msgstr "This field is required"
+
+msgid "Please enter a valid email address"
+msgstr "Please enter a valid email address"
+
+msgid "Passwords do not match"
+msgstr "Passwords do not match"
+
+msgid "Password must be at least 8 characters long"
+msgstr "Password must be at least 8 characters long"
+
+msgid "Username must be at least 3 characters long"
+msgstr "Username must be at least 3 characters long"
+
+msgid "Username already exists"
+msgstr "Username already exists"
+
+msgid "Email already exists"
+msgstr "Email already exists"
+
+msgid "Invalid username or password"
+msgstr "Invalid username or password"
+
+msgid "Account created successfully!"
+msgstr "Account created successfully!"
+
+msgid "Login successful!"
+msgstr "Login successful!"
+
+msgid "Logout successful!"
+msgstr "Logout successful!"
+
+msgid "Password updated successfully!"
+msgstr "Password updated successfully!"
+
+msgid "Profile updated successfully!"
+msgstr "Profile updated successfully!"
+
+# Bot settings
+msgid "Bot Settings"
+msgstr "Bot Settings"
+
+msgid "Telegram Bot"
+msgstr "Telegram Bot"
+
+msgid "Discord Bot"
+msgstr "Discord Bot"
+
+msgid "Bot Token"
+msgstr "Bot Token"
+
+msgid "Channel ID"
+msgstr "Channel ID"
+
+msgid "Enable Notifications"
+msgstr "Enable Notifications"
+
+msgid "Language"
+msgstr "Language"
+
+msgid "English"
+msgstr "English"
+
+msgid "Russian"
+msgstr "Russian"
+
+msgid "Save Settings"
+msgstr "Save Settings"
+
+msgid "Test Connection"
+msgstr "Test Connection"
+
+msgid "Settings saved successfully!"
+msgstr "Settings saved successfully!"
+
+msgid "Failed to save settings"
+msgstr "Failed to save settings"
+
+msgid "Bot connection test successful!"
+msgstr "Bot connection test successful!"
+
+msgid "Bot connection test failed"
+msgstr "Bot connection test failed"
+
+# Feedback
+msgid "Feedback"
+msgstr "Feedback"
+
+msgid "Subject"
+msgstr "Subject"
+
+msgid "Message"
+msgstr "Message"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Bug Report"
+msgstr "Bug Report"
+
+msgid "Feature Request"
+msgstr "Feature Request"
+
+msgid "Suggestion"
+msgstr "Suggestion"
+
+msgid "Improvement"
+msgstr "Improvement"
+
+msgid "Other"
+msgstr "Other"
+
+msgid "Submit Feedback"
+msgstr "Submit Feedback"
+
+msgid "Give Feedback"
+msgstr "Give Feedback"
+
+msgid "Feedback submitted successfully!"
+msgstr "Feedback submitted successfully!"
+
+msgid "Failed to submit feedback"
+msgstr "Failed to submit feedback"
+
+# Admin
+msgid "Admin Panel"
+msgstr "Admin Panel"
+
+msgid "User Management"
+msgstr "User Management"
+
+msgid "Create User"
+msgstr "Create User"
+
+msgid "Admin Users"
+msgstr "Admin Users"
+
+msgid "User Settings"
+msgstr "User Settings"
+
+msgid "Role"
+msgstr "Role"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "User"
+msgstr "User"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Inactive"
+msgstr "Inactive"
+
+msgid "Last Login"
+msgstr "Last Login"
+
+msgid "User created successfully!"
+msgstr "User created successfully!"
+
+msgid "User updated successfully!"
+msgstr "User updated successfully!"
+
+msgid "User deleted successfully!"
+msgstr "User deleted successfully!"
+
+msgid "Failed to create user"
+msgstr "Failed to create user"
+
+msgid "Failed to update user"
+msgstr "Failed to update user"
+
+msgid "Failed to delete user"
+msgstr "Failed to delete user"
+
+# Telegram/Discord announcements
+msgid "MVP Assignment Announcement"
+msgstr "MVP Assignment Announcement"
+
+msgid "Winner Assignment Announcement"
+msgstr "Winner Assignment Announcement"
+
+msgid "MVP Unassignment Announcement"
+msgstr "MVP Unassignment Announcement"
+
+msgid "has been assigned as MVP for"
+msgstr "has been assigned as MVP for"
+
+msgid "has been unassigned from MVP for"
+msgstr "has been unassigned from MVP for"
+
+msgid "has won the event"
+msgstr "has won the event"
+
+msgid "Congratulations to"
+msgstr "Congratulations to"
+
+msgid "for being selected as MVP!"
+msgstr "for being selected as MVP!"
+
+msgid "for winning the event!"
+msgstr "for winning the event!"
+
+msgid "Event"
+msgstr "Event"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Time"
+msgstr "Time"
+
+msgid "Alliance"
+msgstr "Alliance"
+
+msgid "Player"
+msgstr "Player"
+
+msgid "MVP Count"
+msgstr "MVP Count"
+
+msgid "Win Count"
+msgstr "Win Count"
+
+msgid "Total MVP Count"
+msgstr "Total MVP Count"
+
+msgid "Total Win Count"
+msgstr "Total Win Count"
+
+msgid "Previous MVP"
+msgstr "Previous MVP"
+
+msgid "Previous Winner"
+msgstr "Previous Winner"
+
+msgid "No previous MVP"
+msgstr "No previous MVP"
+
+msgid "No previous winner"
+msgstr "No previous winner"
+
+msgid "Rotation Logic"
+msgstr "Rotation Logic"
+
+msgid "Fair distribution"
+msgstr "Fair distribution"
+
+msgid "Equal opportunities"
+msgstr "Equal opportunities"
+
+msgid "System managed"
+msgstr "System managed"
+
+msgid "Automatic rotation"
+msgstr "Automatic rotation"
+
+msgid "Manual assignment"
+msgstr "Manual assignment"
+
+msgid "Admin override"
+msgstr "Admin override"
+
+msgid "Special circumstances"
+msgstr "Special circumstances"
+
+msgid "Event completed"
+msgstr "Event completed"
+
+msgid "Event in progress"
+msgstr "Event in progress"
+
+msgid "Event pending"
+msgstr "Event pending"
+
+msgid "Event cancelled"
+msgstr "Event cancelled"
+
+msgid "Event postponed"
+msgstr "Event postponed"
+
+msgid "Event rescheduled"
+msgstr "Event rescheduled"
+
+msgid "Event updated"
+msgstr "Event updated"
+
+msgid "Event created"
+msgstr "Event created"
+
+msgid "Event deleted"
+msgstr "Event deleted"
+
+msgid "Assignment updated"
+msgstr "Assignment updated"
+
+msgid "Assignment created"
+msgstr "Assignment created"
+
+msgid "Assignment deleted"
+msgstr "Assignment deleted"
+
+msgid "System notification"
+msgstr "System notification"
+
+msgid "Important update"
+msgstr "Important update"
+
+msgid "Reminder"
+msgstr "Reminder"
+
+msgid "Alert"
+msgstr "Alert"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Success"
+msgstr "Success"
+
+msgid "Warning"
+msgstr "Warning"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Debug"
+msgstr "Debug"
+
+msgid "Trace"
+msgstr "Trace"
+
+msgid "Critical"
+msgstr "Critical"
+
+msgid "Fatal"
+msgstr "Fatal"
+
+msgid "Unknown"
+msgstr "Unknown"
+
+msgid "N/A"
+msgstr "N/A"
+
+msgid "TBD"
+msgstr "TBD"
+
+msgid "TBA"
+msgstr "TBA"
+
+msgid "Coming Soon"
+msgstr "Coming Soon"
+
+msgid "Under Construction"
+msgstr "Under Construction"
+
+msgid "Maintenance Mode"
+msgstr "Maintenance Mode"
+
+msgid "Service Unavailable"
+msgstr "Service Unavailable"
+
+msgid "Access Denied"
+msgstr "Access Denied"
+
+msgid "Forbidden"
+msgstr "Forbidden"
+
+msgid "Not Found"
+msgstr "Not Found"
+
+msgid "Internal Server Error"
+msgstr "Internal Server Error"
+
+msgid "Bad Request"
+msgstr "Bad Request"
+
+msgid "Unauthorized"
+msgstr "Unauthorized"
+
+msgid "Method Not Allowed"
+msgstr "Method Not Allowed"
+
+msgid "Not Acceptable"
+msgstr "Not Acceptable"
+
+msgid "Request Timeout"
+msgstr "Request Timeout"
+
+msgid "Conflict"
+msgstr "Conflict"
+
+msgid "Gone"
+msgstr "Gone"
+
+msgid "Length Required"
+msgstr "Length Required"
+
+msgid "Precondition Failed"
+msgstr "Precondition Failed"
+
+msgid "Request Entity Too Large"
+msgstr "Request Entity Too Large"
+
+msgid "Request URI Too Long"
+msgstr "Request URI Too Long"
+
+msgid "Unsupported Media Type"
+msgstr "Unsupported Media Type"
+
+msgid "Requested Range Not Satisfiable"
+msgstr "Requested Range Not Satisfiable"
+
+msgid "Expectation Failed"
+msgstr "Expectation Failed"
+
+msgid "I'm a teapot"
+msgstr "I'm a teapot"
+
+msgid "Misdirected Request"
+msgstr "Misdirected Request"
+
+msgid "Unprocessable Entity"
+msgstr "Unprocessable Entity"
+
+msgid "Locked"
+msgstr "Locked"
+
+msgid "Failed Dependency"
+msgstr "Failed Dependency"
+
+msgid "Too Early"
+msgstr "Too Early"
+
+msgid "Upgrade Required"
+msgstr "Upgrade Required"
+
+msgid "Precondition Required"
+msgstr "Precondition Required"
+
+msgid "Too Many Requests"
+msgstr "Too Many Requests"
+
+msgid "Request Header Fields Too Large"
+msgstr "Request Header Fields Too Large"
+
+msgid "Unavailable For Legal Reasons"
+msgstr "Unavailable For Legal Reasons"
+
+msgid "Internal Server Error"
+msgstr "Internal Server Error"
+
+msgid "Not Implemented"
+msgstr "Not Implemented"
+
+msgid "Bad Gateway"
+msgstr "Bad Gateway"
+
+msgid "Service Unavailable"
+msgstr "Service Unavailable"
+
+msgid "Gateway Timeout"
+msgstr "Gateway Timeout"
+
+msgid "HTTP Version Not Supported"
+msgstr "HTTP Version Not Supported"
+
+msgid "Variant Also Negotiates"
+msgstr "Variant Also Negotiates"
+
+msgid "Insufficient Storage"
+msgstr "Insufficient Storage"
+
+msgid "Loop Detected"
+msgstr "Loop Detected"
+
+msgid "Not Extended"
+msgstr "Not Extended"
+
+msgid "Network Authentication Required"
+msgstr "Network Authentication Required"
+
+msgid "Network Connect Timeout Error"
+msgstr "Network Connect Timeout Error"# Additional translations for edit and add pages
+msgid "Back to Players"
+msgstr "Back to Players"
+
+msgid "Back to Alliances"
+msgstr "Back to Alliances"
+
+msgid "Back to Events"
+msgstr "Back to Events"
+
+msgid "Current Player Information"
+msgstr "Current Player Information"
+
+msgid "Current Alliance Information"
+msgstr "Current Alliance Information"
+
+msgid "Current Name"
+msgstr "Current Name"
+
+msgid "MVP Status"
+msgstr "MVP Status"
+
+msgid "Winner Status"
+msgstr "Winner Status"
+
+msgid "Last Updated"
+msgstr "Last Updated"
+
+msgid "Edit Player Information"
+msgstr "Edit Player Information"
+
+msgid "Player Name"
+msgstr "Player Name"
+
+msgid "Enter player name"
+msgstr "Enter player name"
+
+msgid "Player names must be unique and cannot exceed 100 characters."
+msgstr "Player names must be unique and cannot exceed 100 characters."
+
+msgid "This player is currently MVP. Renaming will not affect MVP status."
+msgstr "This player is currently MVP. Renaming will not affect MVP status."
+
+msgid "This player has been MVP"
+msgstr "This player has been MVP"
+
+msgid "time(s). Renaming will not affect MVP history."
+msgstr "time(s). Renaming will not affect MVP history."
+
+msgid "Update Player"
+msgstr "Update Player"
+
+msgid "Danger Zone"
+msgstr "Danger Zone"
+
+msgid "Permanently delete this player from the system. This action cannot be undone and will also delete all MVP assignments for this player."
+msgstr "Permanently delete this player from the system. This action cannot be undone and will also delete all MVP assignments for this player."
+
+msgid "Warning"
+msgstr "Warning"
+
+msgid "This will permanently delete:"
+msgstr "This will permanently delete:"
+
+msgid "Player record"
+msgstr "Player record"
+
+msgid "All MVP assignments for this player"
+msgstr "All MVP assignments for this player"
+
+msgid "MVP history and statistics"
+msgstr "MVP history and statistics"
+
+msgid "This action cannot be undone."
+msgstr "This action cannot be undone."
+
+msgid "Add New Player"
+msgstr "Add New Player"
+
+msgid "Player Information"
+msgstr "Player Information"
+
+msgid "MVP Rotation"
+msgstr "MVP Rotation"
+
+msgid "New players will be able to receive MVP assignment after all current players have been MVP at least once."
+msgstr "New players will be able to receive MVP assignment after all current players have been MVP at least once."
+
+msgid "Use meaningful player names that are easy to identify"
+msgstr "Use meaningful player names that are easy to identify"
+
+msgid "Player names must be unique in the system"
+msgstr "Player names must be unique in the system"
+
+msgid "After adding, players can be assigned as MVP when it's their turn"
+msgstr "After adding, players can be assigned as MVP when it's their turn"
+
+msgid "You can edit or delete players later if needed"
+msgstr "You can edit or delete players later if needed"
+
+msgid "Player name is required."
+msgstr "Player name is required."
+
+# Additional translations for events view page
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Event Details"
+msgstr "Event Details"
+
+msgid "Event Name"
+msgstr "Event Name"
+
+msgid "Event Date"
+msgstr "Event Date"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Event Assignments"
+msgstr "Event Assignments"
+
+msgid "MVP Players"
+msgstr "MVP Players"
+
+msgid "MVP Assignment History"
+msgstr "MVP Assignment History"
+
+msgid "Assign More MVP"
+msgstr "Assign More MVP"
+
+msgid "No MVP Assigned"
+msgstr "No MVP Assigned"
+
+msgid "This event has no MVP yet."
+msgstr "This event has no MVP yet."
+
+msgid "Winning Alliance"
+msgstr "Winning Alliance"
+
+msgid "No Winner Assigned"
+msgstr "No Winner Assigned"
+
+msgid "This event has no winning alliance yet."
+msgstr "This event has no winning alliance yet."
+
+msgid "Event Summary"
+msgstr "Event Summary"
+
+msgid "Completion Status"
+msgstr "Completion Status"
+
+msgid "Edit Event"
+msgstr "Edit Event"
+
+msgid "Back to Events"
+msgstr "Back to Events"
+
+msgid "Edit Event Information"
+msgstr "Edit Event Information"
+
+msgid "Event Name"
+msgstr "Event Name"
+
+msgid "optional"
+msgstr "optional"
+
+msgid "Event Date"
+msgstr "Event Date"
+
+msgid "Update Event"
+msgstr "Update Event"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "After adding, players can be assigned as MVP when it's their turn"
+msgstr "After adding, players can be assigned as MVP when it's their turn"
+
+msgid "You can edit or delete players later if needed"
+msgstr "You can edit or delete players later if needed"
+
+msgid "Player name is required."
+msgstr "Player name is required."
+
+msgid "Assign Winner"
+msgstr "Assign Winner"
+
+msgid "Winner Rotation Status"
+msgstr "Winner Rotation Status"
+
+msgid "Winner Assignment Available"
+msgstr "Winner Assignment Available"
+
+msgid "You can assign a winner from eligible alliances below."
+msgstr "You can assign a winner from eligible alliances below."
+
+msgid "Winner Assignment Blocked"
+msgstr "Winner Assignment Blocked"
+
+msgid "Not all alliances have won yet. Complete current rotation first."
+msgstr "Not all alliances have won yet. Complete current rotation first."
+
+msgid "Winner Assignment Form"
+msgstr "Winner Assignment Form"
+
+msgid "Select Alliance"
+msgstr "Select Alliance"
+
+msgid "Select alliance..."
+msgstr "Select alliance..."
+
+msgid "Wins"
+msgstr "Wins"
+
+msgid "New Winner"
+msgstr "New Winner"
+
+msgid "Select Event"
+msgstr "Select Event"
+
+msgid "Select event..."
+msgstr "Select event..."
+
+msgid "Assign MVP"
+msgstr "Assign MVP"
+
+msgid "MVP Rotation Status"
+msgstr "MVP Rotation Status"
+
+msgid "MVP Assignment Available"
+msgstr "MVP Assignment Available"
+
+msgid "You can assign MVP to eligible players below."
+msgstr "You can assign MVP to eligible players below."
+
+msgid "Eligible Players"
+msgstr "Eligible Players"
+
+msgid "MVP Assignment Not Available"
+msgstr "MVP Assignment Not Available"
+
+msgid "No eligible players or events for MVP assignment."
+msgstr "No eligible players or events for MVP assignment."
+
+msgid "MVP Assignment Form"
+msgstr "MVP Assignment Form"
+
+msgid "Select Player"
+msgstr "Select Player"
+
+msgid "Select player..."
+msgstr "Select player..."
+
+msgid "New MVP"
+msgstr "New MVP"
+
+msgid "Only players eligible for MVP are shown."
+msgstr "Only players eligible for MVP are shown."
+
+msgid "Select Event"
+msgstr "Select Event"
+
+msgid "Select event..."
+msgstr "Select event..."
+
+msgid "Already has MVP"
+msgstr "Already has MVP"
+
+msgid "All events are shown. You can assign multiple MVPs for one event."
+msgstr "All events are shown. You can assign multiple MVPs for one event."
+
+msgid "Assignment Effects"
+msgstr "Assignment Effects"
+
+msgid "Selected player will become current MVP"
+msgstr "Selected player will become current MVP"
+
+msgid "Any previous MVP status will be removed from other players"
+msgstr "Any previous MVP status will be removed from other players"
+
+msgid "Player's MVP count will be increased"
+msgstr "Player's MVP count will be increased"
+
+msgid "Event will be marked as having assigned MVP"
+msgstr "Event will be marked as having assigned MVP"
+
+msgid "New"
+msgstr "New"
+
+msgid "You can assign multiple MVPs for one event (for recurring events)"
+msgstr "You can assign multiple MVPs for one event (for recurring events)"
+
+msgid "No Eligible Players"
+msgstr "No Eligible Players"
+
+msgid "Currently no available players for MVP assignment."
+msgstr "Currently no available players for MVP assignment."
+
+msgid "Add Players"
+msgstr "Add Players"
+
+msgid "No Available Events"
+msgstr "No Available Events"
+
+msgid "All events already have MVP assigned. Create new events to assign additional MVPs."
+msgstr "All events already have MVP assigned. Create new events to assign additional MVPs."
+
+msgid "Add Event"
+msgstr "Add Event"
+
+msgid "View Players"
+msgstr "View Players"
+
+msgid "MVP Rotation Rules"
+msgstr "MVP Rotation Rules"
+
+msgid "Fair Rotation"
+msgstr "Fair Rotation"
+
+msgid "Priority is given to players with the least MVP count"
+msgstr "Priority is given to players with the least MVP count"
+
+msgid "One MVP per Event"
+msgstr "One MVP per Event"
+
+msgid "Each event can have only one MVP player"
+msgstr "Each event can have only one MVP player"
+
+msgid "Current MVP"
+msgstr "Current MVP"
+
+msgid "Only one player can be current MVP at a time"
+msgstr "Only one player can be current MVP at a time"
+
+msgid "History Tracking"
+msgstr "History Tracking"
+
+msgid "All MVP assignments are tracked and counted"
+msgstr "All MVP assignments are tracked and counted"
+
+msgid "Please select both player and event."
+msgstr "Please select both player and event."
+
+msgid "Assign"
+msgstr "Assign"
+
+msgid "MVP for event"
+msgstr "MVP for event"

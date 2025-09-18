@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Назначить MVP - Управление King's Choice{% endblock %}
+{% block title %}{{ _("Assign MVP") }} - {{ _("King's Choice Management") }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,10 +8,10 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-award me-2"></i>Назначить MVP
+                <i class="bi bi-award me-2"></i>{{ _("Assign MVP") }}
             </h1>
             <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Назад к игрокам
+                <i class="bi bi-arrow-left me-1"></i>{{ _("Back to Players") }}
             </a>
         </div>
     </div>
@@ -35,7 +35,7 @@
         <div class="card mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-arrow-repeat me-2"></i>Статус ротации MVP
+                    <i class="bi bi-arrow-repeat me-2"></i>{{ _("MVP Rotation Status") }}
                 </h5>
             </div>
             <div class="card-body">
@@ -43,13 +43,13 @@
                     <div class="alert alert-success d-flex align-items-center mb-3">
                         <i class="bi bi-check-circle-fill me-3 fs-4"></i>
                         <div>
-                            <strong>Назначение MVP доступно</strong><br>
-                            <small>Вы можете назначить MVP подходящим игрокам ниже.</small>
+                            <strong>{{ _("MVP Assignment Available") }}</strong><br>
+                            <small>{{ _("You can assign MVP to eligible players below.") }}</small>
                         </div>
                     </div>
                     
                     <h6 class="text-success mb-2">
-                        <i class="bi bi-people-fill me-1"></i>Подходящие игроки:
+                        <i class="bi bi-people-fill me-1"></i>{{ _("Eligible Players") }}:
                     </h6>
                     <div class="mb-0">
                         {% for player in eligible_players %}
@@ -62,8 +62,8 @@
                     <div class="alert alert-warning d-flex align-items-center mb-0">
                         <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
                         <div>
-                            <strong>Назначение MVP недоступно</strong><br>
-                            <small>Нет подходящих игроков или событий для назначения MVP.</small>
+                            <strong>{{ _("MVP Assignment Not Available") }}</strong><br>
+                            <small>{{ _("No eligible players or events for MVP assignment.") }}</small>
                         </div>
                     </div>
                 {% endif %}
@@ -75,7 +75,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-trophy me-2"></i>Форма назначения MVP
+                    <i class="bi bi-trophy me-2"></i>{{ _("MVP Assignment Form") }}
                 </h5>
             </div>
             <div class="card-body">
@@ -83,68 +83,68 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="player_id" class="form-label">
-                                <i class="bi bi-person me-1"></i>Выберите игрока
+                                <i class="bi bi-person me-1"></i>{{ _("Select Player") }}
                                 <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="player_id" name="player_id" required>
-                                <option value="">Выберите игрока...</option>
+                                <option value="">{{ _("Select player...") }}</option>
                                 {% for player in eligible_players %}
                                     <option value="{{ player.id }}">
                                         {{ player.name }} 
                                         {% if player.mvp_count > 0 %}
                                             (MVP: {{ player.mvp_count }}x)
                                         {% else %}
-                                            (Новый MVP)
+                                            ({{ _("New MVP") }})
                                         {% endif %}
                                     </option>
                                 {% endfor %}
                             </select>
                             <div class="form-text">
                                 <i class="bi bi-info-circle me-1"></i>
-                                Показаны только игроки, подходящие для MVP.
+                                {{ _("Only players eligible for MVP are shown.") }}
                             </div>
                         </div>
                         
                         <div class="col-md-6 mb-3">
                             <label for="event_id" class="form-label">
-                                <i class="bi bi-calendar-event me-1"></i>Выберите событие
+                                <i class="bi bi-calendar-event me-1"></i>{{ _("Select Event") }}
                                 <span class="text-danger">*</span>
                             </label>
                             <select class="form-select" id="event_id" name="event_id" required>
-                                <option value="">Выберите событие...</option>
+                                <option value="">{{ _("Select event...") }}</option>
                                 {% for event in available_events %}
                                     <option value="{{ event.id }}">
                                         {{ event.name }}
                                         <small>({{ event.event_date.strftime('%Y-%m-%d') if event.event_date }})
-                                        {% if event.has_mvp %} - Уже есть MVP{% endif %}</small>
+                                        {% if event.has_mvp %} - {{ _("Already has MVP") }}{% endif %}</small>
                                     </option>
                                 {% endfor %}
                             </select>
                             <div class="form-text">
                                 <i class="bi bi-info-circle me-1"></i>
-                                Показаны все события. Можно назначать несколько MVP для одного события.
+                                {{ _("All events are shown. You can assign multiple MVPs for one event.") }}
                             </div>
                         </div>
                     </div>
                     
                     <div class="alert alert-info">
                         <i class="bi bi-lightbulb me-2"></i>
-                        <strong>Эффекты назначения:</strong>
+                        <strong>{{ _("Assignment Effects") }}:</strong>
                         <ul class="mb-0 mt-2">
-                            <li>Выбранный игрок станет текущим MVP</li>
-                            <li>Любой предыдущий статус MVP будет убран у других игроков</li>
-                            <li>Счетчик MVP игрока будет увеличен</li>
-                            <li>Событие будет отмечено как имеющее назначенного MVP</li>
-                            <li><strong>Новое:</strong> Можно назначать несколько MVP для одного события (для повторяющихся событий)</li>
+                            <li>{{ _("Selected player will become current MVP") }}</li>
+                            <li>{{ _("Any previous MVP status will be removed from other players") }}</li>
+                            <li>{{ _("Player's MVP count will be increased") }}</li>
+                            <li>{{ _("Event will be marked as having assigned MVP") }}</li>
+                            <li><strong>{{ _("New") }}:</strong> {{ _("You can assign multiple MVPs for one event (for recurring events)") }}</li>
                         </ul>
                     </div>
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-success btn-lg">
-                            <i class="bi bi-trophy-fill me-2"></i>Назначить MVP
+                            <i class="bi bi-trophy-fill me-2"></i>{{ _("Assign MVP") }}
                         </button>
                         <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-1"></i>Отменить
+                            <i class="bi bi-x-circle me-1"></i>{{ _("Cancel") }}
                         </a>
                     </div>
                 </form>
@@ -156,10 +156,10 @@
         <div class="card">
             <div class="card-body text-center py-5">
                 <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
-                <h4 class="mt-3 text-muted">Нет подходящих игроков</h4>
-                <p class="text-muted">В настоящее время нет доступных игроков для назначения MVP.</p>
+                <h4 class="mt-3 text-muted">{{ _("No Eligible Players") }}</h4>
+                <p class="text-muted">{{ _("Currently no available players for MVP assignment.") }}</p>
                 <a href="{{ url_for('players.add_player') }}" class="btn btn-primary">
-                    <i class="bi bi-person-plus me-1"></i>Добавить игроков
+                    <i class="bi bi-person-plus me-1"></i>{{ _("Add Players") }}
                 </a>
             </div>
         </div>
@@ -169,10 +169,10 @@
         <div class="card">
             <div class="card-body text-center py-5">
                 <i class="bi bi-calendar-x text-muted" style="font-size: 4rem;"></i>
-                <h4 class="mt-3 text-muted">Нет доступных событий</h4>
-                <p class="text-muted">У всех событий уже назначен MVP. Создайте новые события для назначения дополнительных MVP.</p>
+                <h4 class="mt-3 text-muted">{{ _("No Available Events") }}</h4>
+                <p class="text-muted">{{ _("All events already have MVP assigned. Create new events to assign additional MVPs.") }}</p>
                 <a href="{{ url_for('events.add_event') }}" class="btn btn-primary">
-                    <i class="bi bi-calendar-plus me-1"></i>Добавить событие
+                    <i class="bi bi-calendar-plus me-1"></i>{{ _("Add Event") }}
                 </a>
             </div>
         </div>
@@ -182,10 +182,10 @@
         <div class="card">
             <div class="card-body text-center py-5">
                 <i class="bi bi-lock text-warning" style="font-size: 4rem;"></i>
-                <h4 class="mt-3 text-muted">Назначение MVP недоступно</h4>
-                <p class="text-muted">Нет подходящих игроков или событий.</p>
+                <h4 class="mt-3 text-muted">{{ _("MVP Assignment Not Available") }}</h4>
+                <p class="text-muted">{{ _("No eligible players or events.") }}</p>
                 <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-primary">
-                    <i class="bi bi-eye me-1"></i>Посмотреть игроков
+                    <i class="bi bi-eye me-1"></i>{{ _("View Players") }}
                 </a>
             </div>
         </div>
@@ -195,26 +195,26 @@
         <div class="card mt-4">
             <div class="card-header bg-light">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-question-circle me-2"></i>Правила ротации MVP
+                    <i class="bi bi-question-circle me-2"></i>{{ _("MVP Rotation Rules") }}
                 </h6>
             </div>
             <div class="card-body">
                 <ul class="list-unstyled mb-0">
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        <strong>Справедливая ротация:</strong> Приоритет отдается игрокам с наименьшим количеством MVP
+                        <strong>{{ _("Fair Rotation") }}:</strong> {{ _("Priority is given to players with the least MVP count") }}
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        <strong>Один MVP на событие:</strong> Каждое событие может иметь только одного игрока MVP
+                        <strong>{{ _("One MVP per Event") }}:</strong> {{ _("Each event can have only one MVP player") }}
                     </li>
                     <li class="mb-2">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        <strong>Текущий MVP:</strong> Только один игрок может быть текущим MVP одновременно
+                        <strong>{{ _("Current MVP") }}:</strong> {{ _("Only one player can be current MVP at a time") }}
                     </li>
                     <li class="mb-0">
                         <i class="bi bi-check-circle text-success me-2"></i>
-                        <strong>Отслеживание истории:</strong> Все назначения MVP отслеживаются и подсчитываются
+                        <strong>{{ _("History Tracking") }}:</strong> {{ _("All MVP assignments are tracked and counted") }}
                     </li>
                 </ul>
             </div>
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Show validation message
                 const alert = document.createElement('div');
                 alert.className = 'alert alert-danger mt-3';
-                alert.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Пожалуйста, выберите и игрока, и событие.';
+                alert.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>{{ _("Please select both player and event.") }}';
                 
                 // Remove existing alerts
                 const existingAlert = form.querySelector('.alert-danger');
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const playerName = playerSelect.options[playerSelect.selectedIndex].text;
                 const eventName = eventSelect.options[eventSelect.selectedIndex].text;
                 
-                if (!confirm(`Назначить ${playerName} MVP для события ${eventName}?`)) {
+                if (!confirm(`{{ _("Assign") }} ${playerName} {{ _("MVP for event") }} ${eventName}?`)) {
                     e.preventDefault();
                 }
             }

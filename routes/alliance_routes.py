@@ -9,15 +9,20 @@ Handles all alliance-related operations:
 - Assign winners with rotation logic
 """
 
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash, session
 from flask_login import login_required, current_user
 from models import Alliance, Event, WinnerAssignment
 from database import db
-from database_manager import query_user_data, get_user_data_by_id
+from database_manager import query_user_data, get_user_data_by_id, create_user_data, update_user_data, delete_user_data, user_database_context
 from utils.rotation_logic import can_assign_winner, get_eligible_alliances
 
 # Create blueprint for alliance routes
 bp = Blueprint('alliances', __name__, url_prefix='/alliances')
+
+def get_template_path(template_name):
+    """Get template path based on user's template preference"""
+    template = session.get('template', 'classic')
+    return f'modern/{template_name}' if template == 'modern' else template_name
 
 @bp.route('/')
 @login_required
@@ -39,13 +44,13 @@ def list_alliances():
         can_assign = can_assign_winner(current_user.id)
         eligible_alliances = get_eligible_alliances(current_user.id) if can_assign else []
         
-        return render_template('alliances/list.html', 
+        return render_template(get_template_path('alliances/list.html'), 
                              alliances=alliances,
                              can_assign_winner=can_assign,
                              eligible_alliances=eligible_alliances)
     except Exception as e:
         print(f"Error in list_alliances route: {str(e)}")
-        return render_template('alliances/list.html', 
+        return render_template(get_template_path('alliances/list.html'), 
                              alliances=[],
                              error="Failed to load alliances")
 
@@ -63,29 +68,26 @@ def add_alliance():
             
             if not alliance_name:
                 flash('Alliance name is required', 'error')
-                return render_template('alliances/add.html')
+                return render_template(get_template_path('alliances/add.html'))
             
             # Check if alliance already exists for this user
             existing_alliance = query_user_data(Alliance, current_user.id, name=alliance_name)
             if existing_alliance:
                 flash(f'Alliance "{alliance_name}" already exists', 'error')
-                return render_template('alliances/add.html')
+                return render_template(get_template_path('alliances/add.html'))
             
-            # Create new alliance
-            new_alliance = Alliance(name=alliance_name, user_id=current_user.id)
-            db.session.add(new_alliance)
-            db.session.commit()
+            # Create new alliance in user's database
+            new_alliance = create_user_data(Alliance, current_user.id, name=alliance_name)
             
             flash(f'Alliance "{alliance_name}" added successfully', 'success')
             return redirect(url_for('alliances.list_alliances'))
             
         except Exception as e:
             print(f"Error adding alliance: {str(e)}")
-            db.session.rollback()
             flash('Failed to add alliance', 'error')
-            return render_template('alliances/add.html')
+            return render_template(get_template_path('alliances/add.html'))
     
-    return render_template('alliances/add.html')
+    return render_template(get_template_path('alliances/add.html'))
 
 @bp.route('/edit/<int:alliance_id>', methods=['GET', 'POST'])
 def edit_alliance(alliance_id):
@@ -109,7 +111,7 @@ def edit_alliance(alliance_id):
             
             if not new_name:
                 flash('Alliance name is required', 'error')
-                return render_template('alliances/edit.html', alliance=alliance)
+                return render_template(get_template_path('alliances/edit.html'), alliance=alliance)
             
             # Check if new name conflicts with existing alliance (excluding current)
             existing_alliances = query_user_data(Alliance, current_user.id, name=new_name)
@@ -121,23 +123,21 @@ def edit_alliance(alliance_id):
             
             if existing_alliance:
                 flash(f'Alliance name "{new_name}" is already taken', 'error')
-                return render_template('alliances/edit.html', alliance=alliance)
+                return render_template(get_template_path('alliances/edit.html'), alliance=alliance)
             
-            # Update alliance
+            # Update alliance in user's database
             old_name = alliance.name
-            alliance.name = new_name
-            db.session.commit()
+            update_user_data(Alliance, current_user.id, alliance_id, name=new_name)
             
             flash(f'Alliance renamed from "{old_name}" to "{new_name}"', 'success')
             return redirect(url_for('alliances.list_alliances'))
             
         except Exception as e:
             print(f"Error editing alliance: {str(e)}")
-            db.session.rollback()
             flash('Failed to update alliance', 'error')
-            return render_template('alliances/edit.html', alliance=alliance)
+            return render_template(get_template_path('alliances/edit.html'), alliance=alliance)
     
-    return render_template('alliances/edit.html', alliance=alliance)
+    return render_template(get_template_path('alliances/edit.html'), alliance=alliance)
 
 @bp.route('/delete/<int:alliance_id>', methods=['POST'])
 def delete_alliance(alliance_id):
@@ -158,17 +158,18 @@ def delete_alliance(alliance_id):
         
         # Remove current winner status if this alliance is current winner
         if alliance.is_current_winner:
-            alliance.is_current_winner = False
+            update_user_data(Alliance, current_user.id, alliance_id, is_current_winner=False)
         
-        # Delete alliance (cascading will handle winner assignments)
-        db.session.delete(alliance)
-        db.session.commit()
+        # Delete alliance from user's database
+        success = delete_user_data(Alliance, current_user.id, alliance_id)
         
-        flash(f'Alliance "{alliance_name}" deleted successfully', 'success')
+        if success:
+            flash(f'Alliance "{alliance_name}" deleted successfully', 'success')
+        else:
+            flash('Failed to delete alliance', 'error')
         
     except Exception as e:
         print(f"Error deleting alliance: {str(e)}")
-        db.session.rollback()
         flash('Failed to delete alliance', 'error')
     
     return redirect(url_for('alliances.list_alliances'))
@@ -208,41 +209,33 @@ def assign_winner():
                 flash('Alliance or event not found', 'error')
                 return redirect(url_for('alliances.assign_winner'))
             
-            # Check if event already has winner
-            existing_assignments = query_user_data(WinnerAssignment, current_user.id)
-            existing_assignment = None
-            for assignment in existing_assignments:
-                if assignment.event_id == event_id:
-                    existing_assignment = assignment
-                    break
-            
-            if existing_assignment:
-                flash(f'Event "{event.name}" already has a winning alliance assigned', 'error')
-                return redirect(url_for('alliances.assign_winner'))
+            # Allow multiple winner assignments per event for recurring events
+            # No need to check if event already has winner - we allow multiple assignments
             
             # Remove current winner status from all alliances for this user
-            user_alliances = query_user_data(Alliance, current_user.id)
-            for user_alliance in user_alliances:
-                user_alliance.is_current_winner = False
+            with user_database_context(current_user.id) as session:
+                session.query(Alliance).update({'is_current_winner': False})
+                session.commit()
             
-            # Create winner assignment
-            assignment = WinnerAssignment(alliance_id=alliance_id, event_id=event_id)
-            db.session.add(assignment)
+            # Create winner assignment in user's database
+            assignment = create_user_data(WinnerAssignment, current_user.id, 
+                                        alliance_id=alliance_id, event_id=event_id)
             
-            # Update alliance status
-            alliance.is_current_winner = True
-            alliance.win_count += 1
+            # Update alliance status in user's database
+            update_user_data(Alliance, current_user.id, alliance_id, 
+                           is_current_winner=True, win_count=alliance.win_count + 1)
             
-            # Update event status
-            event.has_winner = True
-            
-            db.session.commit()
+            # Update event status in user's database
+            update_user_data(Event, current_user.id, event_id, has_winner=True)
             
             # Send winner announcement
             try:
-                from user_notifications import send_winner_announcement
-                results = send_winner_announcement(current_user.id, alliance.name, event.name)
-                print(f"Winner announcement sent: {event.name} -> {alliance.name}, Results: {results}")
+                from telegram_bot import send_winner_announcement
+                success = send_winner_announcement(event.name, alliance.name, current_user)
+                if success:
+                    print(f"Winner announcement sent: {event.name} -> {alliance.name}")
+                else:
+                    print(f"Failed to send winner announcement: {event.name} -> {alliance.name}")
             except Exception as e:
                 print(f"Failed to send winner announcement: {e}")
                 # Don't fail the assignment if notification fails
@@ -252,7 +245,6 @@ def assign_winner():
             
         except Exception as e:
             print(f"Error assigning winner: {str(e)}")
-            db.session.rollback()
             flash('Failed to assign winner', 'error')
             return redirect(url_for('alliances.assign_winner'))
     
@@ -267,13 +259,13 @@ def assign_winner():
         available_events = [e for e in user_events if not e.has_winner]
         available_events.sort(key=lambda x: x.event_date, reverse=True)
         
-        return render_template('alliances/assign_winner.html',
+        return render_template(get_template_path('alliances/assign_winner.html'),
                              can_assign_winner=can_assign,
                              eligible_alliances=eligible_alliances,
                              available_events=available_events)
     except Exception as e:
         print(f"Error loading winner assignment form: {str(e)}")
-        return render_template('alliances/assign_winner.html',
+        return render_template(get_template_path('alliances/assign_winner.html'),
                              error="Failed to load assignment form")
 
 # API Routes for AJAX operations
