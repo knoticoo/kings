@@ -17,7 +17,16 @@ NC='\033[0m' # No Color
 # Configuration
 APP_NAME="King's Choice Management Multi-User System"
 APP_DIR="/workspace"
-VENV_DIR="$APP_DIR/env"
+# Try different common virtual environment locations
+if [ -d "$APP_DIR/env" ]; then
+    VENV_DIR="$APP_DIR/env"
+elif [ -d "$APP_DIR/venv" ]; then
+    VENV_DIR="$APP_DIR/venv"
+elif [ -d "$APP_DIR/.venv" ]; then
+    VENV_DIR="$APP_DIR/.venv"
+else
+    VENV_DIR="$APP_DIR/env"  # Default fallback
+fi
 LOG_DIR="$APP_DIR/logs"
 PID_FILE="$APP_DIR/app.pid"
 LOG_FILE="$LOG_DIR/app.log"
@@ -136,13 +145,21 @@ install_system_deps() {
 setup_virtualenv() {
     print_step "Setting up Python virtual environment..."
     
-    # Remove existing venv if it exists
-    if [ -d "$VENV_DIR" ]; then
-        print_warning "Removing existing virtual environment..."
-        rm -rf "$VENV_DIR"
+    # Check if virtual environment already exists and is valid
+    if [ -d "$VENV_DIR" ] && [ -f "$VENV_DIR/bin/activate" ]; then
+        print_status "Virtual environment already exists at $VENV_DIR"
+        # Test if it works
+        if source "$VENV_DIR/bin/activate" 2>/dev/null && python -c "import sys; print('OK')" >/dev/null 2>&1; then
+            print_success "Existing virtual environment is valid"
+            return 0
+        else
+            print_warning "Existing virtual environment is corrupted, recreating..."
+            rm -rf "$VENV_DIR"
+        fi
     fi
     
     # Create new virtual environment
+    print_status "Creating virtual environment at $VENV_DIR..."
     python3 -m venv "$VENV_DIR"
     
     # Activate virtual environment
@@ -191,14 +208,8 @@ setup_multi_user_database() {
         exit 1
     fi
     
-    # Run database optimization
-    print_status "Optimizing database performance..."
-    if [ -f "$APP_DIR/optimize_database.py" ]; then
-        python3 optimize_database.py
-        print_success "Database optimization completed"
-    else
-        print_warning "Database optimization script not found, skipping..."
-    fi
+    # Database optimization can be run manually with: ./install_and_start.sh optimize
+    print_status "Database optimization can be run manually with: ./install_and_start.sh optimize"
 }
 
 # Function to run tests
@@ -351,19 +362,24 @@ start_app() {
         return
     fi
     
+    # Ensure virtual environment exists
+    if [ ! -d "$VENV_DIR" ] || [ ! -f "$VENV_DIR/bin/activate" ]; then
+        print_warning "Virtual environment not found, creating it..."
+        setup_virtualenv
+        install_python_deps
+    fi
+    
     # Ensure we're in the virtual environment
     source "$VENV_DIR/bin/activate"
     
     # Change to app directory
     cd "$APP_DIR"
     
-    # Run database optimization if needed
-    print_status "Checking database optimization..."
-    if [ -f "$APP_DIR/optimize_database.py" ]; then
-        python3 optimize_database.py > /dev/null 2>&1
-    fi
+    # Skip database optimization during startup to avoid hanging
+    # Database optimization can be run manually with: ./install_and_start.sh optimize
     
-    # Create log files if they don't exist
+    # Create logs directory and log files if they don't exist
+    mkdir -p "$LOG_DIR"
     touch "$LOG_FILE" "$ERROR_LOG"
     
     # Start the application
