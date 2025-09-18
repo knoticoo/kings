@@ -238,15 +238,14 @@ def assign_winner():
             
             db.session.commit()
             
-            # Send Telegram announcement
+            # Send winner announcement
             try:
-                from user_bot_manager import send_telegram_message
-                message = f"🏆 Победитель события '{event.name}': {alliance.name}"
-                send_telegram_message(current_user.id, message)
-                print(f"Telegram winner announcement sent: {event.name} -> {alliance.name}")
+                from user_notifications import send_winner_announcement
+                results = send_winner_announcement(current_user.id, alliance.name, event.name)
+                print(f"Winner announcement sent: {event.name} -> {alliance.name}, Results: {results}")
             except Exception as e:
-                print(f"Failed to send Telegram winner announcement: {e}")
-                # Don't fail the assignment if Telegram fails
+                print(f"Failed to send winner announcement: {e}")
+                # Don't fail the assignment if notification fails
             
             flash(f'{alliance.name} assigned as winner for "{event.name}"', 'success')
             return redirect(url_for('alliances.list_alliances'))

@@ -171,6 +171,21 @@ def test_bot_connection(user=None):
         logger.warning("Telegram bot not configured for user")
         return False, "Telegram bot not configured for user"
 
+def send_message_to_user(user_id, message):
+    """Send message to a specific user's Telegram channel"""
+    try:
+        from models import User
+        user = User.query.get(user_id)
+        if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
+            bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
+            return bot.send_message_sync(message)
+        else:
+            logger.warning(f"Telegram bot not configured for user {user_id}")
+            return False
+    except Exception as e:
+        logger.error(f"Error sending message to user {user_id}: {str(e)}")
+        return False
+
 if __name__ == "__main__":
     # Test the bot if run directly
     print("Testing Telegram bot...")

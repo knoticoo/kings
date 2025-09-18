@@ -9,7 +9,7 @@ import asyncio
 import logging
 import threading
 import time
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
 from datetime import datetime
 import os
 import sys
@@ -34,7 +34,7 @@ class UserBotManager:
         self.bot_threads: Dict[int, threading.Thread] = {}  # user_id -> thread
         self.running = True
         
-    def start_user_discord_bot(self, user_id: int, bot_token: str, channel_id: str = None):
+    def start_user_discord_bot(self, user_id: int, bot_token: str, channel_id: str = None) -> bool:
         """Start Discord bot for a specific user"""
         try:
             if user_id in self.discord_bots:
@@ -78,7 +78,7 @@ class UserBotManager:
             logger.error(f"Failed to start Discord bot for user {user_id}: {e}")
             return False
     
-    def start_user_telegram_bot(self, user_id: int, bot_token: str, chat_id: str = None):
+    def start_user_telegram_bot(self, user_id: int, bot_token: str, chat_id: str = None) -> bool:
         """Start Telegram bot for a specific user"""
         try:
             if user_id in self.telegram_bots:
@@ -105,7 +105,7 @@ class UserBotManager:
             logger.error(f"Failed to start Telegram bot for user {user_id}: {e}")
             return False
     
-    def stop_user_discord_bot(self, user_id: int):
+    def stop_user_discord_bot(self, user_id: int) -> bool:
         """Stop Discord bot for a specific user"""
         try:
             if user_id in self.discord_bots:
@@ -121,7 +121,7 @@ class UserBotManager:
             logger.error(f"Failed to stop Discord bot for user {user_id}: {e}")
             return False
     
-    def stop_user_telegram_bot(self, user_id: int):
+    def stop_user_telegram_bot(self, user_id: int) -> bool:
         """Stop Telegram bot for a specific user"""
         try:
             if user_id in self.telegram_bots:
@@ -150,7 +150,7 @@ class UserBotManager:
         return user_id in self.telegram_bots
     
     def start_user_bots(self, user_id: int, discord_token: str = None, discord_channel: str = None, 
-                       telegram_token: str = None, telegram_chat: str = None):
+                       telegram_token: str = None, telegram_chat: str = None) -> Dict[str, bool]:
         """Start both bots for a user if tokens are provided"""
         results = {}
         
@@ -162,14 +162,14 @@ class UserBotManager:
         
         return results
     
-    def stop_user_bots(self, user_id: int):
+    def stop_user_bots(self, user_id: int) -> Dict[str, bool]:
         """Stop both bots for a user"""
         results = {}
         results['discord'] = self.stop_user_discord_bot(user_id)
         results['telegram'] = self.stop_user_telegram_bot(user_id)
         return results
     
-    def send_discord_message(self, user_id: int, message: str):
+    def send_discord_message(self, user_id: int, message: str) -> bool:
         """Send message via user's Discord bot"""
         bot = self.get_user_discord_bot(user_id)
         if bot:
@@ -183,7 +183,7 @@ class UserBotManager:
                 return False
         return False
     
-    def send_telegram_message(self, user_id: int, message: str):
+    def send_telegram_message(self, user_id: int, message: str) -> bool:
         """Send message via user's Telegram bot"""
         bot = self.get_user_telegram_bot(user_id)
         if bot:
@@ -193,6 +193,58 @@ class UserBotManager:
                 logger.error(f"Failed to send Telegram message for user {user_id}: {e}")
                 return False
         return False
+    
+    def send_mvp_announcement(self, user_id: int, event_name: str, player_name: str) -> Dict[str, bool]:
+        """Send MVP announcement to user's bots"""
+        results = {}
+        
+        # Send via Telegram
+        telegram_bot = self.get_user_telegram_bot(user_id)
+        if telegram_bot:
+            try:
+                results['telegram'] = telegram_bot.announce_mvp(event_name, player_name)
+            except Exception as e:
+                logger.error(f"Failed to send MVP announcement via Telegram for user {user_id}: {e}")
+                results['telegram'] = False
+        else:
+            results['telegram'] = False
+        
+        # Send via Discord (placeholder for now)
+        results['discord'] = self.send_discord_message(user_id, f"🏆 MVP: {player_name} in {event_name}")
+        
+        return results
+    
+    def send_winner_announcement(self, user_id: int, event_name: str, alliance_name: str) -> Dict[str, bool]:
+        """Send winner announcement to user's bots"""
+        results = {}
+        
+        # Send via Telegram
+        telegram_bot = self.get_user_telegram_bot(user_id)
+        if telegram_bot:
+            try:
+                results['telegram'] = telegram_bot.announce_winner(event_name, alliance_name)
+            except Exception as e:
+                logger.error(f"Failed to send winner announcement via Telegram for user {user_id}: {e}")
+                results['telegram'] = False
+        else:
+            results['telegram'] = False
+        
+        # Send via Discord (placeholder for now)
+        results['discord'] = self.send_discord_message(user_id, f"🎉 Winner: {alliance_name} in {event_name}")
+        
+        return results
+    
+    def test_telegram_connection(self, user_id: int) -> Tuple[bool, str]:
+        """Test Telegram bot connection for user"""
+        telegram_bot = self.get_user_telegram_bot(user_id)
+        if telegram_bot:
+            try:
+                return telegram_bot.test_connection_sync()
+            except Exception as e:
+                logger.error(f"Failed to test Telegram connection for user {user_id}: {e}")
+                return False, str(e)
+        else:
+            return False, "Telegram bot not running for user"
     
     def get_status(self) -> Dict:
         """Get status of all running bots"""
@@ -211,22 +263,34 @@ class UserBotManager:
 bot_manager = UserBotManager()
 
 def start_user_bots(user_id: int, discord_token: str = None, discord_channel: str = None, 
-                   telegram_token: str = None, telegram_chat: str = None):
+                   telegram_token: str = None, telegram_chat: str = None) -> Dict[str, bool]:
     """Convenience function to start bots for a user"""
     return bot_manager.start_user_bots(user_id, discord_token, discord_channel, telegram_token, telegram_chat)
 
-def stop_user_bots(user_id: int):
+def stop_user_bots(user_id: int) -> Dict[str, bool]:
     """Convenience function to stop bots for a user"""
     return bot_manager.stop_user_bots(user_id)
 
-def send_discord_message(user_id: int, message: str):
+def send_discord_message(user_id: int, message: str) -> bool:
     """Convenience function to send Discord message"""
     return bot_manager.send_discord_message(user_id, message)
 
-def send_telegram_message(user_id: int, message: str):
+def send_telegram_message(user_id: int, message: str) -> bool:
     """Convenience function to send Telegram message"""
     return bot_manager.send_telegram_message(user_id, message)
 
-def get_bot_status():
+def send_mvp_announcement(user_id: int, event_name: str, player_name: str) -> Dict[str, bool]:
+    """Convenience function to send MVP announcement"""
+    return bot_manager.send_mvp_announcement(user_id, event_name, player_name)
+
+def send_winner_announcement(user_id: int, event_name: str, alliance_name: str) -> Dict[str, bool]:
+    """Convenience function to send winner announcement"""
+    return bot_manager.send_winner_announcement(user_id, event_name, alliance_name)
+
+def test_telegram_connection(user_id: int) -> Tuple[bool, str]:
+    """Convenience function to test Telegram connection"""
+    return bot_manager.test_telegram_connection(user_id)
+
+def get_bot_status() -> Dict:
     """Get status of all bots"""
     return bot_manager.get_status()
