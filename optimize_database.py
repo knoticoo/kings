@@ -12,7 +12,8 @@ import sys
 
 def add_database_indexes():
     """Add indexes to improve query performance"""
-    db_path = "/workspace/kings_choice.db"
+    from config import Config
+    db_path = Config.MAIN_DATABASE_PATH
     
     if not os.path.exists(db_path):
         print(f"❌ Database not found at {db_path}")

@@ -8,7 +8,11 @@ import sqlite3
 import os
 from datetime import datetime
 
-DB_PATH = "/workspace/kings_choice.db"
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from config import Config
+DB_PATH = Config.MAIN_DATABASE_PATH
 
 def main():
     print("=== King's Choice Database Player Check ===")

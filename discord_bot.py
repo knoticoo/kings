@@ -42,7 +42,8 @@ logger = logging.getLogger(__name__)
 class BotConfig:
     def __init__(self):
         self.discord_token = os.getenv('DISCORD_BOT_TOKEN')
-        self.database_path = os.getenv('DATABASE_PATH', 'kings_choice.db')
+        from config import Config
+        self.database_path = os.getenv('DATABASE_PATH', Config.MAIN_DATABASE_PATH)
         self.default_language = os.getenv('DEFAULT_LANGUAGE', 'en')
         self.admin_role = os.getenv('ADMIN_ROLE', 'Admin')
         self.prefix = os.getenv('BOT_PREFIX', '!kc')

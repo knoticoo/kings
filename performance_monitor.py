@@ -15,7 +15,8 @@ from datetime import datetime
 
 def measure_database_performance():
     """Measure database query performance"""
-    db_path = "/workspace/kings_choice.db"
+    from config import Config
+    db_path = Config.MAIN_DATABASE_PATH
     
     if not os.path.exists(db_path):
         print("❌ Database not found. Please run the Flask app first.")
