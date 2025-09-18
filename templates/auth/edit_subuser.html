@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Sub-User{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-user-edit"></i> Edit Sub-User</h4>
+                    <p class="mb-0 text-muted">Modify sub-user settings and permissions.</p>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="username">Username *</label>
+                                    <input type="text" class="form-control" id="username" name="username" 
+                                           value="{{ subuser.username }}" required>
+                                    <small class="form-text text-muted">Unique username for login</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           value="{{ subuser.email }}" required>
+                                    <small class="form-text text-muted">Email address for notifications</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if current_user.is_admin %}
+                        <div class="form-group">
+                            <label for="parent_user_id">Parent User *</label>
+                            <select class="form-control" id="parent_user_id" name="parent_user_id" required>
+                                {% for user in users %}
+                                <option value="{{ user.id }}" {% if user.id == subuser.parent_user_id %}selected{% endif %}>
+                                    {{ user.username }} ({{ user.email }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Select which user this sub-user will help</small>
+                        </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label>Permissions</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_dashboard" name="can_view_dashboard" 
+                                               {% if subuser.permissions.can_view_dashboard %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_view_dashboard">
+                                            View Dashboard
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_players" name="can_view_players" 
+                                               {% if subuser.permissions.can_view_players %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_view_players">
+                                            View Players
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_alliances" name="can_view_alliances" 
+                                               {% if subuser.permissions.can_view_alliances %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_view_alliances">
+                                            View Alliances
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_events" name="can_view_events" 
+                                               {% if subuser.permissions.can_view_events %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_view_events">
+                                            View Events
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_assign_mvp" name="can_assign_mvp" 
+                                               {% if subuser.permissions.can_assign_mvp %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_assign_mvp">
+                                            Assign MVP
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_assign_winner" name="can_assign_winner" 
+                                               {% if subuser.permissions.can_assign_winner %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_assign_winner">
+                                            Assign Winner
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_manage_players" name="can_manage_players" 
+                                               {% if subuser.permissions.can_manage_players %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_manage_players">
+                                            Manage Players
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_manage_alliances" name="can_manage_alliances" 
+                                               {% if subuser.permissions.can_manage_alliances %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_manage_alliances">
+                                            Manage Alliances
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_manage_events" name="can_manage_events" 
+                                               {% if subuser.permissions.can_manage_events %}checked{% endif %}>
+                                        <label class="form-check-label" for="can_manage_events">
+                                            Manage Events
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Select what this sub-user can do. Be careful with management permissions.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" 
+                                       {% if subuser.is_active %}checked{% endif %}>
+                                <label class="form-check-label" for="is_active">
+                                    Active (can login)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Sub-User
+                            </button>
+                            <a href="{{ url_for('subuser.list_subusers') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- Password Reset Section -->
+                    <hr>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Reset Password</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="POST" action="{{ url_for('subuser.reset_subuser_password', subuser_id=subuser.id) }}">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="new_password">New Password *</label>
+                                            <input type="password" class="form-control" id="new_password" name="new_password" required>
+                                            <small class="form-text text-muted">Minimum 6 characters</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="confirm_password">Confirm New Password *</label>
+                                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="fas fa-key"></i> Reset Password
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -33,76 +33,6 @@
     
     {% block extra_css %}{% endblock %}
     
-    <!-- Guide Modal Styles -->
-    <style>
-        .guide-content {
-            line-height: 1.6;
-        }
-
-        .guide-content h1,
-        .guide-content h2,
-        .guide-content h3,
-        .guide-content h4,
-        .guide-content h5,
-        .guide-content h6 {
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            color: #0d6efd;
-        }
-
-        .guide-content h1:first-child,
-        .guide-content h2:first-child,
-        .guide-content h3:first-child {
-            margin-top: 0;
-        }
-
-        .guide-content p {
-            margin-bottom: 1rem;
-        }
-
-        .guide-content ul,
-        .guide-content ol {
-            margin-bottom: 1rem;
-            padding-left: 2rem;
-        }
-
-        .guide-content li {
-            margin-bottom: 0.5rem;
-        }
-
-        .guide-content blockquote {
-            border-left: 4px solid #0d6efd;
-            padding-left: 1rem;
-            margin: 1rem 0;
-            font-style: italic;
-            color: #6c757d;
-        }
-
-        .guide-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 0.375rem;
-            margin: 1rem 0;
-        }
-
-        .guide-content table {
-            width: 100%;
-            margin-bottom: 1rem;
-            border-collapse: collapse;
-        }
-
-        .guide-content table th,
-        .guide-content table td {
-            padding: 0.75rem;
-            border: 1px solid #dee2e6;
-        }
-
-        .guide-content table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-        }
-
-    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -144,22 +74,33 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint and 'guides' in request.endpoint %}active{% endif %}" 
-                           href="{{ url_for('guides.list_guides') }}">
-                            <i class="bi bi-book me-1"></i>{{ _("Guides") }}
-                        </a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link {% if request.endpoint and 'blacklist' in request.endpoint %}active{% endif %}" 
                            href="{{ url_for('blacklist.list_blacklist') }}">
                             <i class="bi bi-shield-exclamation me-1"></i>{{ _("Blacklist") }}
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'main.telegram_message' %}active{% endif %}" 
-                           href="{{ url_for('main.telegram_message') }}">
-                            <i class="bi bi-telegram me-1"></i>{{ _("Telegram") }}
+                </ul>
+                
+                <!-- Language Selector -->
+                <ul class="navbar-nav me-3">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown">
+                            {% if get_locale() == 'en' %}
+                                🇺🇸 EN
+                            {% else %}
+                                🇷🇺 RU
+                            {% endif %}
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item {% if get_locale() == 'en' %}active{% endif %}" 
+                                   href="{{ url_for('set_language', language='en') }}">
+                                🇺🇸 {{ _("English") }}
+                            </a></li>
+                            <li><a class="dropdown-item {% if get_locale() == 'ru' %}active{% endif %}" 
+                                   href="{{ url_for('set_language', language='ru') }}">
+                                🇷🇺 {{ _("Russian") }}
+                            </a></li>
+                        </ul>
                     </li>
                 </ul>
                 
@@ -175,27 +116,41 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{{ url_for('main.dashboard') }}">
-                                    <i class="bi bi-house me-2"></i>Dashboard
+                                    <i class="bi bi-house me-2"></i>{{ _("Dashboard") }}
                                 </a></li>
                                 <li><a class="dropdown-item" href="{{ url_for('user_settings.settings') }}">
-                                    <i class="bi bi-gear me-2"></i>Settings
+                                    <i class="bi bi-gear me-2"></i>{{ _("Settings") }}
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('feedback.my_feedback') }}">
+                                    <i class="bi bi-chat-dots me-2"></i>{{ _("My Feedback") }}
                                 </a></li>
                                 {% if current_user.is_admin %}
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{{ url_for('auth.admin_users') }}">
-                                        <i class="bi bi-people me-2"></i>User Management
+                                        <i class="bi bi-people me-2"></i>{{ _("User Management") }}
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('subuser.list_subusers') }}">
+                                        <i class="bi bi-people-fill me-2"></i>{{ _("Sub-Users") }}
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('feedback.admin_feedback') }}">
+                                        <i class="bi bi-chat-dots me-2"></i>{{ _("Feedback Management") }}
+                                    </a></li>
+                                {% else %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('subuser.list_subusers') }}">
+                                        <i class="bi bi-people-fill me-2"></i>{{ _("Sub-Users") }}
                                     </a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                    <i class="bi bi-box-arrow-right me-2"></i>{{ _("Logout") }}
                                 </a></li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('auth.login') }}">
-                                <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                                <i class="bi bi-box-arrow-in-right me-1"></i>{{ _("Login") }}
                             </a>
                         </li>
                     {% endif %}
@@ -233,13 +188,70 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light mt-5 py-3">
-        <div class="container text-center">
-            <small>&copy; 2024 {{ _("King's Choice Management System") }} | 
-                <i class="bi bi-code-slash text-warning"></i> {{ _("Created with Flask & Bootstrap") }}
-            </small>
+    <footer class="bg-dark text-light mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <small>&copy; 2024 {{ _("King's Choice Management System") }} | 
+                        <i class="bi bi-code-slash text-warning"></i> {{ _("Created with Flask & Bootstrap") }}
+                    </small>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal">
+                        <i class="bi bi-chat-dots me-1"></i> {{ _("Give Feedback") }}
+                    </button>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- Feedback Modal -->
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">
+                        <i class="bi bi-chat-dots me-2"></i>{{ _("Share Your Feedback") }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="feedbackForm" method="POST" action="{{ url_for('feedback.submit_feedback') }}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="feedbackTitle" class="form-label">{{ _("Subject") }}</label>
+                            <input type="text" class="form-control" id="feedbackTitle" name="title" 
+                                   placeholder="{{ _('Brief description of your feedback') }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackCategory" class="form-label">{{ _("Category") }}</label>
+                            <select class="form-select" id="feedbackCategory" name="category" required>
+                                <option value="suggestion">{{ _("Suggestion") }}</option>
+                                <option value="bug_report">{{ _("Bug Report") }}</option>
+                                <option value="feature_request">{{ _("Feature Request") }}</option>
+                                <option value="improvement">{{ _("Improvement") }}</option>
+                                <option value="other">{{ _("Other") }}</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedbackMessage" class="form-label">{{ _("Your Message") }}</label>
+                            <textarea class="form-control" id="feedbackMessage" name="message" rows="4" 
+                                      placeholder="{{ _('Please describe your feedback in detail...') }}" required></textarea>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            {{ _("Your feedback helps us improve the system. We'll review it and respond if needed.") }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send me-1"></i>{{ _("Submit Feedback") }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Bootstrap JS -->

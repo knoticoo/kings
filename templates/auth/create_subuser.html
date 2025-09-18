@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Create Sub-User{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-user-plus"></i> Create Sub-User</h4>
+                    <p class="mb-0 text-muted">Create a new alliance leader helper with limited access to your data.</p>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="username">Username *</label>
+                                    <input type="text" class="form-control" id="username" name="username" 
+                                           value="{{ request.form.username }}" required>
+                                    <small class="form-text text-muted">Unique username for login</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email *</label>
+                                    <input type="email" class="form-control" id="email" name="email" 
+                                           value="{{ request.form.email }}" required>
+                                    <small class="form-text text-muted">Email address for notifications</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="password">Password *</label>
+                                    <input type="password" class="form-control" id="password" name="password" required>
+                                    <small class="form-text text-muted">Minimum 6 characters</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="confirm_password">Confirm Password *</label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if current_user.is_admin %}
+                        <div class="form-group">
+                            <label for="parent_user_id">Parent User *</label>
+                            <select class="form-control" id="parent_user_id" name="parent_user_id" required>
+                                {% for user in users %}
+                                <option value="{{ user.id }}" {% if user.id == current_user.id %}selected{% endif %}>
+                                    {{ user.username }} ({{ user.email }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Select which user this sub-user will help</small>
+                        </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label>Permissions</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_dashboard" name="can_view_dashboard" checked>
+                                        <label class="form-check-label" for="can_view_dashboard">
+                                            View Dashboard
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_players" name="can_view_players" checked>
+                                        <label class="form-check-label" for="can_view_players">
+                                            View Players
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_alliances" name="can_view_alliances" checked>
+                                        <label class="form-check-label" for="can_view_alliances">
+                                            View Alliances
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_view_events" name="can_view_events" checked>
+                                        <label class="form-check-label" for="can_view_events">
+                                            View Events
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_assign_mvp" name="can_assign_mvp">
+                                        <label class="form-check-label" for="can_assign_mvp">
+                                            Assign MVP
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_assign_winner" name="can_assign_winner">
+                                        <label class="form-check-label" for="can_assign_winner">
+                                            Assign Winner
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_manage_players" name="can_manage_players">
+                                        <label class="form-check-label" for="can_manage_players">
+                                            Manage Players
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_manage_alliances" name="can_manage_alliances">
+                                        <label class="form-check-label" for="can_manage_alliances">
+                                            Manage Alliances
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="can_manage_events" name="can_manage_events">
+                                        <label class="form-check-label" for="can_manage_events">
+                                            Manage Events
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Select what this sub-user can do. Be careful with management permissions.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_active" name="is_active" checked>
+                                <label class="form-check-label" for="is_active">
+                                    Active (can login)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Create Sub-User
+                            </button>
+                            <a href="{{ url_for('subuser.list_subusers') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
