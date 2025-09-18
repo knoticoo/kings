@@ -48,6 +48,13 @@ cd "$SCRIPT_DIR"
 
 print_status "Working directory: $SCRIPT_DIR"
 
+# Fix permissions first
+print_status "Fixing file permissions..."
+chmod +x *.sh 2>/dev/null || true
+chmod +x *.py 2>/dev/null || true
+chmod 644 *.py 2>/dev/null || true
+chmod 755 . 2>/dev/null || true
+
 # Check if Python 3 is installed
 print_status "Checking Python 3 installation..."
 if ! command -v python3 &> /dev/null; then
@@ -109,7 +116,12 @@ mkdir -p templates/modern/events
 mkdir -p templates/modern/players
 mkdir -p translations/en/LC_MESSAGES
 mkdir -p translations/ru/LC_MESSAGES
-print_success "Directories created"
+
+# Fix directory permissions
+chmod 755 user_databases logs 2>/dev/null || true
+chmod 755 static templates translations 2>/dev/null || true
+
+print_success "Directories created with proper permissions"
 
 # Set up environment variables
 print_status "Setting up environment variables..."
@@ -166,6 +178,31 @@ with app.app_context():
         create_all_tables(app)
         print('✅ Database tables created successfully')
         
+        # Check if SubUser table exists and works
+        try:
+            SubUser.query.first()
+            print('✅ SubUser table is working')
+        except Exception as e:
+            print(f'⚠️  SubUser table issue: {e}')
+            # Create SubUser table manually
+            from sqlalchemy import text
+            db.session.execute(text('''
+                CREATE TABLE IF NOT EXISTS sub_users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username VARCHAR(80) UNIQUE NOT NULL,
+                    email VARCHAR(120) UNIQUE NOT NULL,
+                    password_hash VARCHAR(255) NOT NULL,
+                    parent_user_id INTEGER NOT NULL,
+                    is_active BOOLEAN DEFAULT 1,
+                    permissions TEXT DEFAULT '{}',
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    last_login DATETIME,
+                    FOREIGN KEY (parent_user_id) REFERENCES users(id)
+                )
+            '''))
+            db.session.commit()
+            print('✅ SubUser table created manually')
+        
         # Check if admin user exists
         admin_user = User.query.filter_by(username='knotico').first()
         if not admin_user:
@@ -173,8 +210,14 @@ with app.app_context():
         else:
             print('✅ Admin user found')
             
+        # Check users
+        user_count = User.query.count()
+        print(f'✅ Found {user_count} users in database')
+            
     except Exception as e:
         print(f'❌ Database setup failed: {e}')
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 "
 
@@ -197,7 +240,11 @@ Type=simple
 User=$USER
 WorkingDirectory=$SCRIPT_DIR
 Environment=PATH=$SCRIPT_DIR/venv/bin
-ExecStart=$SCRIPT_DIR/venv/bin/python app.py
+Environment=SECRET_KEY=$(python3 -c 'import secrets; print(secrets.token_hex(32))')
+Environment=HOST=0.0.0.0
+Environment=PORT=5000
+Environment=DEBUG=False
+ExecStart=$SCRIPT_DIR/venv/bin/python start_app_safe.py
 Restart=always
 RestartSec=10
 
@@ -218,7 +265,7 @@ cat > start_app.sh << 'EOF'
 cd "$(dirname "$0")"
 source venv/bin/activate
 export $(cat .env | grep -v '^#' | xargs)
-python app.py
+python3 start_app_safe.py
 EOF
 
 chmod +x start_app.sh
@@ -254,6 +301,33 @@ EOF
 chmod +x status_app.sh
 print_success "Status script created"
 
+# Test the application first
+print_status "Testing application startup..."
+python3 -c "
+import sys
+sys.path.insert(0, '.')
+
+try:
+    from app import app
+    print('✅ App imports successfully')
+    
+    # Test basic configuration
+    print(f'  - Database: {app.config.get(\"SQLALCHEMY_DATABASE_URI\")}')
+    print(f'  - Secret Key: {\"Set\" if app.config.get(\"SECRET_KEY\") else \"Not set\"}')
+    
+except Exception as e:
+    print(f'❌ App test failed: {e}')
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)
+"
+
+if [ $? -eq 0 ]; then
+    print_success "Application test passed"
+else
+    print_warning "Application test failed, but continuing with service setup"
+fi
+
 # Start the application
 print_status "Starting application..."
 sudo systemctl start kings-choice.service
@@ -270,6 +344,8 @@ else
     print_error "Failed to start application"
     print_status "Checking logs:"
     sudo journalctl -u kings-choice.service --no-pager -l
+    print_status "Trying manual startup for debugging..."
+    python3 start_app_safe.py
     exit 1
 fi
 
