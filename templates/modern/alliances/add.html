@@ -1,0 +1,146 @@
+{% extends "modern/base.html" %}
+
+{% block title %}Add Alliance - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                    <i class="bi bi-shield-plus text-success" style="font-size: 2rem;"></i>
+                </div>
+                <h1 class="h2 fw-bold text-success mb-2">Add New Alliance</h1>
+                <p class="text-muted">Add a new alliance to your kingdom</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <form method="POST" id="addAllianceForm">
+                        <div class="mb-4">
+                            <label for="name" class="form-label">
+                                <i class="bi bi-shield-check me-2"></i>Alliance Name
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="name" 
+                                   name="name" 
+                                   placeholder="Enter alliance name"
+                                   required
+                                   autofocus>
+                            <div class="form-text">Choose a unique name for this alliance</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="form-label">
+                                <i class="bi bi-card-text me-2"></i>Description (Optional)
+                            </label>
+                            <textarea class="form-control" 
+                                      id="description" 
+                                      name="description" 
+                                      rows="3" 
+                                      placeholder="Enter alliance description or notes"></textarea>
+                            <div class="form-text">Add any additional information about this alliance</div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-check-lg me-2"></i>Add Alliance
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body">
+                    <h6 class="fw-semibold text-success mb-3">
+                        <i class="bi bi-lightbulb me-2"></i>Tips
+                    </h6>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            Alliance names should be unique and descriptive
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            You can assign winners to alliances after creation
+                        </li>
+                        <li class="mb-0">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            You can edit alliance details after creation
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('addAllianceForm');
+    const nameInput = document.getElementById('name');
+    
+    // Add form validation
+    form.addEventListener('submit', function(e) {
+        const name = nameInput.value.trim();
+        
+        if (!name) {
+            e.preventDefault();
+            nameInput.focus();
+            showNotification('Please enter an alliance name', 'warning');
+            return;
+        }
+        
+        if (name.length < 2) {
+            e.preventDefault();
+            nameInput.focus();
+            showNotification('Alliance name must be at least 2 characters long', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Adding Alliance...';
+        submitBtn.disabled = true;
+    });
+    
+    // Auto-save functionality
+    let autoSaveTimeout;
+    nameInput.addEventListener('input', function() {
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            const formData = {
+                name: this.value,
+                description: document.getElementById('description').value
+            };
+            localStorage.setItem('autosave_add_alliance', JSON.stringify(formData));
+        }, 1000);
+    });
+    
+    // Load auto-saved data
+    const savedData = localStorage.getItem('autosave_add_alliance');
+    if (savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            nameInput.value = data.name || '';
+            document.getElementById('description').value = data.description || '';
+        } catch (error) {
+            console.error('Error loading auto-saved data:', error);
+        }
+    }
+    
+    // Clear auto-save on successful submit
+    form.addEventListener('submit', function() {
+        localStorage.removeItem('autosave_add_alliance');
+    });
+});
+</script>
+{% endblock %}

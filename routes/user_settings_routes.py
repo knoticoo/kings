@@ -4,11 +4,12 @@ User Settings Routes Module
 Handles user-specific settings including bot configuration and management.
 """
 
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash, session
 from flask_login import login_required, current_user
-from models import User
+from models import User, Feedback
 from database import db
 from user_bot_manager import start_user_bots, stop_user_bots, get_bot_status
+from datetime import datetime, timedelta
 
 # Create blueprint for user settings routes
 bp = Blueprint('user_settings', __name__, url_prefix='/settings')
@@ -46,7 +47,7 @@ def bot_settings():
             db.session.commit()
             
             # Start/stop bots based on settings
-            if discord_enabled and discord_token:
+            if discord_enabled and discord_token and discord_channel:
                 result = start_user_bots(
                     current_user.id,
                     discord_token=discord_token,
@@ -57,22 +58,30 @@ def bot_settings():
                 else:
                     flash('Failed to start Discord bot', 'error')
             elif not discord_enabled:
-                stop_user_bots(current_user.id)
-                flash('Discord bot stopped', 'info')
+                # Only stop Discord bot if it was enabled before
+                if current_user.discord_enabled:
+                    stop_user_bots(current_user.id)
+                    flash('Discord bot stopped', 'info')
             
             if telegram_enabled and telegram_token and telegram_chat:
-                result = start_user_bots(
-                    current_user.id,
-                    telegram_token=telegram_token,
-                    telegram_chat=telegram_chat
-                )
-                if result.get('telegram'):
-                    flash('Telegram bot started successfully', 'success')
-                else:
-                    flash('Failed to start Telegram bot', 'error')
+                try:
+                    result = start_user_bots(
+                        current_user.id,
+                        telegram_token=telegram_token,
+                        telegram_chat=telegram_chat
+                    )
+                    if result.get('telegram'):
+                        flash('Telegram bot started successfully', 'success')
+                    else:
+                        error_msg = result.get('telegram_error') or result.get('error', 'Unknown error')
+                        flash(f'Failed to start Telegram bot: {error_msg}', 'error')
+                except Exception as e:
+                    flash(f'Error starting Telegram bot: {str(e)}', 'error')
             elif not telegram_enabled:
-                stop_user_bots(current_user.id)
-                flash('Telegram bot stopped', 'info')
+                # Only stop Telegram bot if it was enabled before
+                if current_user.telegram_enabled:
+                    stop_user_bots(current_user.id)
+                    flash('Telegram bot stopped', 'info')
             
             flash('Bot settings updated successfully', 'success')
             return redirect(url_for('user_settings.bot_settings'))
@@ -83,7 +92,7 @@ def bot_settings():
             flash('Failed to update bot settings', 'error')
     
     # GET request - show bot settings
-    bot_status = get_bot_status()
+    bot_status = get_bot_status(current_user.id)
     return render_template('user_settings/bot_settings.html', 
                          user=current_user,
                          bot_status=bot_status)
@@ -162,18 +171,40 @@ def stop_bots():
 def api_bot_status():
     """API endpoint to get bot status for current user"""
     try:
-        from user_bot_manager import bot_manager
+        from user_bot_manager import bot_manager, get_bot_status
         
-        status = {
-            'discord_running': bot_manager.is_discord_bot_running(current_user.id),
-            'telegram_running': bot_manager.is_telegram_bot_running(current_user.id),
-            'discord_enabled': current_user.discord_enabled,
-            'telegram_enabled': current_user.telegram_enabled,
-            'has_discord_token': bool(current_user.discord_bot_token),
-            'has_telegram_token': bool(current_user.telegram_bot_token)
-        }
+        # Use the get_bot_status function for consistency
+        status = get_bot_status(current_user.id)
         
         return jsonify({'success': True, 'status': status})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@bp.route('/api/feedback-stats')
+@login_required
+def feedback_stats():
+    """Get feedback statistics for admin users"""
+    try:
+        if not current_user.is_admin:
+            return jsonify({'success': False, 'error': 'Admin access required'})
+        
+        # Get feedback statistics
+        total_feedback = Feedback.query.count()
+        pending_feedback = Feedback.query.filter_by(status='pending').count()
+        recent_feedback = Feedback.query.filter(
+            Feedback.created_at >= datetime.now() - timedelta(days=7)
+        ).count()
+        implemented_feedback = Feedback.query.filter_by(status='implemented').count()
+        
+        stats = {
+            'total_feedback': total_feedback,
+            'pending_feedback': pending_feedback,
+            'recent_feedback': recent_feedback,
+            'implemented_feedback': implemented_feedback
+        }
+        
+        return jsonify({'success': True, 'stats': stats})
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})

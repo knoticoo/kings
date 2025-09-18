@@ -63,6 +63,64 @@
             </div>
         </div>
     </div>
+    
+    <!-- Admin Feedback Management -->
+    {% if user.is_admin %}
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="bi bi-chat-dots"></i> Feedback Management</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Manage user feedback and suggestions.</p>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <div class="card bg-info text-white">
+                                <div class="card-body text-center">
+                                    <h4 id="totalFeedback">-</h4>
+                                    <p class="mb-0">Total Feedback</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-warning text-dark">
+                                <div class="card-body text-center">
+                                    <h4 id="pendingFeedback">-</h4>
+                                    <p class="mb-0">Pending Review</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-success text-white">
+                                <div class="card-body text-center">
+                                    <h4 id="recentFeedback">-</h4>
+                                    <p class="mb-0">This Week</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card bg-primary text-white">
+                                <div class="card-body text-center">
+                                    <h4 id="implementedFeedback">-</h4>
+                                    <p class="mb-0">Implemented</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('feedback.admin_feedback') }}" class="btn btn-primary">
+                            <i class="bi bi-chat-dots me-1"></i> Manage All Feedback
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
 </div>
 
 <script>
@@ -101,6 +159,29 @@ function checkBotStatus() {
 }
 
 // Check status on page load
-document.addEventListener('DOMContentLoaded', checkBotStatus);
+document.addEventListener('DOMContentLoaded', function() {
+    checkBotStatus();
+    {% if user.is_admin %}
+    loadFeedbackStats();
+    {% endif %}
+});
+
+{% if user.is_admin %}
+function loadFeedbackStats() {
+    fetch('/settings/api/feedback-stats')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('totalFeedback').textContent = data.stats.total_feedback;
+                document.getElementById('pendingFeedback').textContent = data.stats.pending_feedback;
+                document.getElementById('recentFeedback').textContent = data.stats.recent_feedback;
+                document.getElementById('implementedFeedback').textContent = data.stats.implemented_feedback;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading feedback stats:', error);
+        });
+}
+{% endif %}
 </script>
 {% endblock %}

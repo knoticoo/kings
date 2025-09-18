@@ -33,6 +33,20 @@ WINNER_TEMPLATES = [
     "Поздравления! Абсолютным чемпионом {event_name} становится альянс {alliance_name}!"
 ]
 
+# MVP Unassign Announcement Templates in Russian
+MVP_UNASSIGN_TEMPLATES = [
+    "Внимание команда! Назначение MVP за {event_name} для {player_name} было отменено.",
+    "Команда, объявляем об отмене MVP за {event_name} для {player_name}.",
+    "Друзья! MVP событие {event_name} для {player_name} больше не действует.",
+    "Товарищи! Назначение {player_name} как MVP за {event_name} было отозвано.",
+    "Команда, с сожалением сообщаем об отмене MVP за {event_name} для {player_name}.",
+    "Внимание! MVP статус {player_name} за {event_name} был снят.",
+    "Добрый вечер! Назначение MVP за {event_name} для {player_name} отменено.",
+    "Команда, объявляем об отзыве MVP за {event_name} у {player_name}.",
+    "Друзья! MVP событие {event_name} для {player_name} больше не актуально.",
+    "Товарищи! {player_name} больше не является MVP за {event_name}."
+]
+
 def get_random_mvp_template():
     """Get a random MVP announcement template"""
     return random.choice(MVP_TEMPLATES)
@@ -40,6 +54,10 @@ def get_random_mvp_template():
 def get_random_winner_template():
     """Get a random alliance winner announcement template"""
     return random.choice(WINNER_TEMPLATES)
+
+def get_random_mvp_unassign_template():
+    """Get a random MVP unassign announcement template"""
+    return random.choice(MVP_UNASSIGN_TEMPLATES)
 
 def format_mvp_announcement(event_name, player_name):
     """Format MVP announcement with random template"""
@@ -50,6 +68,11 @@ def format_winner_announcement(event_name, alliance_name):
     """Format alliance winner announcement with random template"""
     template = get_random_winner_template()
     return template.format(event_name=event_name, alliance_name=alliance_name)
+
+def format_mvp_unassign_announcement(event_name, player_name):
+    """Format MVP unassign announcement with random template"""
+    template = get_random_mvp_unassign_template()
+    return template.format(event_name=event_name, player_name=player_name)
 
 # Example usage and test function
 def test_templates():

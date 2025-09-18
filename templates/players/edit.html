@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Редактировать игрока - Управление King's Choice{% endblock %}
+{% block title %}{{ _("Edit Player") }} - {{ _("King's Choice Management") }}{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -8,10 +8,10 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h2 text-primary">
-                <i class="bi bi-pencil-square me-2"></i>Редактировать игрока
+                <i class="bi bi-pencil-square me-2"></i>{{ _("Edit Player") }}
             </h1>
             <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary">
-                <i class="bi bi-arrow-left me-1"></i>Назад к игрокам
+                <i class="bi bi-arrow-left me-1"></i>{{ _("Back to Players") }}
             </a>
         </div>
     </div>
@@ -23,41 +23,41 @@
         <div class="card mb-4">
             <div class="card-header bg-light">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-info-circle me-2"></i>Текущая информация об игроке
+                    <i class="bi bi-info-circle me-2"></i>{{ _("Current Player Information") }}
                 </h6>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <strong>Текущее имя:</strong><br>
+                        <strong>{{ _("Current Name") }}:</strong><br>
                         <span class="text-primary">{{ player.name }}</span>
                     </div>
                     <div class="col-md-6">
-                        <strong>Статус MVP:</strong><br>
+                        <strong>{{ _("MVP Status") }}:</strong><br>
                         {% if player.is_current_mvp %}
                             <span class="badge bg-warning text-dark">
-                                <i class="bi bi-trophy-fill me-1"></i>Текущий MVP
+                                <i class="bi bi-trophy-fill me-1"></i>{{ _("Current MVP") }}
                             </span>
                         {% elif player.mvp_count > 0 %}
                             <span class="badge bg-success">
-                                <i class="bi bi-award me-1"></i>Предыдущий MVP ({{ player.mvp_count }}x)
+                                <i class="bi bi-award me-1"></i>{{ _("Previous MVP") }} ({{ player.mvp_count }}x)
                             </span>
                         {% else %}
                             <span class="badge bg-secondary">
-                                <i class="bi bi-dash-circle me-1"></i>Никогда не был MVP
+                                <i class="bi bi-dash-circle me-1"></i>{{ _("Never MVP") }}
                             </span>
                         {% endif %}
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6">
-                        <strong>Создан:</strong><br>
+                        <strong>{{ _("Created") }}:</strong><br>
                         <small class="text-muted">
                             {{ player.created_at.strftime('%Y-%m-%d %H:%M') if player.created_at }}
                         </small>
                     </div>
                     <div class="col-md-6">
-                        <strong>Последнее обновление:</strong><br>
+                        <strong>{{ _("Last Updated") }}:</strong><br>
                         <small class="text-muted">
                             {{ player.updated_at.strftime('%Y-%m-%d %H:%M') if player.updated_at }}
                         </small>
@@ -70,14 +70,14 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-pencil me-2"></i>Редактировать информацию об игроке
+                    <i class="bi bi-pencil me-2"></i>{{ _("Edit Player Information") }}
                 </h5>
             </div>
             <div class="card-body">
                 <form method="POST" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">
-                            <i class="bi bi-person me-1"></i>Имя игрока
+                            <i class="bi bi-person me-1"></i>{{ _("Player Name") }}
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" 
@@ -85,38 +85,36 @@
                                id="name" 
                                name="name" 
                                value="{{ player.name }}"
-                               placeholder="Введите имя игрока"
+                               placeholder="{{ _('Enter player name') }}"
                                required
                                autocomplete="off"
                                maxlength="100">
                         <div class="form-text">
                             <i class="bi bi-info-circle me-1"></i>
-                            Имена игроков должны быть уникальными и не могут превышать 100 символов.
+                            {{ _("Player names must be unique and cannot exceed 100 characters.") }}
                         </div>
                     </div>
                     
                     {% if player.is_current_mvp %}
                     <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle me-2"></i>
-                        <strong>Текущий MVP:</strong> Этот игрок в настоящее время MVP. 
-                        Переименование не повлияет на статус MVP.
+                        <strong>{{ _("Current MVP") }}:</strong> {{ _("This player is currently MVP. Renaming will not affect MVP status.") }}
                     </div>
                     {% endif %}
                     
                     {% if player.mvp_count > 0 %}
                     <div class="alert alert-info">
                         <i class="bi bi-info-circle me-2"></i>
-                        <strong>История MVP:</strong> Этот игрок был MVP {{ player.mvp_count }} раз(а). 
-                        Переименование не повлияет на историю MVP.
+                        <strong>{{ _("MVP History") }}:</strong> {{ _("This player has been MVP") }} {{ player.mvp_count }} {{ _("time(s). Renaming will not affect MVP history.") }}
                     </div>
                     {% endif %}
                     
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="bi bi-check-circle me-2"></i>Обновить игрока
+                            <i class="bi bi-check-circle me-2"></i>{{ _("Update Player") }}
                         </button>
                         <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-circle me-1"></i>Отмена
+                            <i class="bi bi-x-circle me-1"></i>{{ _("Cancel") }}
                         </a>
                     </div>
                 </form>
@@ -127,18 +125,17 @@
         <div class="card mt-4 border-danger">
             <div class="card-header bg-danger text-white">
                 <h6 class="card-title mb-0">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>Опасная зона
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ _("Danger Zone") }}
                 </h6>
             </div>
             <div class="card-body">
                 <p class="text-danger mb-3">
-                    <strong>Удалить игрока:</strong> Навсегда удалить этого игрока из системы.
-                    Это действие не может быть отменено и также удалит все назначения MVP для этого игрока.
+                    <strong>{{ _("Delete Player") }}:</strong> {{ _("Permanently delete this player from the system. This action cannot be undone and will also delete all MVP assignments for this player.") }}
                 </p>
                 <button type="button" 
                         class="btn btn-outline-danger" 
                         onclick="confirmDelete('{{ player.name }}', {{ player.id }})">
-                    <i class="bi bi-trash me-1"></i>Удалить игрока
+                    <i class="bi bi-trash me-1"></i>{{ _("Delete Player") }}
                 </button>
             </div>
         </div>
@@ -150,27 +147,27 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Подтвердить удаление</h5>
+                <h5 class="modal-title">{{ _("Confirm Deletion") }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Вы уверены, что хотите удалить игрока <strong id="playerName"></strong>?</p>
+                <p>{{ _("Are you sure you want to delete player") }} <strong id="playerName"></strong>?</p>
                 <div class="alert alert-danger">
                     <i class="bi bi-exclamation-triangle me-2"></i>
-                    <strong>Предупреждение:</strong> Это навсегда удалит:
+                    <strong>{{ _("Warning") }}:</strong> {{ _("This will permanently delete:") }}
                     <ul class="mb-0 mt-2">
-                        <li>Запись об игроке</li>
-                        <li>Все назначения MVP для этого игрока</li>
-                        <li>Историю и статистику MVP</li>
+                        <li>{{ _("Player record") }}</li>
+                        <li>{{ _("All MVP assignments for this player") }}</li>
+                        <li>{{ _("MVP history and statistics") }}</li>
                     </ul>
-                    Это действие не может быть отменено.
+                    {{ _("This action cannot be undone.") }}
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _("Cancel") }}</button>
                 <form id="deleteForm" method="POST" style="display: inline;">
                     <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash me-1"></i>Удалить игрока
+                        <i class="bi bi-trash me-1"></i>{{ _("Delete Player") }}
                     </button>
                 </form>
             </div>

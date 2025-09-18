@@ -502,3 +502,1542 @@ msgstr "Mayima"
 
 msgid "(ATG) besia"
 msgstr "(ATG) besia"
+
+# Additional missing translations
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "My Feedback"
+msgstr "Мой отзыв"
+
+msgid "Logout"
+msgstr "Выйти"
+
+msgid "Login"
+msgstr "Войти"
+
+msgid "Register"
+msgstr "Регистрация"
+
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "Confirm Password"
+msgstr "Подтвердите пароль"
+
+msgid "Email"
+msgstr "Электронная почта"
+
+msgid "Remember Me"
+msgstr "Запомнить меня"
+
+msgid "Forgot Password?"
+msgstr "Забыли пароль?"
+
+msgid "Don't have an account?"
+msgstr "Нет аккаунта?"
+
+msgid "Already have an account?"
+msgstr "Уже есть аккаунт?"
+
+msgid "Sign Up"
+msgstr "Зарегистрироваться"
+
+msgid "Sign In"
+msgstr "Войти"
+
+# Player management
+msgid "Player Management"
+msgstr "Управление игроками"
+
+msgid "Add Player"
+msgstr "Добавить игрока"
+
+msgid "Edit Player"
+msgstr "Редактировать игрока"
+
+msgid "Player Name"
+msgstr "Имя игрока"
+
+msgid "Alliance"
+msgstr "Альянс"
+
+msgid "MVP Count"
+msgstr "Количество MVP"
+
+msgid "Win Count"
+msgstr "Количество побед"
+
+msgid "Is Current MVP"
+msgstr "Текущий MVP"
+
+msgid "Is Blacklisted"
+msgstr "В черном списке"
+
+msgid "Created At"
+msgstr "Создано"
+
+msgid "Updated At"
+msgstr "Обновлено"
+
+msgid "Player Details"
+msgstr "Детали игрока"
+
+msgid "MVP History"
+msgstr "История MVP"
+
+msgid "Assign MVP"
+msgstr "Назначить MVP"
+
+msgid "Unassign MVP"
+msgstr "Снять MVP"
+
+msgid "Select Player"
+msgstr "Выберите игрока"
+
+msgid "Select Event"
+msgstr "Выберите событие"
+
+msgid "Assign"
+msgstr "Назначить"
+
+msgid "Unassign"
+msgstr "Снять"
+
+msgid "Player added successfully!"
+msgstr "Игрок успешно добавлен!"
+
+msgid "Player updated successfully!"
+msgstr "Игрок успешно обновлен!"
+
+msgid "Player deleted successfully!"
+msgstr "Игрок успешно удален!"
+
+msgid "Failed to add player"
+msgstr "Не удалось добавить игрока"
+
+msgid "Failed to update player"
+msgstr "Не удалось обновить игрока"
+
+msgid "Failed to delete player"
+msgstr "Не удалось удалить игрока"
+
+msgid "MVP assigned successfully!"
+msgstr "MVP успешно назначен!"
+
+msgid "Failed to assign MVP"
+msgstr "Не удалось назначить MVP"
+
+msgid "MVP unassigned successfully!"
+msgstr "MVP успешно снят!"
+
+msgid "Failed to unassign MVP"
+msgstr "Не удалось снять MVP"
+
+# Alliance management
+msgid "Alliance Management"
+msgstr "Управление альянсами"
+
+msgid "Add Alliance"
+msgstr "Добавить альянс"
+
+msgid "Edit Alliance"
+msgstr "Редактировать альянс"
+
+msgid "Alliance Name"
+msgstr "Название альянса"
+
+msgid "Alliance Details"
+msgstr "Детали альянса"
+
+msgid "Win Count"
+msgstr "Количество побед"
+
+msgid "Is Current Winner"
+msgstr "Текущий победитель"
+
+msgid "Alliance added successfully!"
+msgstr "Альянс успешно добавлен!"
+
+msgid "Alliance updated successfully!"
+msgstr "Альянс успешно обновлен!"
+
+msgid "Alliance deleted successfully!"
+msgstr "Альянс успешно удален!"
+
+msgid "Failed to add alliance"
+msgstr "Не удалось добавить альянс"
+
+msgid "Failed to update alliance"
+msgstr "Не удалось обновить альянс"
+
+msgid "Failed to delete alliance"
+msgstr "Не удалось удалить альянс"
+
+msgid "Winner assigned successfully!"
+msgstr "Победитель успешно назначен!"
+
+msgid "Failed to assign winner"
+msgstr "Не удалось назначить победителя"
+
+msgid "Winner unassigned successfully!"
+msgstr "Победитель успешно снят!"
+
+msgid "Failed to unassign winner"
+msgstr "Не удалось снять победителя"
+
+# Event management
+msgid "Event Management"
+msgstr "Управление событиями"
+
+msgid "Add Event"
+msgstr "Добавить событие"
+
+msgid "Edit Event"
+msgstr "Редактировать событие"
+
+msgid "Event Name"
+msgstr "Название события"
+
+msgid "Event Date"
+msgstr "Дата события"
+
+msgid "Event Description"
+msgstr "Описание события"
+
+msgid "Event Status"
+msgstr "Статус события"
+
+msgid "Has MVP"
+msgstr "Есть MVP"
+
+msgid "Has Winner"
+msgstr "Есть победитель"
+
+msgid "Event Details"
+msgstr "Детали события"
+
+msgid "Event Assignments"
+msgstr "Назначения события"
+
+msgid "MVP Players"
+msgstr "Игроки MVP"
+
+msgid "Winning Alliance"
+msgstr "Победивший альянс"
+
+msgid "Event Summary"
+msgstr "Сводка по событию"
+
+msgid "Completion Status"
+msgstr "Статус завершения"
+
+msgid "Created"
+msgstr "Создано"
+
+msgid "Event added successfully!"
+msgstr "Событие успешно добавлено!"
+
+msgid "Event updated successfully!"
+msgstr "Событие успешно обновлено!"
+
+msgid "Event deleted successfully!"
+msgstr "Событие успешно удалено!"
+
+msgid "Failed to add event"
+msgstr "Не удалось добавить событие"
+
+msgid "Failed to update event"
+msgstr "Не удалось обновить событие"
+
+msgid "Failed to delete event"
+msgstr "Не удалось удалить событие"
+
+msgid "Failed to load event details"
+msgstr "Не удалось загрузить детали события"
+
+# Common UI elements
+msgid "Back to Events"
+msgstr "Назад к событиям"
+
+msgid "Back to Players"
+msgstr "Назад к игрокам"
+
+msgid "Back to Alliances"
+msgstr "Назад к альянсам"
+
+msgid "View Event"
+msgstr "Посмотреть событие"
+
+msgid "View Player"
+msgstr "Посмотреть игрока"
+
+msgid "View Alliance"
+msgstr "Посмотреть альянс"
+
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+msgid "This action cannot be undone."
+msgstr "Это действие нельзя отменить."
+
+msgid "Yes, delete it!"
+msgstr "Да, удалить!"
+
+msgid "No, cancel"
+msgstr "Нет, отмена"
+
+msgid "Loading..."
+msgstr "Загрузка..."
+
+msgid "No data available"
+msgstr "Нет данных"
+
+msgid "Search..."
+msgstr "Поиск..."
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Clear"
+msgstr "Очистить"
+
+msgid "Apply"
+msgstr "Применить"
+
+msgid "Reset"
+msgstr "Сбросить"
+
+msgid "Previous"
+msgstr "Предыдущая"
+
+msgid "Next"
+msgstr "Следующая"
+
+msgid "First"
+msgstr "Первая"
+
+msgid "Last"
+msgstr "Последняя"
+
+msgid "Page"
+msgstr "Страница"
+
+msgid "of"
+msgstr "из"
+
+msgid "entries"
+msgstr "записей"
+
+msgid "Show"
+msgstr "Показать"
+
+msgid "per page"
+msgstr "на странице"
+
+# Time and date
+msgid "Today"
+msgstr "Сегодня"
+
+msgid "Yesterday"
+msgstr "Вчера"
+
+msgid "This Week"
+msgstr "На этой неделе"
+
+msgid "This Month"
+msgstr "В этом месяце"
+
+msgid "This Year"
+msgstr "В этом году"
+
+msgid "Never"
+msgstr "Никогда"
+
+msgid "Just now"
+msgstr "Только что"
+
+msgid "minutes ago"
+msgstr "минут назад"
+
+msgid "hours ago"
+msgstr "часов назад"
+
+msgid "days ago"
+msgstr "дней назад"
+
+msgid "weeks ago"
+msgstr "недель назад"
+
+msgid "months ago"
+msgstr "месяцев назад"
+
+msgid "years ago"
+msgstr "лет назад"
+
+# Form validation
+msgid "This field is required"
+msgstr "Это поле обязательно"
+
+msgid "Please enter a valid email address"
+msgstr "Пожалуйста, введите действительный адрес электронной почты"
+
+msgid "Passwords do not match"
+msgstr "Пароли не совпадают"
+
+msgid "Password must be at least 8 characters long"
+msgstr "Пароль должен содержать не менее 8 символов"
+
+msgid "Username must be at least 3 characters long"
+msgstr "Имя пользователя должно содержать не менее 3 символов"
+
+msgid "Username already exists"
+msgstr "Имя пользователя уже существует"
+
+msgid "Email already exists"
+msgstr "Электронная почта уже существует"
+
+msgid "Invalid username or password"
+msgstr "Неверное имя пользователя или пароль"
+
+msgid "Account created successfully!"
+msgstr "Аккаунт успешно создан!"
+
+msgid "Login successful!"
+msgstr "Вход выполнен успешно!"
+
+msgid "Logout successful!"
+msgstr "Выход выполнен успешно!"
+
+msgid "Password updated successfully!"
+msgstr "Пароль успешно обновлен!"
+
+msgid "Profile updated successfully!"
+msgstr "Профиль успешно обновлен!"
+
+# Bot settings
+msgid "Bot Settings"
+msgstr "Настройки бота"
+
+msgid "Telegram Bot"
+msgstr "Telegram бот"
+
+msgid "Discord Bot"
+msgstr "Discord бот"
+
+msgid "Bot Token"
+msgstr "Токен бота"
+
+msgid "Channel ID"
+msgstr "ID канала"
+
+msgid "Enable Notifications"
+msgstr "Включить уведомления"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "English"
+msgstr "Английский"
+
+msgid "Russian"
+msgstr "Русский"
+
+msgid "Save Settings"
+msgstr "Сохранить настройки"
+
+msgid "Test Connection"
+msgstr "Тест соединения"
+
+msgid "Settings saved successfully!"
+msgstr "Настройки успешно сохранены!"
+
+msgid "Failed to save settings"
+msgstr "Не удалось сохранить настройки"
+
+msgid "Bot connection test successful!"
+msgstr "Тест соединения с ботом успешен!"
+
+msgid "Bot connection test failed"
+msgstr "Тест соединения с ботом не удался"
+
+# Feedback
+msgid "Feedback"
+msgstr "Обратная связь"
+
+msgid "Subject"
+msgstr "Тема"
+
+msgid "Message"
+msgstr "Сообщение"
+
+msgid "Category"
+msgstr "Категория"
+
+msgid "Bug Report"
+msgstr "Сообщение об ошибке"
+
+msgid "Feature Request"
+msgstr "Запрос функции"
+
+msgid "Suggestion"
+msgstr "Предложение"
+
+msgid "Improvement"
+msgstr "Улучшение"
+
+msgid "Other"
+msgstr "Другое"
+
+msgid "Submit Feedback"
+msgstr "Отправить отзыв"
+
+msgid "Give Feedback"
+msgstr "Оставить отзыв"
+
+msgid "Feedback submitted successfully!"
+msgstr "Отзыв успешно отправлен!"
+
+msgid "Failed to submit feedback"
+msgstr "Не удалось отправить отзыв"
+
+# Admin
+msgid "Admin Panel"
+msgstr "Панель администратора"
+
+msgid "User Management"
+msgstr "Управление пользователями"
+
+msgid "Create User"
+msgstr "Создать пользователя"
+
+msgid "Admin Users"
+msgstr "Пользователи-администраторы"
+
+msgid "User Settings"
+msgstr "Настройки пользователя"
+
+msgid "Role"
+msgstr "Роль"
+
+msgid "Admin"
+msgstr "Администратор"
+
+msgid "User"
+msgstr "Пользователь"
+
+msgid "Active"
+msgstr "Активен"
+
+msgid "Inactive"
+msgstr "Неактивен"
+
+msgid "Last Login"
+msgstr "Последний вход"
+
+msgid "User created successfully!"
+msgstr "Пользователь успешно создан!"
+
+msgid "User updated successfully!"
+msgstr "Пользователь успешно обновлен!"
+
+msgid "User deleted successfully!"
+msgstr "Пользователь успешно удален!"
+
+msgid "Failed to create user"
+msgstr "Не удалось создать пользователя"
+
+msgid "Failed to update user"
+msgstr "Не удалось обновить пользователя"
+
+msgid "Failed to delete user"
+msgstr "Не удалось удалить пользователя"
+
+# Telegram/Discord announcements
+msgid "MVP Assignment Announcement"
+msgstr "Объявление о назначении MVP"
+
+msgid "Winner Assignment Announcement"
+msgstr "Объявление о назначении победителя"
+
+msgid "MVP Unassignment Announcement"
+msgstr "Объявление о снятии MVP"
+
+msgid "has been assigned as MVP for"
+msgstr "назначен MVP за"
+
+msgid "has been unassigned from MVP for"
+msgstr "снят с MVP за"
+
+msgid "has won the event"
+msgstr "выиграл событие"
+
+msgid "Congratulations to"
+msgstr "Поздравляем"
+
+msgid "for being selected as MVP!"
+msgstr "с назначением MVP!"
+
+msgid "for winning the event!"
+msgstr "с победой в событии!"
+
+msgid "Event"
+msgstr "Событие"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Time"
+msgstr "Время"
+
+msgid "Alliance"
+msgstr "Альянс"
+
+msgid "Player"
+msgstr "Игрок"
+
+msgid "MVP Count"
+msgstr "Количество MVP"
+
+msgid "Win Count"
+msgstr "Количество побед"
+
+msgid "Total MVP Count"
+msgstr "Общее количество MVP"
+
+msgid "Total Win Count"
+msgstr "Общее количество побед"
+
+msgid "Previous MVP"
+msgstr "Предыдущий MVP"
+
+msgid "Previous Winner"
+msgstr "Предыдущий победитель"
+
+msgid "No previous MVP"
+msgstr "Нет предыдущего MVP"
+
+msgid "No previous winner"
+msgstr "Нет предыдущего победителя"
+
+msgid "Rotation Logic"
+msgstr "Логика ротации"
+
+msgid "Fair distribution"
+msgstr "Справедливое распределение"
+
+msgid "Equal opportunities"
+msgstr "Равные возможности"
+
+msgid "System managed"
+msgstr "Управляется системой"
+
+msgid "Automatic rotation"
+msgstr "Автоматическая ротация"
+
+msgid "Manual assignment"
+msgstr "Ручное назначение"
+
+msgid "Admin override"
+msgstr "Переопределение администратора"
+
+msgid "Special circumstances"
+msgstr "Особые обстоятельства"
+
+msgid "Event completed"
+msgstr "Событие завершено"
+
+msgid "Event in progress"
+msgstr "Событие в процессе"
+
+msgid "Event pending"
+msgstr "Событие ожидает"
+
+msgid "Event cancelled"
+msgstr "Событие отменено"
+
+msgid "Event postponed"
+msgstr "Событие отложено"
+
+msgid "Event rescheduled"
+msgstr "Событие перенесено"
+
+msgid "Event updated"
+msgstr "Событие обновлено"
+
+msgid "Event created"
+msgstr "Событие создано"
+
+msgid "Event deleted"
+msgstr "Событие удалено"
+
+msgid "Assignment updated"
+msgstr "Назначение обновлено"
+
+msgid "Assignment created"
+msgstr "Назначение создано"
+
+msgid "Assignment deleted"
+msgstr "Назначение удалено"
+
+msgid "System notification"
+msgstr "Системное уведомление"
+
+msgid "Important update"
+msgstr "Важное обновление"
+
+msgid "Reminder"
+msgstr "Напоминание"
+
+msgid "Alert"
+msgstr "Предупреждение"
+
+msgid "Info"
+msgstr "Информация"
+
+msgid "Success"
+msgstr "Успех"
+
+msgid "Warning"
+msgstr "Предупреждение"
+
+msgid "Error"
+msgstr "Ошибка"
+
+msgid "Debug"
+msgstr "Отладка"
+
+msgid "Trace"
+msgstr "Трассировка"
+
+msgid "Critical"
+msgstr "Критический"
+
+msgid "Fatal"
+msgstr "Фатальный"
+
+msgid "Unknown"
+msgstr "Неизвестно"
+
+msgid "N/A"
+msgstr "Н/Д"
+
+msgid "TBD"
+msgstr "Будет определено"
+
+msgid "TBA"
+msgstr "Будет объявлено"
+
+msgid "Coming Soon"
+msgstr "Скоро"
+
+msgid "Under Construction"
+msgstr "В разработке"
+
+msgid "Maintenance Mode"
+msgstr "Режим обслуживания"
+
+msgid "Service Unavailable"
+msgstr "Сервис недоступен"
+
+msgid "Access Denied"
+msgstr "Доступ запрещен"
+
+msgid "Forbidden"
+msgstr "Запрещено"
+
+msgid "Not Found"
+msgstr "Не найдено"
+
+msgid "Internal Server Error"
+msgstr "Внутренняя ошибка сервера"
+
+msgid "Bad Request"
+msgstr "Неверный запрос"
+
+msgid "Unauthorized"
+msgstr "Не авторизован"
+
+msgid "Method Not Allowed"
+msgstr "Метод не разрешен"
+
+msgid "Not Acceptable"
+msgstr "Неприемлемо"
+
+msgid "Request Timeout"
+msgstr "Таймаут запроса"
+
+msgid "Conflict"
+msgstr "Конфликт"
+
+msgid "Gone"
+msgstr "Удалено"
+
+msgid "Length Required"
+msgstr "Требуется длина"
+
+msgid "Precondition Failed"
+msgstr "Предварительное условие не выполнено"
+
+msgid "Request Entity Too Large"
+msgstr "Слишком большое тело запроса"
+
+msgid "Request URI Too Long"
+msgstr "Слишком длинный URI запроса"
+
+msgid "Unsupported Media Type"
+msgstr "Неподдерживаемый тип медиа"
+
+msgid "Requested Range Not Satisfiable"
+msgstr "Запрошенный диапазон не выполним"
+
+msgid "Expectation Failed"
+msgstr "Ожидание не выполнено"
+
+msgid "I'm a teapot"
+msgstr "Я чайник"
+
+msgid "Misdirected Request"
+msgstr "Неправильно направленный запрос"
+
+msgid "Unprocessable Entity"
+msgstr "Необрабатываемая сущность"
+
+msgid "Locked"
+msgstr "Заблокировано"
+
+msgid "Failed Dependency"
+msgstr "Неудачная зависимость"
+
+msgid "Too Early"
+msgstr "Слишком рано"
+
+msgid "Upgrade Required"
+msgstr "Требуется обновление"
+
+msgid "Precondition Required"
+msgstr "Требуется предварительное условие"
+
+msgid "Too Many Requests"
+msgstr "Слишком много запросов"
+
+msgid "Request Header Fields Too Large"
+msgstr "Поля заголовка запроса слишком большие"
+
+msgid "Unavailable For Legal Reasons"
+msgstr "Недоступно по юридическим причинам"
+
+msgid "Internal Server Error"
+msgstr "Внутренняя ошибка сервера"
+
+msgid "Not Implemented"
+msgstr "Не реализовано"
+
+msgid "Bad Gateway"
+msgstr "Плохой шлюз"
+
+msgid "Service Unavailable"
+msgstr "Сервис недоступен"
+
+msgid "Gateway Timeout"
+msgstr "Таймаут шлюза"
+
+msgid "HTTP Version Not Supported"
+msgstr "Версия HTTP не поддерживается"
+
+msgid "Variant Also Negotiates"
+msgstr "Вариант также ведет переговоры"
+
+msgid "Insufficient Storage"
+msgstr "Недостаточно места"
+
+msgid "Loop Detected"
+msgstr "Обнаружен цикл"
+
+msgid "Not Extended"
+msgstr "Не расширено"
+
+msgid "Network Authentication Required"
+msgstr "Требуется сетевая аутентификация"
+
+msgid "Network Connect Timeout Error"
+msgstr "Ошибка таймаута сетевого подключения"
+
+# New translations added for template updates
+msgid "Player Management"
+msgstr "Управление игроками"
+
+msgid "Alliance Management"
+msgstr "Управление альянсами"
+
+msgid "Event Management"
+msgstr "Управление событиями"
+
+msgid "MVP Rotation Status"
+msgstr "Статус ротации MVP"
+
+msgid "Winner Rotation Status"
+msgstr "Статус ротации победителей"
+
+msgid "All Players"
+msgstr "Все игроки"
+
+msgid "All Alliances"
+msgstr "Все альянсы"
+
+msgid "All Events"
+msgstr "Все события"
+
+msgid "Add Player"
+msgstr "Добавить игрока"
+
+msgid "Add Alliance"
+msgstr "Добавить альянс"
+
+msgid "Add Event"
+msgstr "Добавить событие"
+
+msgid "Assign MVP"
+msgstr "Назначить MVP"
+
+msgid "Assign Winner"
+msgstr "Назначить победителя"
+
+msgid "MVP Assignment Available"
+msgstr "Назначение MVP доступно"
+
+msgid "MVP Assignment Not Available"
+msgstr "Назначение MVP недоступно"
+
+msgid "Winner Assignment Available"
+msgstr "Назначение победителя доступно"
+
+msgid "Winner Assignment Blocked"
+msgstr "Назначение победителя заблокировано"
+
+msgid "Eligible Players"
+msgstr "Подходящие игроки"
+
+msgid "Eligible Alliances"
+msgstr "Подходящие альянсы"
+
+msgid "No eligible players or events."
+msgstr "Нет подходящих игроков или событий."
+
+msgid "Not all alliances have won yet. Complete current rotation first."
+msgstr "Не все альянсы еще побеждали. Сначала завершите текущую ротацию."
+
+msgid "Player"
+msgstr "Игрок"
+
+msgid "Alliance"
+msgstr "Альянс"
+
+msgid "Event"
+msgstr "Событие"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Actions"
+msgstr "Действия"
+
+msgid "MVP Count"
+msgstr "Количество MVP"
+
+msgid "Win Count"
+msgstr "Количество побед"
+
+msgid "Rotation"
+msgstr "Ротация"
+
+msgid "Created"
+msgstr "Создан"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "Winner"
+msgstr "Победитель"
+
+msgid "Current MVP"
+msgstr "Текущий MVP"
+
+msgid "Previous MVP"
+msgstr "Предыдущий MVP"
+
+msgid "Never MVP"
+msgstr "Никогда не был MVP"
+
+msgid "Former Winner"
+msgstr "Бывший победитель"
+
+msgid "Never Won"
+msgstr "Никогда не побеждал"
+
+msgid "Active"
+msgstr "Активен"
+
+msgid "Excluded"
+msgstr "Исключен"
+
+msgid "Excluded from rotation"
+msgstr "Исключен из ротации"
+
+msgid "Show MVP History"
+msgstr "Показать историю MVP"
+
+msgid "Edit Player"
+msgstr "Редактировать игрока"
+
+msgid "Edit Alliance"
+msgstr "Редактировать альянс"
+
+msgid "Edit Event"
+msgstr "Редактировать событие"
+
+msgid "View Event"
+msgstr "Посмотреть событие"
+
+msgid "Delete Player"
+msgstr "Удалить игрока"
+
+msgid "Delete Alliance"
+msgstr "Удалить альянс"
+
+msgid "Delete Event"
+msgstr "Удалить событие"
+
+msgid "Unassign MVP"
+msgstr "Отменить назначение MVP"
+
+msgid "Include in MVP Rotation"
+msgstr "Включить в ротацию MVP"
+
+msgid "Exclude from MVP Rotation"
+msgstr "Исключить из ротации MVP"
+
+msgid "Total Players"
+msgstr "Всего игроков"
+
+msgid "Total Alliances"
+msgstr "Всего альянсов"
+
+msgid "Total Events"
+msgstr "Всего событий"
+
+msgid "Previous MVPs"
+msgstr "Предыдущие MVP"
+
+msgid "Former Winners"
+msgstr "Бывшие победители"
+
+msgid "Total MVP Awards"
+msgstr "Всего наград MVP"
+
+msgid "Total Wins"
+msgstr "Всего побед"
+
+msgid "Active Players"
+msgstr "Активных игроков"
+
+msgid "Excluded Players"
+msgstr "Исключенных игроков"
+
+msgid "Eligible for MVP"
+msgstr "Подходящих для MVP"
+
+msgid "No Players Yet"
+msgstr "Пока нет игроков"
+
+msgid "No Alliances Yet"
+msgstr "Пока нет альянсов"
+
+msgid "No Events Yet"
+msgstr "Пока нет событий"
+
+msgid "Players have not been added to the system yet."
+msgstr "Игроки еще не добавлены в систему."
+
+msgid "Alliances have not been added to the system yet."
+msgstr "Альянсы еще не добавлены в систему."
+
+msgid "Events have not been created yet."
+msgstr "События еще не созданы."
+
+msgid "Add First Player"
+msgstr "Добавить первого игрока"
+
+msgid "Add First Alliance"
+msgstr "Добавить первый альянс"
+
+msgid "Create First Event"
+msgstr "Создать первое событие"
+
+msgid "Confirm Deletion"
+msgstr "Подтвердить удаление"
+
+msgid "Are you sure you want to delete player"
+msgstr "Вы уверены, что хотите удалить игрока"
+
+msgid "Are you sure you want to delete alliance"
+msgstr "Вы уверены, что хотите удалить альянс"
+
+msgid "Are you sure you want to delete event"
+msgstr "Вы уверены, что хотите удалить событие"
+
+msgid "This will also delete all MVP assignments for this player and cannot be undone."
+msgstr "Это также удалит все назначения MVP для этого игрока и не может быть отменено."
+
+msgid "This will also delete all winner assignments for this alliance and cannot be undone."
+msgstr "Это также удалит все назначения победителей для этого альянса и не может быть отменено."
+
+msgid "This will also delete all MVP and winner assignments for this event and cannot be undone."
+msgstr "Это также удалит все назначения MVP и победителей для этого события и не может быть отменено."
+
+msgid "Cancel"
+msgstr "Отменить"
+
+msgid "MVP History"
+msgstr "История MVP"
+
+msgid "Loading..."
+msgstr "Загрузка..."
+
+msgid "Loading MVP history..."
+msgstr "Загрузка истории MVP..."
+
+msgid "Event Participations"
+msgstr "Участий в событиях"
+
+msgid "Detailed History"
+msgstr "Детальная история"
+
+msgid "No MVP History Yet"
+msgstr "Пока нет истории MVP"
+
+msgid "This player has not received MVP awards yet."
+msgstr "Этот игрок еще не получал награду MVP."
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Failed to load MVP history"
+msgstr "Не удалось загрузить историю MVP"
+
+msgid "Error loading MVP history"
+msgstr "Ошибка при загрузке истории MVP"
+
+msgid "Date not specified"
+msgstr "Дата не указана"
+
+msgid "Assigned"
+msgstr "Назначен"
+
+msgid "Are you sure you want to unassign MVP for"
+msgstr "Вы уверены, что хотите отменить назначение MVP для"
+
+msgid "Confirm Change"
+msgstr "Подтвердить изменение"
+
+msgid "Are you sure you want to exclude player"
+msgstr "Вы уверены, что хотите исключить игрока"
+
+msgid "from MVP rotation?"
+msgstr "из ротации MVP?"
+
+msgid "Are you sure you want to include player"
+msgstr "Вы уверены, что хотите включить игрока"
+
+msgid "in MVP rotation?"
+msgstr "в ротацию MVP?"
+
+msgid "Player will remain visible in the list but will not participate in MVP rotation until re-enabled."
+msgstr "Игрок останется видимым в списке, но не будет участвовать в ротации MVP до повторного включения."
+
+msgid "Player will become available for MVP assignment according to rotation logic."
+msgstr "Игрок снова станет доступен для назначения MVP согласно логике ротации."
+
+msgid "Exclude"
+msgstr "Исключить"
+
+msgid "Include"
+msgstr "Включить"
+
+msgid "Checking rotation status..."
+msgstr "Проверка статуса ротации..."
+
+msgid "Add New Alliance"
+msgstr "Добавить новый альянс"
+
+msgid "Back to Alliances"
+msgstr "Назад к альянсам"
+
+msgid "Alliance Information"
+msgstr "Информация о альянсе"
+
+msgid "Alliance Name"
+msgstr "Название альянса"
+
+msgid "Enter alliance name"
+msgstr "Введите название альянса"
+
+msgid "Alliance names must be unique and cannot exceed 100 characters."
+msgstr "Названия альянсов должны быть уникальными и не могут превышать 100 символов."
+
+msgid "Winner Rotation"
+msgstr "Ротация победителей"
+
+msgid "New alliances will be able to compete for winner assignment after all current alliances have won at least once."
+msgstr "Новые альянсы смогут претендовать на назначение победителя после того, как все текущие альянсы победят хотя бы один раз."
+
+msgid "Need Help?"
+msgstr "Нужна помощь?"
+
+msgid "Use meaningful alliance names that reflect groups or guilds"
+msgstr "Используйте осмысленные названия альянсов, которые отражают группы или гильдии"
+
+msgid "Alliance names must be unique in the system"
+msgstr "Названия альянсов должны быть уникальными в системе"
+
+msgid "After adding, alliances can be assigned as winners when it's their turn"
+msgstr "После добавления альянсы могут быть назначены победителями, когда придет их очередь"
+
+msgid "You can edit or delete alliances later if needed"
+msgstr "При необходимости вы можете редактировать или удалять альянсы позже"
+
+msgid "Alliance name is required."
+msgstr "Название альянса обязательно."
+
+msgid "Add New Event"
+msgstr "Добавить новое событие"
+
+msgid "Back to Events"
+msgstr "Назад к событиям"
+
+msgid "Event Information"
+msgstr "Информация о событии"
+
+msgid "Pending"
+msgstr "Ожидает"
+
+msgid "Completed"
+msgstr "Завершено"
+
+msgid "Partial"
+msgstr "Частично"
+
+msgid "Incomplete"
+msgstr "Незавершено"# Additional translations for edit and add pages
+msgid "Back to Players"
+msgstr "Назад к игрокам"
+
+msgid "Back to Alliances"
+msgstr "Назад к альянсам"
+
+msgid "Back to Events"
+msgstr "Назад к событиям"
+
+msgid "Current Player Information"
+msgstr "Текущая информация об игроке"
+
+msgid "Current Alliance Information"
+msgstr "Текущая информация о альянсе"
+
+msgid "Current Name"
+msgstr "Текущее название"
+
+msgid "MVP Status"
+msgstr "Статус MVP"
+
+msgid "Winner Status"
+msgstr "Статус победителя"
+
+msgid "Last Updated"
+msgstr "Последнее обновление"
+
+msgid "Edit Player Information"
+msgstr "Редактировать информацию об игроке"
+
+msgid "Player Name"
+msgstr "Имя игрока"
+
+msgid "Enter player name"
+msgstr "Введите имя игрока"
+
+msgid "Player names must be unique and cannot exceed 100 characters."
+msgstr "Имена игроков должны быть уникальными и не могут превышать 100 символов."
+
+msgid "This player is currently MVP. Renaming will not affect MVP status."
+msgstr "Этот игрок в настоящее время MVP. Переименование не повлияет на статус MVP."
+
+msgid "This player has been MVP"
+msgstr "Этот игрок был MVP"
+
+msgid "time(s). Renaming will not affect MVP history."
+msgstr "раз(а). Переименование не повлияет на историю MVP."
+
+msgid "Update Player"
+msgstr "Обновить игрока"
+
+msgid "Danger Zone"
+msgstr "Опасная зона"
+
+msgid "Permanently delete this player from the system. This action cannot be undone and will also delete all MVP assignments for this player."
+msgstr "Навсегда удалить этого игрока из системы. Это действие не может быть отменено и также удалит все назначения MVP для этого игрока."
+
+msgid "Warning"
+msgstr "Предупреждение"
+
+msgid "This will permanently delete:"
+msgstr "Это навсегда удалит:"
+
+msgid "Player record"
+msgstr "Запись об игроке"
+
+msgid "All MVP assignments for this player"
+msgstr "Все назначения MVP для этого игрока"
+
+msgid "MVP history and statistics"
+msgstr "Историю и статистику MVP"
+
+msgid "This action cannot be undone."
+msgstr "Это действие не может быть отменено."
+
+msgid "Add New Player"
+msgstr "Добавить нового игрока"
+
+msgid "Player Information"
+msgstr "Информация об игроке"
+
+msgid "MVP Rotation"
+msgstr "Ротация MVP"
+
+msgid "New players will be able to receive MVP assignment after all current players have been MVP at least once."
+msgstr "Новые игроки смогут получить назначение MVP после того, как все текущие игроки побывают MVP хотя бы один раз."
+
+msgid "Use meaningful player names that are easy to identify"
+msgstr "Используйте осмысленные имена игроков, которые легко идентифицировать"
+
+msgid "Player names must be unique in the system"
+msgstr "Имена игроков должны быть уникальными в системе"
+
+msgid "After adding, players can be assigned as MVP when it's their turn"
+msgstr "После добавления игроки могут быть назначены MVP, когда придет их очередь"
+
+msgid "You can edit or delete players later if needed"
+msgstr "При необходимости вы можете редактировать или удалять игроков позже"
+
+msgid "Player name is required."
+msgstr "Имя игрока обязательно."
+
+# Additional translations for events view page
+msgid "Edit"
+msgstr "Редактировать"
+
+msgid "Event Details"
+msgstr "Подробности события"
+
+msgid "Event Name"
+msgstr "Название события"
+
+msgid "Event Date"
+msgstr "Дата события"
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Event Assignments"
+msgstr "Назначения события"
+
+msgid "MVP Players"
+msgstr "Игроки MVP"
+
+msgid "MVP Assignment History"
+msgstr "История назначений MVP"
+
+msgid "Assign More MVP"
+msgstr "Назначить еще MVP"
+
+msgid "No MVP Assigned"
+msgstr "MVP не назначен"
+
+msgid "This event has no MVP yet."
+msgstr "У этого события еще нет MVP."
+
+msgid "Winning Alliance"
+msgstr "Победивший альянс"
+
+msgid "No Winner Assigned"
+msgstr "Победитель не назначен"
+
+msgid "This event has no winning alliance yet."
+msgstr "У этого события еще нет победившего альянса."
+
+msgid "Event Summary"
+msgstr "Сводка по событию"
+
+msgid "Completion Status"
+msgstr "Статус завершения"
+
+msgid "Edit Event"
+msgstr "????????????? ???????"
+
+msgid "Back to Events"
+msgstr "????? ? ????????"
+
+msgid "Edit Event Information"
+msgstr "????????????? ?????????? ? ???????"
+
+msgid "Event Name"
+msgstr "???????? ???????"
+
+msgid "optional"
+msgstr "?????????????"
+
+msgid "Event Date"
+msgstr "???? ? ????? ???????"
+
+msgid "Update Event"
+msgstr "???????? ???????"
+
+msgid "Cancel"
+msgstr "????????"
+
+msgid "After adding, players can be assigned as MVP when it's their turn"
+msgstr "????? ?????????? ?????? ????? ???? ????????? MVP, ????? ???????? ?? ???????"
+
+msgid "You can edit or delete players later if needed"
+msgstr "??? ????????????? ?? ?????? ????????????? ??? ??????? ??????? ?????"
+
+msgid "Player name is required."
+msgstr "??? ?????? ???????????."
+
+msgid "Assign MVP"
+msgstr "????????? MVP"
+
+msgid "MVP Rotation Status"
+msgstr "?????? ??????? MVP"
+
+msgid "MVP Assignment Available"
+msgstr "?????????? MVP ????????"
+
+msgid "You can assign MVP to eligible players below."
+msgstr "?? ?????? ????????? MVP ?????????? ??????? ????."
+
+msgid "Eligible Players"
+msgstr "?????????? ??????"
+
+msgid "MVP Assignment Not Available"
+msgstr "?????????? MVP ??????????"
+
+msgid "No eligible players or events for MVP assignment."
+msgstr "??? ?????????? ??????? ??? ??????? ??? ?????????? MVP."
+
+msgid "MVP Assignment Form"
+msgstr "????? ?????????? MVP"
+
+msgid "Select Player"
+msgstr "???????? ??????"
+
+msgid "Select player..."
+msgstr "???????? ??????..."
+
+msgid "New MVP"
+msgstr "????? MVP"
+
+msgid "Only players eligible for MVP are shown."
+msgstr "???????? ?????? ??????, ?????????? ??? MVP."
+
+msgid "Select Event"
+msgstr "???????? ???????"
+
+msgid "Select event..."
+msgstr "???????? ???????..."
+
+msgid "Already has MVP"
+msgstr "??? ???? MVP"
+
+msgid "All events are shown. You can assign multiple MVPs for one event."
+msgstr "???????? ??? ???????. ????? ????????? ????????? MVP ??? ?????? ???????."
+
+msgid "Assignment Effects"
+msgstr "??????? ??????????"
+
+msgid "Selected player will become current MVP"
+msgstr "????????? ????? ?????? ??????? MVP"
+
+msgid "Any previous MVP status will be removed from other players"
+msgstr "????? ?????????? ?????? MVP ????? ????? ? ?????? ???????"
+
+msgid "Player's MVP count will be increased"
+msgstr "??????? MVP ?????? ????? ????????"
+
+msgid "Event will be marked as having assigned MVP"
+msgstr "??????? ????? ???????? ??? ??????? ???????????? MVP"
+
+msgid "New"
+msgstr "?????"
+
+msgid "You can assign multiple MVPs for one event (for recurring events)"
+msgstr "????? ????????? ????????? MVP ??? ?????? ??????? (??? ????????????? ???????)"
+
+msgid "No Eligible Players"
+msgstr "??? ?????????? ???????"
+
+msgid "Currently no available players for MVP assignment."
+msgstr "? ????????? ????? ??? ????????? ??????? ??? ?????????? MVP."
+
+msgid "Add Players"
+msgstr "???????? ???????"
+
+msgid "No Available Events"
+msgstr "??? ????????? ???????"
+
+msgid "All events already have MVP assigned. Create new events to assign additional MVPs."
+msgstr "? ???? ??????? ??? ???????? MVP. ???????? ????? ??????? ??? ?????????? ?????????????? MVP."
+
+msgid "Add Event"
+msgstr "???????? ???????"
+
+msgid "View Players"
+msgstr "?????????? ???????"
+
+msgid "MVP Rotation Rules"
+msgstr "??????? ??????? MVP"
+
+msgid "Fair Rotation"
+msgstr "???????????? ???????"
+
+msgid "Priority is given to players with the least MVP count"
+msgstr "????????? ???????? ??????? ? ?????????? ??????????? MVP"
+
+msgid "One MVP per Event"
+msgstr "???? MVP ?? ???????"
+
+msgid "Each event can have only one MVP player"
+msgstr "?????? ??????? ????? ????? ?????? ?????? ?????? MVP"
+
+msgid "Current MVP"
+msgstr "??????? MVP"
+
+msgid "Only one player can be current MVP at a time"
+msgstr "?????? ???? ????? ????? ???? ??????? MVP ????????????"
+
+msgid "History Tracking"
+msgstr "???????????? ???????"
+
+msgid "All MVP assignments are tracked and counted"
+msgstr "??? ?????????? MVP ????????????? ? ??????????????"
+
+msgid "Please select both player and event."
+msgstr "??????????, ???????? ? ??????, ? ???????."
+
+msgid "Assign"
+msgstr "?????????"
+
+msgid "MVP for event"
+msgstr "MVP ??? ???????"

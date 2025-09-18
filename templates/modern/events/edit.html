@@ -1,0 +1,142 @@
+{% extends "modern/base.html" %}
+
+{% block title %}Edit Event - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                    <i class="bi bi-pencil-square text-warning" style="font-size: 2rem;"></i>
+                </div>
+                <h1 class="h2 fw-bold text-warning mb-2">Edit Event</h1>
+                <p class="text-muted">Update event information</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4">
+                    <form method="POST" id="editEventForm">
+                        <div class="mb-4">
+                            <label for="name" class="form-label fw-semibold">
+                                <i class="bi bi-calendar-event me-2"></i>Event Name
+                            </label>
+                            <input type="text" 
+                                   class="form-control form-control-lg" 
+                                   id="name" 
+                                   name="name" 
+                                   value="{{ event.name }}"
+                                   placeholder="Enter event name"
+                                   required
+                                   autofocus>
+                            <div class="form-text">Update the event's name</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="description" class="form-label fw-semibold">
+                                <i class="bi bi-card-text me-2"></i>Description (Optional)
+                            </label>
+                            <textarea class="form-control" 
+                                      id="description" 
+                                      name="description" 
+                                      rows="3" 
+                                      placeholder="Enter event description or details">{{ event.description or '' }}</textarea>
+                            <div class="form-text">Add any additional information about this event</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="event_date" class="form-label fw-semibold">
+                                <i class="bi bi-calendar-date me-2"></i>Event Date (Optional)
+                            </label>
+                            <input type="datetime-local" 
+                                   class="form-control" 
+                                   id="event_date" 
+                                   name="event_date"
+                                   value="{{ event.event_date.strftime('%Y-%m-%dT%H:%M') if event.event_date else '' }}">
+                            <div class="form-text">Update the event date and time</div>
+                        </div>
+
+                        <!-- Event Stats -->
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h6 class="fw-semibold text-warning mb-3">
+                                    <i class="bi bi-graph-up me-2"></i>Event Statistics
+                                </h6>
+                                <div class="row text-center">
+                                    <div class="col-4">
+                                        <div class="fw-bold text-primary fs-4">{{ event.mvp_assignments|length }}</div>
+                                        <small class="text-muted">MVP Assignments</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-success fs-4">{{ 1 if event.winner_assignments else 0 }}</div>
+                                        <small class="text-muted">Winner Assignments</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-info fs-4">
+                                            {{ event.event_date.strftime('%m/%d') if event.event_date else 'No date' }}
+                                        </div>
+                                        <small class="text-muted">Event Date</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="bi bi-check-lg me-2"></i>Update Event
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editEventForm');
+    const nameInput = document.getElementById('name');
+    
+    // Add form validation
+    form.addEventListener('submit', function(e) {
+        const name = nameInput.value.trim();
+        
+        if (!name) {
+            e.preventDefault();
+            nameInput.focus();
+            showNotification('Please enter an event name', 'warning');
+            return;
+        }
+        
+        if (name.length < 2) {
+            e.preventDefault();
+            nameInput.focus();
+            showNotification('Event name must be at least 2 characters long', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Updating...';
+        submitBtn.disabled = true;
+    });
+    
+    // Add smooth animations
+    const card = document.querySelector('.card');
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    
+    setTimeout(() => {
+        card.style.transition = 'all 0.6s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    }, 200);
+});
+</script>
+{% endblock %}

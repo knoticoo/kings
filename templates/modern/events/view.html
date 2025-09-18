@@ -1,0 +1,240 @@
+{% extends "modern/base.html" %}
+
+{% block title %}{{ event.name }} - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <div class="bg-warning bg-opacity-10 rounded-circle p-4 d-inline-block mb-4">
+                    <i class="bi bi-calendar-event text-warning" style="font-size: 3rem;"></i>
+                </div>
+                <h1 class="h2 fw-bold text-warning mb-3">{{ event.name }}</h1>
+                {% if event.description %}
+                    <p class="text-muted lead">{{ event.description }}</p>
+                {% endif %}
+                {% if event.event_date %}
+                    <p class="text-muted">
+                        <i class="bi bi-calendar me-2"></i>
+                        {{ event.event_date.strftime('%B %d, %Y at %I:%M %p') }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- Event Details -->
+            <div class="row g-4">
+                <!-- MVP Assignments -->
+                <div class="col-lg-6">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-award me-2"></i>MVP Assignments
+                                <span class="badge bg-light text-primary ms-2">{{ mvp_assignments|length }}</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if mvp_assignments %}
+                                <div class="list-group list-group-flush">
+                                    {% for assignment in mvp_assignments %}
+                                    <div class="list-group-item border-0 px-0">
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                                    <i class="bi bi-award text-primary"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-3">
+                                                <h6 class="mb-1 fw-semibold">
+                                                    {{ assignment.player.name if assignment.player else 'Unknown Player' }}
+                                                </h6>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-calendar me-1"></i>
+                                                    {{ assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if assignment.assigned_at else 'Unknown date' }}
+                                                </small>
+                                            </div>
+                                            <div class="flex-shrink-0">
+                                                <span class="badge bg-primary">MVP</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="bi bi-award text-muted" style="font-size: 3rem;"></i>
+                                    <p class="text-muted mt-3">No MVP assignments yet</p>
+                                    <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-outline-primary">
+                                        <i class="bi bi-plus me-2"></i>Assign MVP
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Winner Assignment -->
+                <div class="col-lg-6">
+                    <div class="card shadow-lg border-0 h-100">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-trophy me-2"></i>Winner Assignment
+                                {% if winner_assignment %}
+                                    <span class="badge bg-light text-success ms-2">Assigned</span>
+                                {% else %}
+                                    <span class="badge bg-light text-secondary ms-2">Not Assigned</span>
+                                {% endif %}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if winner_assignment %}
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                                            <i class="bi bi-trophy text-success" style="font-size: 2rem;"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h5 class="mb-1 fw-semibold text-success">
+                                            {{ winner_assignment.alliance.name if winner_assignment.alliance else 'Unknown Alliance' }}
+                                        </h5>
+                                        <p class="text-muted mb-2">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            {{ winner_assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if winner_assignment.assigned_at else 'Unknown date' }}
+                                        </p>
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-trophy me-1"></i>Winner
+                                        </span>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="bi bi-trophy text-muted" style="font-size: 3rem;"></i>
+                                    <p class="text-muted mt-3">No winner assigned yet</p>
+                                    <a href="{{ url_for('alliances.assign_winner') }}" class="btn btn-outline-success">
+                                        <i class="bi bi-plus me-2"></i>Assign Winner
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Statistics -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-graph-up me-2"></i>Event Statistics
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                        <i class="bi bi-award text-primary" style="font-size: 2rem;"></i>
+                                    </div>
+                                    <div class="fw-bold text-primary fs-4">{{ mvp_assignments|length }}</div>
+                                    <small class="text-muted">MVP Assignments</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                        <i class="bi bi-trophy text-success" style="font-size: 2rem;"></i>
+                                    </div>
+                                    <div class="fw-bold text-success fs-4">{{ 1 if winner_assignment else 0 }}</div>
+                                    <small class="text-muted">Winner Assignments</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                        <i class="bi bi-calendar text-warning" style="font-size: 2rem;"></i>
+                                    </div>
+                                    <div class="fw-bold text-warning fs-4">
+                                        {{ event.event_date.strftime('%m/%d') if event.event_date else 'No date' }}
+                                    </div>
+                                    <small class="text-muted">Event Date</small>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="bg-info bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                        <i class="bi bi-activity text-info" style="font-size: 2rem;"></i>
+                                    </div>
+                                    <div class="fw-bold text-info fs-4">
+                                        {{ (mvp_assignments|length) + (1 if winner_assignment else 0) }}
+                                    </div>
+                                    <small class="text-muted">Total Assignments</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <div class="btn-group" role="group">
+                        <a href="{{ url_for('events.edit_event', event_id=event.id) }}" class="btn btn-warning btn-lg">
+                            <i class="bi bi-pencil me-2"></i>Edit Event
+                        </a>
+                        <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Events
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth animations
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+
+    // Add hover effects to cards
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+
+<style>
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.list-group-item {
+    transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+    background-color: var(--gray-50);
+    transform: translateX(5px);
+}
+
+.btn-group .btn {
+    margin: 0 5px;
+}
+</style>
+{% endblock %}

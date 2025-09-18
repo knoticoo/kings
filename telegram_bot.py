@@ -9,8 +9,7 @@ import logging
 from dotenv import load_dotenv
 from telegram import Bot
 from telegram.error import TelegramError
-from deep_translator import GoogleTranslator
-from russian_templates import format_mvp_announcement, format_winner_announcement
+from multilingual_templates import format_announcement_with_user_language, get_user_language
 
 # Load environment variables from .env file
 load_dotenv()
@@ -37,12 +36,6 @@ class KingsChoiceTelegramBot:
         if self.bot_token:
             self.bot = Bot(token=self.bot_token)
     
-    @property
-    def translator(self):
-        """Lazy initialization of translator"""
-        if self._translator is None:
-            self._translator = GoogleTranslator(source='auto', target='ru')
-        return self._translator
     
     async def send_message(self, message):
         """Send a message to the configured Telegram channel"""
@@ -72,16 +65,22 @@ class KingsChoiceTelegramBot:
         
         return loop.run_until_complete(self.send_message(message))
     
-    def announce_mvp(self, event_name, player_name):
+    def announce_mvp(self, event_name, player_name, user_id=None, language=None):
         """Send MVP announcement to Telegram channel"""
-        message = format_mvp_announcement(event_name, player_name)
-        logger.info(f"Sending MVP announcement: {event_name} -> {player_name}")
+        message = format_announcement_with_user_language('mvp', event_name, player_name, user_id, language)
+        logger.info(f"Sending MVP announcement: {event_name} -> {player_name} (language: {language or 'auto'})")
         return self.send_message_sync(message)
     
-    def announce_winner(self, event_name, alliance_name):
+    def announce_winner(self, event_name, alliance_name, user_id=None, language=None):
         """Send alliance winner announcement to Telegram channel"""
-        message = format_winner_announcement(event_name, alliance_name)
-        logger.info(f"Sending winner announcement: {event_name} -> {alliance_name}")
+        message = format_announcement_with_user_language('winner', event_name, alliance_name, user_id, language)
+        logger.info(f"Sending winner announcement: {event_name} -> {alliance_name} (language: {language or 'auto'})")
+        return self.send_message_sync(message)
+    
+    def announce_mvp_unassign(self, event_name, player_name, user_id=None, language=None):
+        """Send MVP unassign announcement to Telegram channel"""
+        message = format_announcement_with_user_language('mvp_unassign', event_name, player_name, user_id, language)
+        logger.info(f"Sending MVP unassign announcement: {event_name} -> {player_name} (language: {language or 'auto'})")
         return self.send_message_sync(message)
     
     def translate_and_send(self, text):
@@ -139,7 +138,9 @@ def send_mvp_announcement(event_name, player_name, user=None):
     """Helper function to send MVP announcement for a specific user"""
     if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
         bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
-        return bot.announce_mvp(event_name, player_name)
+        # Get user's language preference
+        user_language = getattr(user, 'language', None) or 'en'
+        return bot.announce_mvp(event_name, player_name, user_id=user.id, language=user_language)
     else:
         logger.warning("Telegram bot not configured for user - skipping MVP announcement")
         return False
@@ -148,9 +149,22 @@ def send_winner_announcement(event_name, alliance_name, user=None):
     """Helper function to send winner announcement for a specific user"""
     if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
         bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
-        return bot.announce_winner(event_name, alliance_name)
+        # Get user's language preference
+        user_language = getattr(user, 'language', None) or 'en'
+        return bot.announce_winner(event_name, alliance_name, user_id=user.id, language=user_language)
     else:
         logger.warning("Telegram bot not configured for user - skipping winner announcement")
+        return False
+
+def send_mvp_unassign_announcement(event_name, player_name, user=None):
+    """Helper function to send MVP unassign announcement for a specific user"""
+    if user and user.telegram_enabled and user.telegram_bot_token and user.telegram_chat_id:
+        bot = KingsChoiceTelegramBot(user.telegram_bot_token, user.telegram_chat_id)
+        # Get user's language preference
+        user_language = getattr(user, 'language', None) or 'en'
+        return bot.announce_mvp_unassign(event_name, player_name, user_id=user.id, language=user_language)
+    else:
+        logger.warning("Telegram bot not configured for user - skipping MVP unassign announcement")
         return False
 
 def send_manual_message(text, user=None):

@@ -1,0 +1,298 @@
+{% extends "modern/base.html" %}
+
+{% block title %}Assign Winner - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <div class="bg-warning bg-opacity-10 rounded-circle p-4 d-inline-block mb-4">
+                    <i class="bi bi-trophy text-warning" style="font-size: 3rem;"></i>
+                </div>
+                <h1 class="h2 fw-bold text-warning mb-3">Assign Winner</h1>
+                <p class="text-muted lead">Select an alliance and event to assign as winner</p>
+            </div>
+
+            <!-- Assignment Form -->
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    {% if error %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            {{ error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+
+                    {% if can_assign_winner %}
+                        <form method="POST" id="assignWinnerForm">
+                            <div class="row g-4">
+                                <!-- Alliance Selection -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="alliance_id" class="form-label fw-semibold">
+                                            <i class="bi bi-shield-check me-2"></i>Select Alliance
+                                        </label>
+                                        <select class="form-select form-select-lg" id="alliance_id" name="alliance_id" required>
+                                            <option value="">Choose an alliance...</option>
+                                            {% for alliance in eligible_alliances %}
+                                                <option value="{{ alliance.id }}" 
+                                                        data-wins="{{ alliance.winner_assignments|length }}"
+                                                        data-last-win="{{ alliance.winner_assignments|sort(attribute='assigned_at', reverse=true)|first.assigned_at.strftime('%Y-%m-%d') if alliance.winner_assignments else 'Never' }}">
+                                                    {{ alliance.name }}
+                                                    {% if alliance.winner_assignments %}
+                                                        ({{ alliance.winner_assignments|length }} win{{ 's' if alliance.winner_assignments|length != 1 else '' }})
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Choose from eligible alliances</div>
+                                    </div>
+                                </div>
+
+                                <!-- Event Selection -->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="event_id" class="form-label fw-semibold">
+                                            <i class="bi bi-calendar-event me-2"></i>Select Event
+                                        </label>
+                                        <select class="form-select form-select-lg" id="event_id" name="event_id" required>
+                                            <option value="">Choose an event...</option>
+                                            {% for event in available_events %}
+                                                <option value="{{ event.id }}" 
+                                                        data-event-date="{{ event.event_date.strftime('%Y-%m-%d') if event.event_date else 'No date' }}"
+                                                        data-description="{{ event.description or 'No description' }}">
+                                                    {{ event.name }}
+                                                    {% if event.event_date %}
+                                                        ({{ event.event_date.strftime('%Y-%m-%d') }})
+                                                    {% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Choose an event for this winner assignment</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Alliance Info Card -->
+                            <div id="allianceInfoCard" class="card mt-4 bg-light" style="display: none;">
+                                <div class="card-body">
+                                    <h6 class="fw-semibold text-success mb-3">
+                                        <i class="bi bi-shield-check me-2"></i>Alliance Information
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="text-center">
+                                                <div class="fw-bold text-warning" id="winCount">0</div>
+                                                <small class="text-muted">Total Wins</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="text-center">
+                                                <div class="fw-bold text-info" id="lastWin">Never</div>
+                                                <small class="text-muted">Last Win</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event Info Card -->
+                            <div id="eventInfoCard" class="card mt-4 bg-light" style="display: none;">
+                                <div class="card-body">
+                                    <h6 class="fw-semibold text-warning mb-3">
+                                        <i class="bi bi-calendar-event me-2"></i>Event Information
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="fw-semibold">Date:</div>
+                                            <div class="text-muted" id="eventDate">No date</div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="fw-semibold">Description:</div>
+                                            <div class="text-muted" id="eventDescription">No description</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5">
+                                <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-secondary btn-lg me-md-2">
+                                    <i class="bi bi-arrow-left me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-warning btn-lg">
+                                    <i class="bi bi-trophy me-2"></i>Assign Winner
+                                </button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="bg-warning bg-opacity-10 rounded-circle p-4 d-inline-block mb-4">
+                                <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                            </div>
+                            <h4 class="text-warning mb-3">Cannot Assign Winner</h4>
+                            <p class="text-muted mb-4">No eligible alliances or events available for assignment.</p>
+                            <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Alliances
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Help Card -->
+            <div class="card mt-4 border-0 bg-gradient-light">
+                <div class="card-body">
+                    <h6 class="fw-semibold text-warning mb-3">
+                        <i class="bi bi-lightbulb me-2"></i>How Winner Assignment Works
+                    </h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                    <i class="bi bi-1-circle text-success"></i>
+                                </div>
+                                <h6 class="fw-semibold">Select Alliance</h6>
+                                <small class="text-muted">Choose from eligible alliances</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                    <i class="bi bi-2-circle text-warning"></i>
+                                </div>
+                                <h6 class="fw-semibold">Choose Event</h6>
+                                <small class="text-muted">Select the event for this winner</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center mb-3">
+                                <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-2">
+                                    <i class="bi bi-3-circle text-primary"></i>
+                                </div>
+                                <h6 class="fw-semibold">Assign & Track</h6>
+                                <small class="text-muted">System tracks all assignments</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const allianceSelect = document.getElementById('alliance_id');
+    const eventSelect = document.getElementById('event_id');
+    const allianceInfoCard = document.getElementById('allianceInfoCard');
+    const eventInfoCard = document.getElementById('eventInfoCard');
+    const form = document.getElementById('assignWinnerForm');
+
+    // Alliance selection handler
+    allianceSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const winCount = selectedOption.getAttribute('data-wins') || '0';
+            const lastWin = selectedOption.getAttribute('data-last-win') || 'Never';
+            
+            document.getElementById('winCount').textContent = winCount;
+            document.getElementById('lastWin').textContent = lastWin;
+            
+            allianceInfoCard.style.display = 'block';
+            allianceInfoCard.classList.add('fade-in-up');
+        } else {
+            allianceInfoCard.style.display = 'none';
+        }
+    });
+
+    // Event selection handler
+    eventSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        if (selectedOption.value) {
+            const eventDate = selectedOption.getAttribute('data-event-date') || 'No date';
+            const description = selectedOption.getAttribute('data-description') || 'No description';
+            
+            document.getElementById('eventDate').textContent = eventDate;
+            document.getElementById('eventDescription').textContent = description;
+            
+            eventInfoCard.style.display = 'block';
+            eventInfoCard.classList.add('fade-in-up');
+        } else {
+            eventInfoCard.style.display = 'none';
+        }
+    });
+
+    // Form submission handler
+    form.addEventListener('submit', function(e) {
+        const allianceId = allianceSelect.value;
+        const eventId = eventSelect.value;
+        
+        if (!allianceId || !eventId) {
+            e.preventDefault();
+            showNotification('Please select both an alliance and an event', 'warning');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Assigning Winner...';
+        submitBtn.disabled = true;
+    });
+
+    // Add smooth animations
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.6s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
+
+<style>
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+</style>
+{% endblock %}

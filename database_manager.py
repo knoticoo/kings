@@ -81,7 +81,7 @@ def query_user_data_with_joins(model_class, user_id, joins=None, **filters):
 def get_user_data_optimized(user_id, include_stats=True):
     """Get optimized dashboard data with single query"""
     with user_database_context(user_id) as session:
-        from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Guide
+        from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist
         
         # Single query to get all dashboard data
         result = {
@@ -144,7 +144,7 @@ def get_user_data_optimized(user_id, include_stats=True):
                 'total_alliances': session.query(Alliance).filter_by(user_id=user_id).count(),
                 'total_events': session.query(Event).filter_by(user_id=user_id).count(),
                 'total_blacklist_entries': session.query(Blacklist).filter_by(user_id=user_id).count(),
-                'total_guides': session.query(Guide).filter_by(user_id=user_id).count()
+                'total_guides': 0  # Guides removed
             }
         
         return result
@@ -157,7 +157,11 @@ def get_user_data_by_id(model_class, user_id, record_id):
 def create_user_data(model_class, user_id, **data):
     """Create new record in user's database"""
     with user_database_context(user_id) as session:
-        record = model_class(user_id=user_id, **data)
+        # Check if model has user_id field
+        if hasattr(model_class, 'user_id'):
+            record = model_class(user_id=user_id, **data)
+        else:
+            record = model_class(**data)
         session.add(record)
         session.commit()
         return record

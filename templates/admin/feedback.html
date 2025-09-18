@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback Management{% endblock %}
+
+{% block content %}
+<!-- Hidden CSRF token for JavaScript -->
+<input type="hidden" name="csrf_token" value="" id="csrf-token">
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-chat-dots"></i> Feedback Management</h2>
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+                </a>
+            </div>
+            
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>{{ stats.total }}</h4>
+                                    <p class="mb-0">Total Feedback</p>
+                                </div>
+                                <i class="bi bi-chat-dots fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>{{ stats.pending }}</h4>
+                                    <p class="mb-0">Pending Review</p>
+                                </div>
+                                <i class="bi bi-clock fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>{{ stats.reviewed }}</h4>
+                                    <p class="mb-0">Reviewed</p>
+                                </div>
+                                <i class="bi bi-check-circle fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h4>{{ stats.implemented }}</h4>
+                                    <p class="mb-0">Implemented</p>
+                                </div>
+                                <i class="bi bi-check2-circle fs-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Feedback List -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">All Feedback</h5>
+                </div>
+                <div class="card-body">
+                    {% if feedback_list %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>User</th>
+                                        <th>Subject</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for feedback, user in feedback_list %}
+                                    <tr>
+                                        <td>{{ feedback.id }}</td>
+                                        <td>
+                                            <strong>{{ user.username }}</strong>
+                                            {% if user.is_admin %}
+                                                <span class="badge bg-danger ms-1">Admin</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <strong>{{ feedback.title }}</strong>
+                                            <br>
+                                            <small class="text-muted">{{ feedback.message[:100] }}{% if feedback.message|length > 100 %}...{% endif %}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ feedback.category.replace('_', ' ').title() }}</span>
+                                        </td>
+                                        <td>
+                                            {% if feedback.status == 'pending' %}
+                                                <span class="badge bg-warning">Pending</span>
+                                            {% elif feedback.status == 'reviewed' %}
+                                                <span class="badge bg-info">Reviewed</span>
+                                            {% elif feedback.status == 'implemented' %}
+                                                <span class="badge bg-success">Implemented</span>
+                                            {% elif feedback.status == 'rejected' %}
+                                                <span class="badge bg-danger">Rejected</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ feedback.status.title() }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {{ feedback.created_at.strftime('%Y-%m-%d %H:%M') if feedback.created_at else 'Unknown' }}
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" 
+                                                    onclick="viewFeedback({{ feedback.id }}, '{{ feedback.title }}', '{{ feedback.message }}', '{{ feedback.category }}', '{{ feedback.status }}', '{{ feedback.admin_notes or '' }}', '{{ feedback.created_at.strftime('%Y-%m-%d %H:%M') if feedback.created_at else 'Unknown' }}', '{{ user.username }}')">
+                                                <i class="bi bi-eye"></i> View
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" 
+                                                    onclick="deleteFeedback({{ feedback.id }})">
+                                                <i class="bi bi-trash"></i> Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-chat-dots fs-1 text-muted"></i>
+                            <p class="text-muted mt-2">No feedback submitted yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feedback View/Edit Modal -->
+<div class="modal fade" id="feedbackViewModal" tabindex="-1" aria-labelledby="feedbackViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="feedbackViewModalLabel">
+                    <i class="bi bi-chat-dots me-2"></i>Feedback Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="feedbackUpdateForm" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" id="feedbackId" name="feedback_id">
+                    <input type="hidden" name="csrf_token" value="">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Submitted by:</strong></label>
+                            <p id="feedbackUser" class="form-control-plaintext"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label"><strong>Submitted on:</strong></label>
+                            <p id="feedbackDate" class="form-control-plaintext"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Subject:</strong></label>
+                        <p id="feedbackTitle" class="form-control-plaintext"></p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Category:</strong></label>
+                        <p id="feedbackCategory" class="form-control-plaintext"></p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Message:</strong></label>
+                        <div id="feedbackMessage" class="border p-3 rounded bg-light"></div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="feedbackStatus" class="form-label"><strong>Status:</strong></label>
+                        <select class="form-select" id="feedbackStatus" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="reviewed">Reviewed</option>
+                            <option value="implemented">Implemented</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="adminNotes" class="form-label"><strong>Admin Notes:</strong></label>
+                        <textarea class="form-control" id="adminNotes" name="admin_notes" rows="3" 
+                                  placeholder="Add your response or notes here..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i>Update Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewFeedback(id, title, message, category, status, adminNotes, date, user) {
+    document.getElementById('feedbackId').value = id;
+    document.getElementById('feedbackUser').textContent = user;
+    document.getElementById('feedbackDate').textContent = date;
+    document.getElementById('feedbackTitle').textContent = title;
+    document.getElementById('feedbackCategory').textContent = category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    document.getElementById('feedbackMessage').textContent = message;
+    document.getElementById('feedbackStatus').value = status;
+    document.getElementById('adminNotes').value = adminNotes;
+    
+    // Update form action - we'll set it dynamically in the form submission
+    
+    // Show modal
+    new bootstrap.Modal(document.getElementById('feedbackViewModal')).show();
+}
+
+function deleteFeedback(id) {
+    if (confirm('Are you sure you want to delete this feedback? This action cannot be undone.')) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/feedback/admin/${id}/delete`;
+        
+        // Add CSRF token if available
+        const csrfValue = document.getElementById('csrf-token').value;
+        if (csrfValue) {
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrf_token';
+            csrfToken.value = csrfValue;
+            form.appendChild(csrfToken);
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+// Handle form submission
+document.getElementById('feedbackUpdateForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const feedbackId = document.getElementById('feedbackId').value;
+    const formData = new FormData(this);
+    
+    // Set the correct URL with feedback ID
+    const url = `/feedback/admin/${feedbackId}/update`;
+    
+    console.log('Submitting feedback update:', { feedbackId, url });
+    
+    fetch(url, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            // If not JSON, get text to see what we got
+            return response.text().then(text => {
+                console.log('Non-JSON response:', text);
+                throw new Error('Server returned HTML instead of JSON. Status: ' + response.status);
+            });
+        }
+    })
+    .then(data => {
+        console.log('Response data:', data);
+        if (data.success) {
+            alert('Feedback updated successfully!');
+            location.reload();
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        alert('Error updating feedback: ' + error.message);
+    });
+});
+</script>
+{% endblock %}

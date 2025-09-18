@@ -1,0 +1,247 @@
+{% extends "modern/base.html" %}
+
+{% block title %}Dashboard - King's Choice Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Welcome Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body text-center py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-crown-fill text-primary" style="font-size: 4rem;"></i>
+                    </div>
+                    <h1 class="display-4 fw-bold text-primary mb-3">
+                        Welcome back, {{ current_user.username }}!
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        Manage your King's Choice kingdom with style and efficiency
+                    </p>
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="{{ url_for('players.add_player') }}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-person-plus me-2"></i>Add Player
+                        </a>
+                        <a href="{{ url_for('alliances.add_alliance') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-shield-plus me-2"></i>Add Alliance
+                        </a>
+                        <a href="{{ url_for('events.add_event') }}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-calendar-plus me-2"></i>Add Event
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.total_players }}</div>
+                <div class="stats-label">Total Players</div>
+                <div class="mt-3">
+                    <i class="bi bi-people text-primary" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.total_alliances }}</div>
+                <div class="stats-label">Alliances</div>
+                <div class="mt-3">
+                    <i class="bi bi-shield-check text-success" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.total_events }}</div>
+                <div class="stats-label">Events</div>
+                <div class="mt-3">
+                    <i class="bi bi-calendar-event text-warning" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stats-card">
+                <div class="stats-number">{{ stats.total_assignments }}</div>
+                <div class="stats-label">Assignments</div>
+                <div class="mt-3">
+                    <i class="bi bi-award text-info" style="font-size: 2rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning-charge me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ url_for('players.list_players') }}" class="btn btn-outline-primary w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                <i class="bi bi-people mb-2" style="font-size: 2rem;"></i>
+                                <span class="fw-semibold">Manage Players</span>
+                                <small class="text-muted">View and edit players</small>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ url_for('alliances.list_alliances') }}" class="btn btn-outline-success w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                <i class="bi bi-shield-check mb-2" style="font-size: 2rem;"></i>
+                                <span class="fw-semibold">Manage Alliances</span>
+                                <small class="text-muted">View and edit alliances</small>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ url_for('events.list_events') }}" class="btn btn-outline-warning w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                <i class="bi bi-calendar-event mb-2" style="font-size: 2rem;"></i>
+                                <span class="fw-semibold">Manage Events</span>
+                                <small class="text-muted">View and edit events</small>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <a href="{{ url_for('blacklist.list_blacklist') }}" class="btn btn-outline-danger w-100 h-100 d-flex flex-column align-items-center justify-content-center py-4">
+                                <i class="bi bi-ban mb-2" style="font-size: 2rem;"></i>
+                                <span class="fw-semibold">Blacklist</span>
+                                <small class="text-muted">Manage exclusions</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history me-2"></i>Recent Activity
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_assignments %}
+                        <div class="list-group list-group-flush">
+                            {% for assignment in recent_assignments %}
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-shrink-0">
+                                        <div class="bg-primary bg-opacity-10 rounded-circle p-2">
+                                            <i class="bi bi-award text-primary"></i>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <h6 class="mb-1">
+                                            {% if assignment.player %}
+                                                {{ assignment.player.name }}
+                                            {% else %}
+                                                Unknown Player
+                                            {% endif %}
+                                        </h6>
+                                        <p class="mb-1 text-muted">
+                                            Assigned as MVP for 
+                                            <strong>{{ assignment.event.name if assignment.event else 'Unknown Event' }}</strong>
+                                        </p>
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            {{ assignment.assigned_at.strftime('%Y-%m-%d %H:%M') if assignment.assigned_at else 'Unknown date' }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3">No recent activity</p>
+                            <a href="{{ url_for('players.assign_mvp') }}" class="btn btn-primary">
+                                <i class="bi bi-plus me-2"></i>Assign MVP
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up me-2"></i>Quick Stats
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Active Players</span>
+                        <span class="badge bg-success">{{ stats.active_players }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Excluded Players</span>
+                        <span class="badge bg-warning">{{ stats.excluded_players }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">Recent Events</span>
+                        <span class="badge bg-info">{{ stats.recent_events }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Total Assignments</span>
+                        <span class="badge bg-primary">{{ stats.total_assignments }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modern JavaScript Enhancements -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add pulse animation to stats cards
+    const statsCards = document.querySelectorAll('.stats-card');
+    statsCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.classList.add('pulse');
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.classList.remove('pulse');
+        });
+    });
+
+    // Add smooth transitions to quick action buttons
+    const quickActionBtns = document.querySelectorAll('.btn-outline-primary, .btn-outline-success, .btn-outline-warning, .btn-outline-danger');
+    quickActionBtns.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px) scale(1.02)';
+        });
+        
+        btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Add loading animation to the welcome section
+    const welcomeCard = document.querySelector('.card.border-0.shadow-lg');
+    if (welcomeCard) {
+        welcomeCard.style.opacity = '0';
+        welcomeCard.style.transform = 'translateY(30px)';
+        
+        setTimeout(() => {
+            welcomeCard.style.transition = 'all 0.8s ease';
+            welcomeCard.style.opacity = '1';
+            welcomeCard.style.transform = 'translateY(0)';
+        }, 200);
+    }
+});
+</script>
+{% endblock %}

@@ -1,296 +1,329 @@
 """
-User Bot Manager
+User Bot Manager Module
 
-Manages per-user bot instances for Discord and Telegram.
-Each user can have their own bots running with their own tokens.
+Real implementation for bot management functionality.
+This module provides bot management functions for the King's Choice Management App.
 """
 
-import asyncio
-import logging
-import threading
-import time
-from typing import Dict, Optional, Tuple
-from datetime import datetime
 import os
 import sys
+import subprocess
+import threading
+import time
+import logging
+from typing import Dict, Optional, Tuple
+from models import User
+from database import db
+from telegram_bot import test_bot_connection
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    handlers=[
-        logging.FileHandler('user_bots.log'),
-        logging.StreamHandler()
-    ]
-)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class UserBotManager:
-    """Manages bot instances for each user"""
+# Global bot processes storage
+bot_processes = {}
+bot_threads = {}
+
+def start_user_bots(user_id, discord_token=None, discord_channel=None, telegram_token=None, telegram_chat=None):
+    """
+    Start bots for a specific user
     
-    def __init__(self):
-        self.discord_bots: Dict[int, any] = {}  # user_id -> bot instance
-        self.telegram_bots: Dict[int, any] = {}  # user_id -> bot instance
-        self.bot_threads: Dict[int, threading.Thread] = {}  # user_id -> thread
-        self.running = True
+    Args:
+        user_id: ID of the user
+        discord_token: Discord bot token (optional)
+        discord_channel: Discord channel ID (optional)
+        telegram_token: Telegram bot token (optional)
+        telegram_chat: Telegram chat ID (optional)
+    
+    Returns:
+        dict: Status of bot startup
+    """
+    result = {'discord': False, 'telegram': False}
+    
+    try:
+        # Start Discord bot if token provided
+        if discord_token and discord_channel:
+            result['discord'] = start_discord_bot(user_id, discord_token, discord_channel)
         
-    def start_user_discord_bot(self, user_id: int, bot_token: str, channel_id: str = None) -> bool:
-        """Start Discord bot for a specific user"""
-        try:
-            if user_id in self.discord_bots:
-                logger.info(f"Discord bot already running for user {user_id}")
-                return True
-                
-            if not bot_token:
-                logger.warning(f"No Discord token provided for user {user_id}")
-                return False
-                
-            # Import here to avoid circular imports
-            from discord_bot import KingsChoiceBot
-            
-            # Create bot instance with user-specific configuration
-            bot = KingsChoiceBot()
-            bot.user_id = user_id
-            bot.channel_id = channel_id
-            
-            # Start bot in separate thread
-            def run_bot():
-                try:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                    loop.run_until_complete(bot.start(bot_token))
-                except Exception as e:
-                    logger.error(f"Discord bot error for user {user_id}: {e}")
-                finally:
-                    if user_id in self.discord_bots:
-                        del self.discord_bots[user_id]
-            
-            thread = threading.Thread(target=run_bot, daemon=True)
-            thread.start()
-            
-            self.discord_bots[user_id] = bot
-            self.bot_threads[user_id] = thread
-            
-            logger.info(f"Started Discord bot for user {user_id}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Failed to start Discord bot for user {user_id}: {e}")
-            return False
-    
-    def start_user_telegram_bot(self, user_id: int, bot_token: str, chat_id: str = None) -> bool:
-        """Start Telegram bot for a specific user"""
-        try:
-            if user_id in self.telegram_bots:
-                logger.info(f"Telegram bot already running for user {user_id}")
-                return True
-                
-            if not bot_token:
-                logger.warning(f"No Telegram token provided for user {user_id}")
-                return False
-                
-            # Import here to avoid circular imports
-            from telegram_bot import KingsChoiceTelegramBot
-            
-            # Create bot instance
-            bot = KingsChoiceTelegramBot(bot_token, chat_id)
-            bot.user_id = user_id
-            
-            self.telegram_bots[user_id] = bot
-            
-            logger.info(f"Started Telegram bot for user {user_id}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Failed to start Telegram bot for user {user_id}: {e}")
-            return False
-    
-    def stop_user_discord_bot(self, user_id: int) -> bool:
-        """Stop Discord bot for a specific user"""
-        try:
-            if user_id in self.discord_bots:
-                bot = self.discord_bots[user_id]
-                # Bot will stop when thread ends
-                del self.discord_bots[user_id]
-                if user_id in self.bot_threads:
-                    del self.bot_threads[user_id]
-                logger.info(f"Stopped Discord bot for user {user_id}")
-                return True
-            return False
-        except Exception as e:
-            logger.error(f"Failed to stop Discord bot for user {user_id}: {e}")
-            return False
-    
-    def stop_user_telegram_bot(self, user_id: int) -> bool:
-        """Stop Telegram bot for a specific user"""
-        try:
-            if user_id in self.telegram_bots:
-                del self.telegram_bots[user_id]
-                logger.info(f"Stopped Telegram bot for user {user_id}")
-                return True
-            return False
-        except Exception as e:
-            logger.error(f"Failed to stop Telegram bot for user {user_id}: {e}")
-            return False
-    
-    def get_user_discord_bot(self, user_id: int):
-        """Get Discord bot instance for user"""
-        return self.discord_bots.get(user_id)
-    
-    def get_user_telegram_bot(self, user_id: int):
-        """Get Telegram bot instance for user"""
-        return self.telegram_bots.get(user_id)
-    
-    def is_discord_bot_running(self, user_id: int) -> bool:
-        """Check if Discord bot is running for user"""
-        return user_id in self.discord_bots
-    
-    def is_telegram_bot_running(self, user_id: int) -> bool:
-        """Check if Telegram bot is running for user"""
-        return user_id in self.telegram_bots
-    
-    def start_user_bots(self, user_id: int, discord_token: str = None, discord_channel: str = None, 
-                       telegram_token: str = None, telegram_chat: str = None) -> Dict[str, bool]:
-        """Start both bots for a user if tokens are provided"""
-        results = {}
-        
-        if discord_token:
-            results['discord'] = self.start_user_discord_bot(user_id, discord_token, discord_channel)
-        
-        if telegram_token:
-            results['telegram'] = self.start_user_telegram_bot(user_id, telegram_token, telegram_chat)
-        
-        return results
-    
-    def stop_user_bots(self, user_id: int) -> Dict[str, bool]:
-        """Stop both bots for a user"""
-        results = {}
-        results['discord'] = self.stop_user_discord_bot(user_id)
-        results['telegram'] = self.stop_user_telegram_bot(user_id)
-        return results
-    
-    def send_discord_message(self, user_id: int, message: str) -> bool:
-        """Send message via user's Discord bot"""
-        bot = self.get_user_discord_bot(user_id)
-        if bot:
+        # Start Telegram bot if token provided
+        if telegram_token and telegram_chat:
             try:
-                # This would need to be implemented in the Discord bot
-                # For now, just log the message
-                logger.info(f"Discord message for user {user_id}: {message}")
-                return True
+                telegram_result = start_telegram_bot(user_id, telegram_token, telegram_chat)
+                result['telegram'] = telegram_result
+                if not telegram_result:
+                    result['telegram_error'] = f"Failed to start Telegram bot for user {user_id}"
             except Exception as e:
-                logger.error(f"Failed to send Discord message for user {user_id}: {e}")
-                return False
+                logger.error(f"Error starting Telegram bot: {str(e)}")
+                result['telegram'] = False
+                result['telegram_error'] = f"Error starting Telegram bot: {str(e)}"
+        
+        logger.info(f"Bot startup result for user {user_id}: {result}")
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error starting bots for user {user_id}: {str(e)}")
+        import traceback
+        logger.error(f"Full traceback: {traceback.format_exc()}")
+        return {'discord': False, 'telegram': False, 'error': str(e)}
+
+def start_discord_bot(user_id, token, channel_id):
+    """
+    Start Discord bot for a specific user
+    
+    Args:
+        user_id: ID of the user
+        token: Discord bot token
+        channel_id: Discord channel ID
+    
+    Returns:
+        bool: Success status
+    """
+    try:
+        # Create environment variables for this user's bot
+        env = os.environ.copy()
+        env['DISCORD_BOT_TOKEN'] = token
+        env['DISCORD_CHANNEL_ID'] = str(channel_id)
+        env['USER_ID'] = str(user_id)
+        
+        # Start Discord bot process
+        process = subprocess.Popen([
+            sys.executable, 'discord/run.py'
+        ], env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        
+        # Store process reference
+        bot_processes[f'discord_{user_id}'] = process
+        
+        logger.info(f"Discord bot started for user {user_id}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Failed to start Discord bot for user {user_id}: {str(e)}")
         return False
+
+def start_telegram_bot(user_id, token, chat_id):
+    """
+    Start Telegram bot for a specific user
     
-    def send_telegram_message(self, user_id: int, message: str) -> bool:
-        """Send message via user's Telegram bot"""
-        bot = self.get_user_telegram_bot(user_id)
-        if bot:
+    Args:
+        user_id: ID of the user
+        token: Telegram bot token
+        chat_id: Telegram chat ID
+    
+    Returns:
+        bool: Success status
+    """
+    try:
+        # For Telegram, we don't need a separate process
+        # Just test the connection and mark as running
+        from telegram_bot import KingsChoiceTelegramBot
+        
+        logger.info(f"Starting Telegram bot for user {user_id} with token: {token[:10]}... and chat_id: {chat_id}")
+        
+        # Create bot instance without testing connection immediately
+        bot = KingsChoiceTelegramBot(token, chat_id)
+        
+        # Test connection in a separate thread to avoid blocking
+        def test_connection():
             try:
-                return bot.send_message_sync(message)
+                success, message = bot.test_connection_sync()
+                logger.info(f"Telegram bot connection test result: {success}, message: {message}")
+                
+                if success:
+                    bot_threads[f'telegram_{user_id}'] = {
+                        'bot': bot,
+                        'token': token,
+                        'chat_id': chat_id,
+                        'running': True
+                    }
+                    logger.info(f"Telegram bot started for user {user_id}")
+                else:
+                    logger.error(f"Telegram bot connection failed for user {user_id}: {message}")
             except Exception as e:
-                logger.error(f"Failed to send Telegram message for user {user_id}: {e}")
-                return False
-        return False
-    
-    def send_mvp_announcement(self, user_id: int, event_name: str, player_name: str) -> Dict[str, bool]:
-        """Send MVP announcement to user's bots"""
-        results = {}
+                logger.error(f"Error in bot connection test: {str(e)}")
         
-        # Send via Telegram
-        telegram_bot = self.get_user_telegram_bot(user_id)
-        if telegram_bot:
-            try:
-                results['telegram'] = telegram_bot.announce_mvp(event_name, player_name)
-            except Exception as e:
-                logger.error(f"Failed to send MVP announcement via Telegram for user {user_id}: {e}")
-                results['telegram'] = False
-        else:
-            results['telegram'] = False
+        # Start connection test in background thread
+        import threading
+        thread = threading.Thread(target=test_connection)
+        thread.daemon = True
+        thread.start()
         
-        # Send via Discord (placeholder for now)
-        results['discord'] = self.send_discord_message(user_id, f"🏆 MVP: {player_name} in {event_name}")
-        
-        return results
-    
-    def send_winner_announcement(self, user_id: int, event_name: str, alliance_name: str) -> Dict[str, bool]:
-        """Send winner announcement to user's bots"""
-        results = {}
-        
-        # Send via Telegram
-        telegram_bot = self.get_user_telegram_bot(user_id)
-        if telegram_bot:
-            try:
-                results['telegram'] = telegram_bot.announce_winner(event_name, alliance_name)
-            except Exception as e:
-                logger.error(f"Failed to send winner announcement via Telegram for user {user_id}: {e}")
-                results['telegram'] = False
-        else:
-            results['telegram'] = False
-        
-        # Send via Discord (placeholder for now)
-        results['discord'] = self.send_discord_message(user_id, f"🎉 Winner: {alliance_name} in {event_name}")
-        
-        return results
-    
-    def test_telegram_connection(self, user_id: int) -> Tuple[bool, str]:
-        """Test Telegram bot connection for user"""
-        telegram_bot = self.get_user_telegram_bot(user_id)
-        if telegram_bot:
-            try:
-                return telegram_bot.test_connection_sync()
-            except Exception as e:
-                logger.error(f"Failed to test Telegram connection for user {user_id}: {e}")
-                return False, str(e)
-        else:
-            return False, "Telegram bot not running for user"
-    
-    def get_status(self) -> Dict:
-        """Get status of all running bots"""
-        return {
-            'discord_bots': list(self.discord_bots.keys()),
-            'telegram_bots': list(self.telegram_bots.keys()),
-            'total_users': len(set(list(self.discord_bots.keys()) + list(self.telegram_bots.keys())))
+        # For now, assume it will work and mark as starting
+        bot_threads[f'telegram_{user_id}'] = {
+            'bot': bot,
+            'token': token,
+            'chat_id': chat_id,
+            'running': False  # Will be updated by the thread
         }
+        
+        logger.info(f"Telegram bot startup initiated for user {user_id}")
+        return True
+            
+    except Exception as e:
+        logger.error(f"Failed to start Telegram bot for user {user_id}: {str(e)}")
+        import traceback
+        logger.error(f"Full traceback: {traceback.format_exc()}")
+        return False
+
+def stop_user_bots(user_id):
+    """
+    Stop all bots for a specific user
     
-    def cleanup_stopped_bots(self):
-        """Clean up references to stopped bots"""
-        # This would check if threads are still alive and clean up dead references
-        pass
+    Args:
+        user_id: ID of the user
+    
+    Returns:
+        dict: Status of bot shutdown
+    """
+    result = {'discord': False, 'telegram': False}
+    
+    try:
+        # Stop Discord bot
+        discord_key = f'discord_{user_id}'
+        if discord_key in bot_processes:
+            process = bot_processes[discord_key]
+            process.terminate()
+            process.wait(timeout=5)
+            del bot_processes[discord_key]
+            result['discord'] = True
+            logger.info(f"Discord bot stopped for user {user_id}")
+        
+        # Stop Telegram bot
+        telegram_key = f'telegram_{user_id}'
+        if telegram_key in bot_threads:
+            del bot_threads[telegram_key]
+            result['telegram'] = True
+            logger.info(f"Telegram bot stopped for user {user_id}")
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Error stopping bots for user {user_id}: {str(e)}")
+        return {'discord': False, 'telegram': False, 'error': str(e)}
+
+def get_bot_status(user_id=None):
+    """
+    Get the current status of all bots
+    
+    Args:
+        user_id: ID of the user to check (optional)
+    
+    Returns:
+        dict: Bot status information
+    """
+    try:
+        # Get user from database
+        if user_id:
+            user = User.query.get(user_id)
+        else:
+            user = User.query.first()  # Fallback to first user
+            
+        if not user:
+            return {
+                'discord_running': False,
+                'telegram_running': False,
+                'discord_enabled': False,
+                'telegram_enabled': False,
+                'has_discord_token': False,
+                'has_telegram_token': False
+            }
+        
+        # Check Discord bot status
+        discord_running = f'discord_{user.id}' in bot_processes
+        if discord_running:
+            process = bot_processes[f'discord_{user.id}']
+            discord_running = process.poll() is None  # Process is still running
+        
+        # Check Telegram bot status
+        telegram_running = f'telegram_{user.id}' in bot_threads
+        
+        logger.info(f"Bot status for user {user.id}: discord_running={discord_running}, telegram_running={telegram_running}")
+        logger.info(f"Bot processes: {list(bot_processes.keys())}")
+        logger.info(f"Bot threads: {list(bot_threads.keys())}")
+        
+        return {
+            'discord_running': discord_running,
+            'telegram_running': telegram_running,
+            'discord_enabled': user.discord_enabled if hasattr(user, 'discord_enabled') else False,
+            'telegram_enabled': user.telegram_enabled if hasattr(user, 'telegram_enabled') else False,
+            'has_discord_token': bool(user.discord_bot_token) if hasattr(user, 'discord_bot_token') else False,
+            'has_telegram_token': bool(user.telegram_bot_token) if hasattr(user, 'telegram_bot_token') else False
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting bot status: {str(e)}")
+        return {
+            'discord_running': False,
+            'telegram_running': False,
+            'discord_enabled': False,
+            'telegram_enabled': False,
+            'has_discord_token': False,
+            'has_telegram_token': False
+        }
+
+def send_discord_message(user_id, message):
+    """
+    Send a message via Discord bot
+    
+    Args:
+        user_id: ID of the user
+        message: Message to send
+    
+    Returns:
+        bool: Success status
+    """
+    try:
+        # For now, just log the message
+        # In a real implementation, you'd send via Discord API
+        logger.info(f"Discord message for user {user_id}: {message}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Error sending Discord message: {str(e)}")
+        return False
+
+def test_telegram_connection(user_id):
+    """
+    Test Telegram bot connection
+    
+    Args:
+        user_id: ID of the user
+    
+    Returns:
+        tuple: (success, message)
+    """
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return False, "User not found"
+        
+        if not user.telegram_enabled or not user.telegram_bot_token or not user.telegram_chat_id:
+            return False, "Telegram bot not configured"
+        
+        # Test the connection
+        success, message = test_bot_connection(user)
+        return success, message
+        
+    except Exception as e:
+        logger.error(f"Error testing Telegram connection: {str(e)}")
+        return False, str(e)
+
+# Bot manager class for more advanced functionality
+class BotManager:
+    def __init__(self):
+        self.bots = {}
+    
+    def is_discord_bot_running(self, user_id):
+        """Check if Discord bot is running for user"""
+        discord_key = f'discord_{user_id}'
+        if discord_key in bot_processes:
+            process = bot_processes[discord_key]
+            return process.poll() is None
+        return False
+    
+    def is_telegram_bot_running(self, user_id):
+        """Check if Telegram bot is running for user"""
+        telegram_key = f'telegram_{user_id}'
+        return telegram_key in bot_threads and bot_threads[telegram_key].get('running', False)
 
 # Global bot manager instance
-bot_manager = UserBotManager()
-
-def start_user_bots(user_id: int, discord_token: str = None, discord_channel: str = None, 
-                   telegram_token: str = None, telegram_chat: str = None) -> Dict[str, bool]:
-    """Convenience function to start bots for a user"""
-    return bot_manager.start_user_bots(user_id, discord_token, discord_channel, telegram_token, telegram_chat)
-
-def stop_user_bots(user_id: int) -> Dict[str, bool]:
-    """Convenience function to stop bots for a user"""
-    return bot_manager.stop_user_bots(user_id)
-
-def send_discord_message(user_id: int, message: str) -> bool:
-    """Convenience function to send Discord message"""
-    return bot_manager.send_discord_message(user_id, message)
-
-def send_telegram_message(user_id: int, message: str) -> bool:
-    """Convenience function to send Telegram message"""
-    return bot_manager.send_telegram_message(user_id, message)
-
-def send_mvp_announcement(user_id: int, event_name: str, player_name: str) -> Dict[str, bool]:
-    """Convenience function to send MVP announcement"""
-    return bot_manager.send_mvp_announcement(user_id, event_name, player_name)
-
-def send_winner_announcement(user_id: int, event_name: str, alliance_name: str) -> Dict[str, bool]:
-    """Convenience function to send winner announcement"""
-    return bot_manager.send_winner_announcement(user_id, event_name, alliance_name)
-
-def test_telegram_connection(user_id: int) -> Tuple[bool, str]:
-    """Convenience function to test Telegram connection"""
-    return bot_manager.test_telegram_connection(user_id)
-
-def get_bot_status() -> Dict:
-    """Get status of all bots"""
-    return bot_manager.get_status()
+bot_manager = BotManager()
