@@ -31,23 +31,96 @@ This pull request transforms the King's Choice Management application into a com
 ```bash
 git clone <repository>
 cd kings-choice-management
-pip install -r requirements.txt
+
+# Install system dependencies (Ubuntu/Debian)
+sudo apt update
+sudo apt install -y python3 python3-pip python3-venv python3-dev sqlite3 curl wget build-essential
+
+# Run complete installation
+./install_and_start.sh install
 ```
 
-### 2. Setup Multi-User System
+### 2. Start Application
 ```bash
-python setup_multi_user.py
+# Start all services
+./install_and_start.sh start
+
+# Or start only the main application
+./install_and_start.sh start-app
 ```
 
-### 3. Start Application
-```bash
-python start_multi_user.py start
-```
-
-### 4. Access System
+### 3. Access System
 - Go to `http://localhost:5000`
 - Login with admin credentials
 - Create users via admin panel
+
+## 🔧 Troubleshooting
+
+### Common Installation Issues
+
+#### 1. Virtual Environment Creation Fails
+**Error**: `The virtual environment was not created successfully because ensurepip is not available`
+
+**Solution**:
+```bash
+# Install required system packages
+sudo apt update
+sudo apt install -y python3-venv python3-dev sqlite3 curl wget build-essential
+
+# Then retry installation
+./install_and_start.sh install
+```
+
+#### 2. Application Hangs During Database Optimization
+**Issue**: Application appears to hang after "Checking database optimization..."
+
+**Solution**: This is normal behavior. The optimization script runs quickly but output is redirected. The application will continue starting after optimization completes.
+
+#### 3. Permission Denied Errors
+**Error**: Permission denied when running installation script
+
+**Solution**:
+```bash
+# Make script executable
+chmod +x install_and_start.sh
+
+# Run with proper permissions
+./install_and_start.sh install
+```
+
+#### 4. Port Already in Use
+**Error**: Port 5000 is already in use
+
+**Solution**:
+```bash
+# Check what's using the port
+sudo lsof -i :5000
+
+# Stop the application
+./install_and_start.sh stop
+
+# Or kill the process manually
+sudo kill -9 <PID>
+```
+
+### Service Management Commands
+
+```bash
+# Check application status
+./install_and_start.sh status
+
+# View logs
+./install_and_start.sh logs
+
+# Restart all services
+./install_and_start.sh restart
+
+# Stop all services
+./install_and_start.sh stop
+
+# Run database optimization
+./install_and_start.sh optimize
+```
 
 ## 📁 Key Files
 
