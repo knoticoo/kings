@@ -28,7 +28,8 @@ def create_admin_user():
     
     # Database configuration
     basedir = os.path.abspath(os.path.dirname(__file__))
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "kings_choice.db")}'
+    from config import Config
+    app.config['SQLALCHEMY_DATABASE_URI'] = Config.get_main_database_uri()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'admin-creation-script-key'
     

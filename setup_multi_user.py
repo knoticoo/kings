@@ -92,7 +92,7 @@ def setup_system():
             email=admin_email,
             is_admin=True,
             is_active=True,
-            database_path=admin_db_path,
+            database_path=Config.get_user_database_path(0, 'admin'),  # Will be updated with real ID
             telegram_bot_token=telegram_bot_token if telegram_bot_token else None,
             telegram_chat_id=telegram_chat_id if telegram_chat_id else None,
             telegram_enabled=telegram_enabled,

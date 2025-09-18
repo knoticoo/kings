@@ -51,8 +51,8 @@ def cache_response(timeout_seconds=30):
     return decorator
 
 # Database configuration
-basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "kings_choice.db")}'
+from config import Config
+app.config['SQLALCHEMY_DATABASE_URI'] = Config.get_main_database_uri()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here-change-in-production')
 
@@ -136,6 +136,10 @@ def create_tables():
     create_all_tables(app)
 
 if __name__ == '__main__':
+    # Print configuration for debugging
+    Config.print_config()
+    Config.ensure_user_database_directory()
+    
     create_tables()
     
     # Don't start any bots globally - they will be started per-user when needed
