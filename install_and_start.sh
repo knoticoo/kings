@@ -208,14 +208,8 @@ setup_multi_user_database() {
         exit 1
     fi
     
-    # Run database optimization
-    print_status "Optimizing database performance..."
-    if [ -f "$APP_DIR/optimize_database.py" ]; then
-        python3 optimize_database.py
-        print_success "Database optimization completed"
-    else
-        print_warning "Database optimization script not found, skipping..."
-    fi
+    # Database optimization can be run manually with: ./install_and_start.sh optimize
+    print_status "Database optimization can be run manually with: ./install_and_start.sh optimize"
 }
 
 # Function to run tests
@@ -381,11 +375,8 @@ start_app() {
     # Change to app directory
     cd "$APP_DIR"
     
-    # Run database optimization if needed
-    print_status "Checking database optimization..."
-    if [ -f "$APP_DIR/optimize_database.py" ]; then
-        python3 optimize_database.py > /dev/null 2>&1
-    fi
+    # Skip database optimization during startup to avoid hanging
+    # Database optimization can be run manually with: ./install_and_start.sh optimize
     
     # Create logs directory and log files if they don't exist
     mkdir -p "$LOG_DIR"
