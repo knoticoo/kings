@@ -5,12 +5,13 @@ Handles the main dashboard and navigation routes.
 Shows current MVP player and winning alliance information.
 """
 
-from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash
+from flask import Blueprint, render_template, jsonify, request, redirect, url_for, flash, session
 from flask_login import login_required, current_user
-from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Guide
+from models import Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist
 from database import db
 from database_manager import query_user_data, get_user_data_by_id, get_user_data_optimized
 from utils.cache import cache_response
+from datetime import datetime, timedelta
 
 # Create blueprint for main routes
 bp = Blueprint('main', __name__)
@@ -31,15 +32,41 @@ def dashboard():
         # Use optimized single query to get all dashboard data
         data = get_user_data_optimized(current_user.id, include_stats=True)
         
+        # Get feedback statistics for admin users
+        feedback_stats = {}
+        if current_user.is_admin:
+            try:
+                from models import Feedback
+                feedback_stats = {
+                    'total_feedback': Feedback.query.count(),
+                    'pending_feedback': Feedback.query.filter_by(status='pending').count(),
+                    'recent_feedback': Feedback.query.filter(
+                        Feedback.created_at >= datetime.now() - timedelta(days=7)
+                    ).count()
+                }
+            except ImportError:
+                # Feedback model not available, skip feedback stats
+                feedback_stats = {
+                    'total_feedback': 0,
+                    'pending_feedback': 0,
+                    'recent_feedback': 0
+                }
+        
+        # Use classic template
         return render_template('dashboard.html', 
                              current_mvp=data['current_mvp'],
                              current_winner=data['current_winner'],
                              recent_events=data['recent_events'],
+                             recent_assignments=data.get('recent_assignments', []),
                              total_players=data['stats']['total_players'],
                              total_alliances=data['stats']['total_alliances'],
                              total_events=data['stats']['total_events'],
+                             total_assignments=data['stats'].get('total_assignments', 0),
+                             active_players=data['stats'].get('active_players', 0),
+                             excluded_players=data['stats'].get('excluded_players', 0),
+                             recent_events_count=data['stats'].get('recent_events', 0),
                              total_blacklist_entries=data['stats']['total_blacklist_entries'],
-                             total_guides=data['stats']['total_guides'])
+                             feedback_stats=feedback_stats)
     except Exception as e:
         print(f"Error in dashboard route: {str(e)}")
         return render_template('dashboard.html', 
@@ -51,7 +78,7 @@ def dashboard():
                              total_alliances=0,
                              total_events=0,
                              total_blacklist_entries=0,
-                             total_guides=0)
+)
 
 @bp.route('/api/dashboard-data')
 @login_required
@@ -89,44 +116,3 @@ def dashboard_data():
             'success': False,
             'error': str(e)
         }), 500
-
-@bp.route('/telegram-message', methods=['GET', 'POST'])
-@login_required
-def telegram_message():
-    """
-    Manual Telegram message posting interface
-    
-    GET: Show form to enter text
-    POST: Translate text to Russian and send to Telegram channel
-    """
-    if request.method == 'POST':
-        try:
-            message_text = request.form.get('message', '').strip()
-            
-            if not message_text:
-                flash('Message text is required', 'error')
-                return render_template('telegram_message.html')
-            
-            # Send message via Telegram (will be auto-translated to Russian)
-            # Send manual message via Telegram
-            try:
-                from telegram_bot import send_manual_message
-                success = send_manual_message(message_text, current_user)
-            except Exception as e:
-                print(f"Failed to send manual message: {e}")
-                success = False
-            
-            if success:
-                flash('Message sent successfully to Telegram channel!', 'success')
-                print(f"Manual Telegram message sent: {message_text[:50]}...")
-            else:
-                flash('Failed to send message to Telegram channel', 'error')
-                
-            return render_template('telegram_message.html')
-            
-        except Exception as e:
-            print(f"Error sending manual Telegram message: {str(e)}")
-            flash('An error occurred while sending the message', 'error')
-            return render_template('telegram_message.html')
-    
-    return render_template('telegram_message.html')
