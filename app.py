@@ -138,7 +138,11 @@ def create_tables():
 if __name__ == '__main__':
     # Print configuration for debugging
     Config.print_config()
-    Config.ensure_user_database_directory()
+    print(f"🎯 Deployment type: {Config.detect_deployment_type()}")
+    print()
+    
+    # Ensure directories exist
+    Config.ensure_data_directories()
     
     create_tables()
     

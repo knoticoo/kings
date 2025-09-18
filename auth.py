@@ -23,7 +23,7 @@ def create_user_database(user_id, username):
     user_db_path = Config.get_user_database_path(user_id, username)
     
     # Ensure the user database directory exists
-    Config.ensure_user_database_directory()
+    Config.ensure_data_directories()
     
     # Create the database file and initialize tables
     conn = sqlite3.connect(user_db_path)
