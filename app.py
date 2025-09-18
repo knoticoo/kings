@@ -74,7 +74,7 @@ from database import db, init_app, create_all_tables
 init_app(app)
 
 # Import models after database initialization
-from models import User, SubUser, Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist
+from models import User, SubUser, Player, Alliance, Event, MVPAssignment, WinnerAssignment, Blacklist, Feedback
 
 # User loader for Flask-Login
 @login_manager.user_loader
